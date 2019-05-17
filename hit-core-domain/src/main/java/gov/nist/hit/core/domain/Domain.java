@@ -42,6 +42,9 @@ public class Domain extends TestResource implements Serializable {
 
 	@Column(columnDefinition = "TEXT")
 	private String validationResultInfo;
+	
+	@Column(columnDefinition = "TEXT")
+	private String validationConfiguration;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Column(name = "PARTICIPANT_EMAILS", nullable = true)
@@ -168,6 +171,14 @@ public class Domain extends TestResource implements Serializable {
 		return owner;
 	}
 
+	public String getValidationConfiguration() {
+		return validationConfiguration;
+	}
+
+	public void setValidationConfiguration(String validationConfiguration) {
+		this.validationConfiguration = validationConfiguration;
+	}
+
 	public void merge(Domain source) {
 		this.homeTitle = source.homeTitle;
 		this.homeContent = source.homeContent;
@@ -182,6 +193,7 @@ public class Domain extends TestResource implements Serializable {
 		this.rsbVersion = source.rsbVersion;
 		this.igVersion = source.igVersion;
 		this.owner = this.authorUsername;
+		this.validationConfiguration = source.validationConfiguration;
 	}
 
 }

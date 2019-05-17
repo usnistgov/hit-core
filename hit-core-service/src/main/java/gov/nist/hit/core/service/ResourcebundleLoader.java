@@ -166,6 +166,7 @@ public abstract class ResourcebundleLoader {
 	public static final String REGISTRATION = "Registration.json";
 	public static final String DEFAULT_CATEGORY = "Default";
 	public static final String TOOL_DOCUMENT_DOMAIN = "app";
+	final static public String VALIDATION_CONFIGURATION_PATTERN = "ValidationConfiguration.json";
 
 	@Autowired
 	protected IntegrationProfileRepository integrationProfileRepository;
@@ -507,6 +508,12 @@ public abstract class ResourcebundleLoader {
 		if (resource != null) {
 			entry.setValidationResultInfo(FileUtil.getContent(resource));
 		}
+		
+		resource = this.getResource(domainPath + ResourcebundleLoader.VALIDATION_CONFIGURATION_PATTERN,rootPath);
+		if (resource != null) {
+			entry.setValidationConfiguration(FileUtil.getContent(resource));
+		}
+		
 		resource = this.getResource(domainPath + ResourcebundleLoader.HOME_PATTERN, rootPath);
 		if (resource == null) {
 			throw new IllegalArgumentException("No " + ResourcebundleLoader.HOME_PATTERN + " found at " + domainPath);
