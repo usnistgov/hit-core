@@ -1079,10 +1079,10 @@ public class AccountController {
 	private void sendRegistrationNotificationToAdmin(Account acc) {
 		try {
 			SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
-			msg.setSubject("New Registration Application on " + TOOL_NAME);
+			msg.setSubject("New Registration on " + TOOL_NAME);
 			msg.setTo(appInfoService.get().getAdminEmails().get(0));
 			msg.setText(
-					"Hello Admin,  \n A new application has been submitted and is waiting for approval. The user information are as follow: \n\n"
+					"Hello Admin,  \n A new user has registered: \n\n"
 							+ "Name: " + acc.getFullName() + "\n" + "Email: " + acc.getEmail() + "\n" + "Username: "
 							+ acc.getUsername() + "\n" + " \n\n" + "Sincerely, " + "\n\n" + "The " + TOOL_NAME + " Team"
 							+ "\n\n");
