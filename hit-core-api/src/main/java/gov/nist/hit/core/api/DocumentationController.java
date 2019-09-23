@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -209,9 +210,20 @@ public class DocumentationController {
 					return testCaseDocumentationService.generate(scope, domain, account.getUsername());
 				}
 			}
-		} else {
+		} else if (TestScope.GLOBALANDUSER.equals(scope)) {
+			List<TestCaseDocumentation> res = new ArrayList<TestCaseDocumentation>();
+			Long userId = SessionContext.getCurrentUserId(request.getSession(false));
+			if (userId != null) {
+				Account account = accountService.findOne(userId);
+				if (account != null) {
+					res = testCaseDocumentationService.generate(TestScope.USER, domain, account.getUsername());
+				}
+			}		
+			res.addAll(testCaseDocumentationService.generate(TestScope.GLOBAL, domain));
+			return res;
+		}  else {
 			return testCaseDocumentationService.generate(scope, domain);
-		}
+		} 
 		return null;
 	}
 
