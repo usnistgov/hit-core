@@ -22,14 +22,14 @@
 	<xsl:template match="report:HeaderReport">
 		<xsl:if test="$withHeader = boolean('true')">
 			<div class="report-section">
-				<table class="forumline title-background" width="100%"
-					cellspacing="1" cellpadding="10">
+				<table class="forumline" width="100%"
+					cellspacing="1" cellpadding="10" >
 					<tbody class="cf-tbody">
 						<tr>
-							<td class="row1 border_right">
-								<span class="submaintitle2">Message Validation Report</span>
+							<td class="row0 border_right" >
+								<span class="">Message Validation Report</span>
 							</td>
-							<td class="row2" style="font-weight:bold">
+							<td  style="font-weight:bold"  >
 								<center>
 									<xsl:call-template name="dateTransformer">
 										<xsl:with-param name="myDate" select="message:DateOfTest" />
@@ -47,8 +47,8 @@
 					cellpadding="2">
 					<tbody class="cf-tbody">
 						<tr>
-							<td class="row1 border_right">Validation Type</td>
-							<td class="row2">
+							<td class="row0 border_right">Validation Type</td>
+							<td  >
 								<center>
 									<xsl:value-of select="message:Type" />
 								</center>
@@ -62,15 +62,15 @@
 					cellpadding="2">
 					<tbody class="cf-tbody border_right">
 						<tr class="border_bottom">
-							<td class="row1 border_right" valign="top" rowspan="2">Testing
+							<td class="row0 border_right" valign="top" rowspan="2">Testing
 								Tool</td>
-							<td class="row2 border_right ">Name</td>
+							<td class="row20 border_right ">Name:</td>
 							<td class="row3 ">
 								<xsl:value-of select="message:ServiceName" />
 							</td>
 						</tr>
 						<tr class="border_bottom">
-							<td class="row2 border_right ">Validation Version</td>
+							<td class="row20 border_right ">Validation Version:</td>
 							<td class="row3 ">
 								<xsl:value-of select="message:ServiceVersion" />
 							</td>
@@ -177,10 +177,11 @@
 		</tbody>
 		<xsl:for-each select="current-group()">
 			<tbody class="border_bottom">
-				<xsl:attribute name="class">alternate<xsl:value-of
-					select="position() mod 2" /> border_bottom <xsl:value-of
-							select="$id" /></xsl:attribute>
+				
 				<tr class="border_bottom">
+					<xsl:attribute name="class">alternate<xsl:value-of
+						select="position() mod 2" /> border_bottom <xsl:value-of
+								select="$id" /></xsl:attribute>
 					<td class="row3 border_right border_bottom" rowspan="5"
 						style="width:20px;">
 						<xsl:value-of select="position()" />
@@ -191,12 +192,18 @@
 					</td>
 				</tr>
 				<tr class="border_bottom">
+					<xsl:attribute name="class">alternate<xsl:value-of
+					select="position() mod 2" /> border_bottom <xsl:value-of
+							select="$id" /></xsl:attribute>
 					<td class="row3 border_right">Description:</td>
 					<td class="row3 border_bottom" colspan="2">
 						<xsl:value-of select="report:Description" />
 					</td>
 				</tr>
 				<tr class="row3 border_bottom">
+					<xsl:attribute name="class">alternate<xsl:value-of
+					select="position() mod 2" /> border_bottom <xsl:value-of
+							select="$id" /></xsl:attribute>
 					<td rowspan="3" class="border_right border_bottom" style="width:100px;">
 						Location:</td>
 					<xsl:if test="report:Location/report:Line">
@@ -208,6 +215,9 @@
 				</tr>
 				<xsl:if test="report:Location/report:Column">
 					<tr class="row3 border_bottom">
+						<xsl:attribute name="class">alternate<xsl:value-of
+					select="position() mod 2" /> border_bottom <xsl:value-of
+							select="$id" /></xsl:attribute>
 						<td colspan="2" style="font-weight: bold">
 							Column:
 							<xsl:value-of select="report:Location/report:Column" />
@@ -216,6 +226,9 @@
 				</xsl:if>
 				<xsl:if test="report:Location/report:Path">
 					<tr class="row3 border_bottom">
+						<xsl:attribute name="class">alternate<xsl:value-of
+					select="position() mod 2" /> border_bottom <xsl:value-of
+							select="$id" /></xsl:attribute>
 						<td colspan="2" style="font-weight: bold;" class="border_bottom">
 							Path:
 							<xsl:value-of select="report:Location/report:Path" />
@@ -266,38 +279,38 @@
 				cellpadding="2">
 				<tbody>
 					<tr class="border_bottom">
-						<td class="row1 border_right" valign="top" rowspan="6">Profile</td>
-						<td class="row2 border_right dark-gray">Name</td>
+						<td class="row0 border_right" valign="top" rowspan="6">Profile</td>
+						<td class="row20 border_right dark-gray">Name:</td>
 						<td class="row3 ">
 							<xsl:value-of select="@Name" />
 						</td>
 					</tr>
 					<tr class="border_bottom">
-						<td class="row2 border_right dark-gray">Organization</td>
+						<td class="row20 border_right dark-gray">Organization:</td>
 						<td class="row3 ">
 							<xsl:value-of select="@Organization" />
 						</td>
 					</tr>
 					<tr class="border_bottom">
-						<td class="row2 border_right dark-gray">Type</td>
+						<td class="row20 border_right dark-gray">Type:</td>
 						<td class="row3">
 							<xsl:value-of select="@Type" />
 						</td>
 					</tr>
 					<tr class="border_bottom">
-						<td class="row2 border_right dark-gray">Profile Version</td>
+						<td class="row20 border_right dark-gray">Profile Version:</td>
 						<td class="row3 ">
 							<xsl:value-of select="@Version" />
 						</td>
 					</tr>
 					<tr class="border_bottom">
-						<td class="row2 border_right dark-gray">Profile Date</td>
+						<td class="row20 border_right dark-gray">Profile Date:</td>
 						<td class="row3 ">
 							<xsl:value-of select="@Date" />
 						</td>
 					</tr>
 					<tr class="border_bottom">
-						<td class="row2 border_right dark-gray">Standard</td>
+						<td class="row20 border_right dark-gray">Standard:</td>
 						<td class="row3 ">
 							<xsl:value-of select="@HL7Version" />
 						</td>
@@ -353,6 +366,7 @@
 								<xsl:for-each
 								select="tokenize(report:Er7MessageHexFormatted,'\n')">
 								<p style="text-align: left;font-family: monospace">
+								<xsl:variable name="segment"></xsl:variable>
 									<xsl:call-template name="segmentBreaker">
 										<xsl:with-param name="segment">
 											<xsl:value-of select="." />
@@ -457,10 +471,10 @@
 	<xsl:template name="segmentBreaker">
 		<xsl:param name="segment" />
 		<xsl:if test="string-length($segment) > 0">
-			<xsl:value-of select="substring($segment,1,90)" />
-			<br />
+			<xsl:value-of select="substring($segment,1,70)" />
+			<br/>
 			<xsl:variable name="segment">
-				<xsl:value-of select="substring($segment,91)" />
+				<xsl:value-of select="substring($segment,71)" />
 			</xsl:variable>
 			<xsl:call-template name="segmentBreaker">
 				<xsl:with-param name="segment" select="$segment" />

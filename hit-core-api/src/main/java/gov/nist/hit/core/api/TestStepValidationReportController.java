@@ -176,7 +176,7 @@ public class TestStepValidationReportController {
 				io = IOUtils.toInputStream(xmlReport, "UTF-8");
 				response.setContentType("application/xml");
 			} else if ("PDF".equalsIgnoreCase(format)) {
-				io = validationReportService.generatePdf(xmlReport);
+				io = validationReportService.generatePdf2(xmlReport);
 				response.setContentType("application/pdf");
 			} else {
 				throw new ValidationReportException("Unsupported report format " + format);
@@ -209,10 +209,11 @@ public class TestStepValidationReportController {
 				throw new TestStepException(testStepId);
 			}
 			TestStepValidationReport report = validationReportService
-					.findOneByTestStepAndUser(testStep.getPersistentId(), userId);
+					.findOneByTestStepAndUser(testStepId, userId);
 			UserTestStepReport userTestStepReport = new UserTestStepReport(report.getXml(), report.getHtml(),
 					testStep.getVersion(), user.getId(), testStep.getPersistentId(), report.getComments());
-			userTestStepReport = userTestStepReportService.save(userTestStepReport);
+						
+			userTestStepReportService.save(userTestStepReport);
 			return userTestStepReport;
 		} catch (UserNotFoundException e) {
 			e.printStackTrace();
@@ -249,7 +250,8 @@ public class TestStepValidationReportController {
 			report.setComments(comments);
 			report.setTestStepId(testStepId);
 			report.setResult(StringUtils.isNotEmpty(result) && result != null ? TestResult.valueOf(result) : null);
-			validationReportService.save(report);
+			//Already saved at validation?  this updates the validation result 
+			TestStepValidationReport vr = validationReportService.save(report);
 			String tmpXml = generateXml(report, testStep.getStage(), testStep);
 			report.setHtml(validationReportService.generateHtml(tmpXml));
 			report.setXml(null);

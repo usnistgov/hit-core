@@ -48,5 +48,9 @@ public class Constant {
 
   public static final String DOMAIN_MANAGEMENT_SUPPORTED = "DOMAIN_MANAGEMENT_SUPPORTED";
 
-
+  public static final String TOOL_SCOPE_SELECTON_DISPLAYED = "TOOL_SCOPE_SELECTON_DISPLAYED";
+  
+  public static final String USER_LOGIN_SUPPORTED = "USER_LOGIN_SUPPORTED";
+  
+  public static final String REPORT_SAVING_SUPPORTED = "REPORT_SAVING_SUPPORTED";
 }

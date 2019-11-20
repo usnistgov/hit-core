@@ -99,7 +99,7 @@ public class MessageValidationReportController {
 				io = IOUtils.toInputStream(xmlReport, "UTF-8");
 				response.setContentType("application/xml");
 			} else if ("PDF".equalsIgnoreCase(format)) {
-				io = validationReportService.generatePdf(xmlReport);
+				io = validationReportService.generatePdf2(xmlReport);
 				response.setContentType("application/pdf");
 			} else {
 				throw new ValidationReportException("Unsupported report format " + format);

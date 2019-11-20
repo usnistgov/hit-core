@@ -35,4 +35,7 @@ public interface MessageValidationReportService {
   InputStream generatePdf(String xml) throws ValidationReportException;
 
 
+InputStream generatePdf2(String xml) throws ValidationReportException;
+
+
 }

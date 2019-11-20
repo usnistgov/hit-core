@@ -2,6 +2,7 @@ package gov.nist.auth.hit.core.domain;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * This software was developed at the National Institute of Standards and Technology by employees of
@@ -28,6 +29,8 @@ public class UserTestCaseReport {
     private Long testCasePersistentId;
     @Column(columnDefinition = "LONGTEXT")
     private String xml;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date creationDate;
 
     public Double getVersion() {
         return version;
@@ -36,6 +39,7 @@ public class UserTestCaseReport {
     public void setVersion(Double version) {
         this.version = version;
     }
+    
 
     /*public ArrayList<UserTestStepReport> getUserTestStepReports() {
         return userTestStepReports;
@@ -52,7 +56,19 @@ public class UserTestCaseReport {
         this.userTestStepReports = userTestStepReports;
     }*/
 
-    public Long getAccountId() {
+    public UserTestCaseReport(Long id, Double version, Long accountId, Long testCasePersistentId, String xml) {
+		this.id = id;
+		this.version = version;
+		this.accountId = accountId;
+		this.testCasePersistentId = testCasePersistentId;
+		this.xml = xml;
+	}
+    
+    public UserTestCaseReport() {
+        this.creationDate = new Date();
+	}
+        
+	public Long getAccountId() {
         return accountId;
     }
 

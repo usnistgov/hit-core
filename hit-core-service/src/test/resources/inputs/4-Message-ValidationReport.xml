@@ -1,0 +1,1515 @@
+<ns6:HL7V2MessageValidationReport xmlns:ns6="http://www.nist.gov/healthcare/validation/message/hl7/v2/report" xmlns:ns2="http://www.nist.gov/healthcare/validation/message/hl7/v2/context" xmlns:ns3="http://www.nist.gov/healthcare/message" xmlns:ns4="http://www.nist.gov/healthcare/validation" xmlns:ns5="http://www.nist.gov/healthcare/profile" xmlns:ns7="http://www.nist.gov/healthcare/validation/message">
+    <ns6:HeaderReport Result="Passed">
+        <ns7:ServiceName>NIST Validation Tool</ns7:ServiceName>
+        <ns7:ServiceProvider></ns7:ServiceProvider>
+        <ns7:ServiceVersion>1.1.18</ns7:ServiceVersion>
+        <ns7:StandardType>HL7 V2</ns7:StandardType>
+        <ns7:ValidationType>Automated</ns7:ValidationType>
+        <ns7:Type>Context-Free</ns7:Type>
+        <ns7:DateOfTest>2019-11-14-05:00</ns7:DateOfTest>
+        <ns7:TimeOfTest>13:27:14.193-05:00</ns7:TimeOfTest>
+        <ns7:PositiveAssertionIndicator>false</ns7:PositiveAssertionIndicator>
+        <ns7:AffirmCount>160</ns7:AffirmCount>
+        <ns7:ErrorCount>0</ns7:ErrorCount>
+        <ns7:WarningCount>7</ns7:WarningCount>
+        <ns7:InfoCount>0</ns7:InfoCount>
+        <ns7:AlertCount>13</ns7:AlertCount>
+    </ns6:HeaderReport>
+    <ns6:SpecificReport>
+        <ns6:MetaData>
+            <ns6:Profile Organization="NIST" Version="1.0.2" MessageType="ADT^A01^ADT_A01" />
+            <ns6:Message Encoding="ER7" Transformed="false">
+                <ns6:Er7Message>MSH|^~\&amp;||MountainviewGeneral^1231231236^NPI|||201508180100||ADT^A01^ADT_A01|NIST-SS-003.41|P|2.5.1|||NE||||||PH_SS-NoAck^SS Sender^2.16.840.1.114222.4.10.3^ISO
+EVN||201508180100|||||MountainviewGeneral^1231231236^NPI
+PID|1||3333^^^MountainviewGeneral&amp;1231231236&amp;NPI^MR||^^^^^^~^^^^^^U|||M||2106-3^White^CDCREC|^^Columbus^39^43058^USA^^^39049|||||||||||2135-2^Hispanic or Latino^CDCREC
+PV1|1|I||U|||||||||||||||3333_001^^^MountainviewGeneral&amp;1231231236&amp;NPI^VN|||||||||||||||||||||||||201508170700
+PV2|||I25110^Atherosclerotic heart disease of native coronary artery with unstable angina pectoris^I10C|
+OBX|1|HD|SS001^TREATING FACILITY IDENTIFIER^PHINQUESTION||MountainviewGeneral^1231231236^NPI||||||F|||201508170700
+OBX|2|CWE|56816-2^PATIENT LOCATION^LN||1028-0^Medical cardiac critical care unit^HSLOC||||||F|||201508171400
+OBX|3|NM|21612-7^Age at Time Patient Reported^LN||51|a^year^UCUM|||||F
+OBX|4|NM|8302-2^Height^LN||72|[in_us]^inch^UCUM|||||F
+OBX|5|NM|3141-9^Weight^LN||235|[lb_av]^pound^UCUM|||||F
+OBX|6|CWE|72166-2^Tobacco Smoking Status^LN||428061000124105^Current Light tobacco smoker^SCT||||||F
+DG1|1||I209^Angina pectoris, unspecified^I10C|||W</ns6:Er7Message>
+            </ns6:Message>
+            <ns6:Context>
+                <ns2:FailureInterpretation>
+                    <ns2:MessageFailure Result="WARNING" Type="RE_USAGE" />
+                    <ns2:MessageFailure Result="ERROR" Type="CONSTRAINT_FAILURE" />
+                    <ns2:MessageFailure Result="ERROR" Type="CODED_ELEMENT" />
+                    <ns2:MessageFailure Result="AFFIRMATIVE" Type="CONTENT_SPEC_ERROR" />
+                    <ns2:MessageFailure Result="ERROR" Type="INVALID_CONTENT" />
+                    <ns2:MessageFailure Result="AFFIRMATIVE" Type="CONTENT_SUCCESS" />
+                    <ns2:MessageFailure Result="AFFIRMATIVE" Type="BINDING_LOCATION" />
+                    <ns2:MessageFailure Result="AFFIRMATIVE" Type="COCONSTRAINT_SUCCESS" />
+                    <ns2:MessageFailure Result="ERROR" Type="X_USAGE" />
+                    <ns2:MessageFailure Result="ERROR" Type="UNRESOLVED_FIELD_MODEL" />
+                    <ns2:MessageFailure Result="ERROR" Type="W_USAGE" />
+                    <ns2:MessageFailure Result="AFFIRMATIVE" Type="CONSTRAINT_SUCCESS" />
+                    <ns2:MessageFailure Result="ALERT" Type="LENGTH_SPEC_ERROR" />
+                    <ns2:MessageFailure Result="AFFIRMATIVE" Type="CONSTRAINT_SPEC_ERROR" />
+                    <ns2:MessageFailure Result="ERROR" Type="COCONSTRAINT_FAILURE" />
+                    <ns2:MessageFailure Result="AFFIRMATIVE" Type="PREDICATE_SPEC_ERROR" />
+                    <ns2:MessageFailure Result="ALERT" Type="VALUE_SET" />
+                    <ns2:MessageFailure Result="WARNING" Type="VALUE_SET" />
+                    <ns2:MessageFailure Result="ERROR" Type="VALUE_SET" />
+                    <ns2:MessageFailure Result="ERROR" Type="EXTRA" />
+                    <ns2:MessageFailure Result="AFFIRMATIVE" Type="PREDICATE_SUCCESS" />
+                    <ns2:MessageFailure Result="ERROR" Type="LENGTH" />
+                    <ns2:MessageFailure Result="ERROR" Type="PREDICATE" />
+                    <ns2:MessageFailure Result="ERROR" Type="R_USAGE" />
+                    <ns2:MessageFailure Result="ERROR" Type="UNEXPECTED" />
+                    <ns2:MessageFailure Result="ERROR" Type="HIGH_LEVEL_CONTENT_ERROR" />
+                    <ns2:MessageFailure Result="ERROR" Type="FORMAT" />
+                    <ns2:MessageFailure Result="ERROR" Type="CONTENT_FAILURE" />
+                    <ns2:MessageFailure Result="ERROR" Type="UNESCAPED_SEPARATOR" />
+                    <ns2:MessageFailure Result="ERROR" Type="CONFORMANCE_STATEMENT" />
+                    <ns2:MessageFailure Result="ERROR" Type="CARDINALITY" />
+                    <ns2:MessageFailure Result="ALERT" Type="O_USAGE" />
+                </ns2:FailureInterpretation>
+            </ns6:Context>
+        </ns6:MetaData>
+        <ns6:AssertionList>
+            <ns6:Assertion Type="RE_USAGE" Result="warning">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>40</ns6:Column>
+                    <ns6:Path>OBX[2]-5[1].9</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Component OBX-5.9 (Original Text) is missing. Depending on the use case and data availability it may be appropriate to value this element.(Usage is RE, Required, but may be Empty)</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="RE_USAGE" Result="warning">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>40</ns6:Column>
+                    <ns6:Path>OBX[2]-5[1].5</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Component OBX-5.5 (Alternate Text) is missing. Depending on the use case and data availability it may be appropriate to value this element.(Usage is RE, Required, but may be Empty)</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="RE_USAGE" Result="warning">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>40</ns6:Column>
+                    <ns6:Path>OBX[2]-5[1].4</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Component OBX-5.4 (Alternate Identifier) is missing. Depending on the use case and data availability it may be appropriate to value this element.(Usage is RE, Required, but may be Empty)</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="RE_USAGE" Result="warning">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>46</ns6:Column>
+                    <ns6:Path>OBX[6]-5[1].9</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Component OBX-5.9 (Original Text) is missing. Depending on the use case and data availability it may be appropriate to value this element.(Usage is RE, Required, but may be Empty)</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="RE_USAGE" Result="warning">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>46</ns6:Column>
+                    <ns6:Path>OBX[6]-5[1].5</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Component OBX-5.5 (Alternate Text) is missing. Depending on the use case and data availability it may be appropriate to value this element.(Usage is RE, Required, but may be Empty)</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="RE_USAGE" Result="warning">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>46</ns6:Column>
+                    <ns6:Path>OBX[6]-5[1].4</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Component OBX-5.4 (Alternate Identifier) is missing. Depending on the use case and data availability it may be appropriate to value this element.(Usage is RE, Required, but may be Empty)</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="RE_USAGE" Result="warning">
+                <ns6:Location>
+                    <ns6:Line>1</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>MSH[1]-16[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Field MSH-16 (Application Acknowledgment Type) is missing. Depending on the use case and data availability it may be appropriate to value this element.(Usage is RE, Required, but may be Empty)</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>3</ns6:Line>
+                    <ns6:Column>74</ns6:Column>
+                    <ns6:Path>PID[1]-10[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If CE.4 (Alternate Identifier) is valued. </ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>3</ns6:Line>
+                    <ns6:Column>74</ns6:Column>
+                    <ns6:Path>PID[1]-10[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 3[1] description: If CE.1 (Identifier) is valued.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>3</ns6:Line>
+                    <ns6:Column>136</ns6:Column>
+                    <ns6:Path>PID[1]-22[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If CE.4 (Alternate Identifier) is valued. </ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>3</ns6:Line>
+                    <ns6:Column>136</ns6:Column>
+                    <ns6:Path>PID[1]-22[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 3[1] description: If CE.1 (Identifier) is valued.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>5</ns6:Line>
+                    <ns6:Column>7</ns6:Column>
+                    <ns6:Path>PV2[1]-3[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If CE.4 (Alternate Identifier) is valued. </ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>5</ns6:Line>
+                    <ns6:Column>7</ns6:Column>
+                    <ns6:Path>PV2[1]-3[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 3[1] description: If CE.1 (Identifier) is valued.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If OBX.2 (Value Type) is valued "NM".</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/O) target: 5[1].1[1] description: If OBX-2 = "XAD" and OBX-3="SS002".</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>10</ns6:Column>
+                    <ns6:Path>OBX[1]-3[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If CE.4 (Alternate Identifier) is valued. </ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>10</ns6:Column>
+                    <ns6:Path>OBX[1]-3[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 3[1] description: If CE.1 (Identifier) is valued.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If OBX.2 (Value Type) is valued "NM".</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/O) target: 5[1].1[1] description: If OBX-2 = "XAD" and OBX-3="SS002".</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>11</ns6:Column>
+                    <ns6:Path>OBX[2]-3[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If CE.4 (Alternate Identifier) is valued. </ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>11</ns6:Column>
+                    <ns6:Path>OBX[2]-3[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 3[1] description: If CE.1 (Identifier) is valued.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>40</ns6:Column>
+                    <ns6:Path>OBX[2]-5[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If CWE.4 (Identifier) is valued.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If OBX.2 (Value Type) is valued "NM".</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/O) target: 5[1].1[1] description: If OBX-2 = "XAD" and OBX-3="SS002".</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>10</ns6:Column>
+                    <ns6:Path>OBX[3]-3[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If CE.4 (Alternate Identifier) is valued. </ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>10</ns6:Column>
+                    <ns6:Path>OBX[3]-3[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 3[1] description: If CE.1 (Identifier) is valued.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>54</ns6:Column>
+                    <ns6:Path>OBX[3]-6[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If CE.4 (Alternate Identifier) is valued. </ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>54</ns6:Column>
+                    <ns6:Path>OBX[3]-6[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 3[1] description: If CE.1 (Identifier) is valued.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If OBX.2 (Value Type) is valued "NM".</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/O) target: 5[1].1[1] description: If OBX-2 = "XAD" and OBX-3="SS002".</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>10</ns6:Column>
+                    <ns6:Path>OBX[4]-3[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If CE.4 (Alternate Identifier) is valued. </ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>10</ns6:Column>
+                    <ns6:Path>OBX[4]-3[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 3[1] description: If CE.1 (Identifier) is valued.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>31</ns6:Column>
+                    <ns6:Path>OBX[4]-6[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If CE.4 (Alternate Identifier) is valued. </ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>31</ns6:Column>
+                    <ns6:Path>OBX[4]-6[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 3[1] description: If CE.1 (Identifier) is valued.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If OBX.2 (Value Type) is valued "NM".</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/O) target: 5[1].1[1] description: If OBX-2 = "XAD" and OBX-3="SS002".</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>10</ns6:Column>
+                    <ns6:Path>OBX[5]-3[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If CE.4 (Alternate Identifier) is valued. </ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>10</ns6:Column>
+                    <ns6:Path>OBX[5]-3[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 3[1] description: If CE.1 (Identifier) is valued.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>32</ns6:Column>
+                    <ns6:Path>OBX[5]-6[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If CE.4 (Alternate Identifier) is valued. </ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>32</ns6:Column>
+                    <ns6:Path>OBX[5]-6[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 3[1] description: If CE.1 (Identifier) is valued.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If OBX.2 (Value Type) is valued "NM".</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/O) target: 5[1].1[1] description: If OBX-2 = "XAD" and OBX-3="SS002".</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>11</ns6:Column>
+                    <ns6:Path>OBX[6]-3[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If CE.4 (Alternate Identifier) is valued. </ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>11</ns6:Column>
+                    <ns6:Path>OBX[6]-3[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 3[1] description: If CE.1 (Identifier) is valued.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="PREDICATE_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>46</ns6:Column>
+                    <ns6:Path>OBX[6]-5[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Predicate C(R/X) target: 6[1] description: If CWE.4 (Identifier) is valued.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>1</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>ADT_A01[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-037 - If PV1-36 (Discharge Disposition) is valued with any of the following: '20', '40', '41', '42' then PID-30 (Patient Death Indicator) SHALL be valued to the Literal Value 'Y'. </ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>1</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>ADT_A01[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-017-ack - An instance of MSH.21 (Message Profile Identifier) SHALL contain the constant value: PH_SS-Ack^SS Sender^2.16.840.1.114222.4.10.3^ISO</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>1</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>MSH[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-043 - MSH-1 (Field Separator) SHALL be literal '|' (ASCII 124).</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>1</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>MSH[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-044 - MSH-2 (Encoding Characters) SHALL be literal value '^~\&amp;' (ASCII 94, 126, 92, and 38 respectively).</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>1</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>MSH[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-013 - MSH-7.1 (Date/Time of Message.Time) SHALL be expressed with a minimum precision of the nearest minute and be represented in the following format: 'YYYYMMDDHHMM[SS[.S[S[S[S]]]]] [+/-ZZZZ]'</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>1</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>MSH[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-015 - MSH-11.1 (Processing ID.Processing ID) SHALL have a value in the set of literal values: "P" for Production, "D" for Debug or "T" for Training.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>1</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>MSH[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-016 - MSH-12.1 (Version ID.Version ID) SHALL have a value '2.5.1'</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>1</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>MSH[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-014 - MSH-9 (Message Type) SHALL be the literal value: 'ADT^A01^ADT_A01' for Admission Messages</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>1</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>MSH[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-002 - MSH-15 (Accept Acknowledgment Type) SHALL be the literal value: 'NE'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>2</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>EVN[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-018 - EVN-2.1 (Recorded Date/Time of Message.Time) SHALL be expressed with a minimum precision of the nearest minute, and be represented in the following format: 'YYYYMMDDHHMM[SS[.S[S[S[S]]]]] [+/- ZZZZ]'</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>3</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>PID[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-019 - PID-1 (Set ID - PID) SHALL be valued with the constant value '1'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>3</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>PID[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-023 - PID-5 (Patient Name) SHALL be valued as |~^^^^^^S| or |~^^^^^^U|). </ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>3</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>PID[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-036 - If valued, PID-29 (Patient Death and Time), SHALL be expressed with a minimum precision of the nearest minute and be represented in the following format:'YYYYMMDDHHMM[SS[.S[S[S[S]]]]][+/- ZZZZ]'</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>4</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>PV1[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-024 - PV1-1 (Set ID) SHALL be valued with the constant value '1'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>4</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>PV1[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-010 - PV1-44.1 (Admit Date/Time.Time) SHALL be expressed with a minimum precision of the nearest minute and be represented in the following format: 'YYYYMMDDHHMM[SS[.S[S[S[S]]]]] [+/-ZZZZ]'</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>4</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>PV1[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-045 - PV1-45.1 (Discharge Date/Time.Time) SHALL be expressed with a minimum precision of the nearest minute and be represented in the following format: 'YYYYMMDDHHMM[SS[.S[S[S[S]]]]] [+/-ZZZZ]'</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>5</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>PV2[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-009 - PV2-3.3 SHALL be valued "I9CDX" or "I10C" or "SCT".</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-027 - OBX-1(SetID) for the first instance of an OBX Segment SHALL have the Literal Value of '1'. Each following occurrence SHALL be numbered consecutively.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-012 - If OBX 3.1 (Observation Identifier) is valued with SS002 TREATING FACILITY LOCATION (PHINQUESTION), then OBX-2 (Value Type) SHALL be valued 'XAD'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-014 - If OBX 3.1 (Observation Identifier) is valued with SS003 FACILITY/VISIT TYPE (PHINQUESTION), then OBX-2 (Value Type) SHALL be valued 'CWE'</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-015 - If OBX 3.1 (Observation Identifier) is valued with SS003 FACILITY/VISIT TYPE (PHINQUESTION), then OBX-5 (Observation Value) SHALL be valued to a member of the set: PHVS_FacilityVisitType_SyndromicSurveillance</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-016 - If OBX 3.1 (Observation Identifier) is valued with 21612-7 AGE – REPORTED (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-029 - If OBX 3.1 (Observation Identifier) is valued with 21612-7 AGE-REPORTED (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_AgeUnit_SyndromicSurveillance</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-011 - If OBX 3.1 (Observation Identifier) is valued with 8661-1 CHIEF COMPLAINT-REPORTED (LOINC), then OBX-2 (Value Type) SHALL be valued 'TX'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-017 - If OBX 3.1 (Observation Identifier) is valued with 56816-2 PATIENT LOCATION (LOINC), then OBX-2 (Value Type) SHALL be valued 'CWE'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-018 - If OBX 3.1 (Observation Identifier) is valued with 56816-2 PATIENT LOCATION (LOINC), then OBX-5 (Observation Value) SHALL be valued to a member of the set: NHSNHealthcareServiceLocationCode</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-019 - If OBX 3.1 (Observation Identifier) is valued with 8302-2 BODY HEIGHT (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-020 - If OBX 3.1 (Observation Identifier) is valued with 8302-2 BODY HEIGHT (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_HeightUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-021 - If OBX 3.1 (Observation Identifier) is valued with 3141-9 BODY WEIGHT MEASURED (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-022 - If OBX 3.1 (Observation Identifier) is valued with 3141-9 BODY WEIGHT MEASURED (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_WeightUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-023 - If OBX 3.1 (Observation Identifier) is valued with 72166-2 TOBACCO SMOKING STATUS (LOINC), then OBX-2 (Value Type) SHALL be valued 'CWE'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-024 - If OBX 3.1 (Observation Identifier) is valued with 72166-2 TOBACCO SMOKING STATUS (LOINC), then OBX-5 (Observation Value) SHALL be valued to a member of the set: PHVS_SmokingStatus_MU</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-030 - If OBX 3.1 (Observation Identifier) is valued with 11289-6 BODY TEMPERATURE, INITIAL (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_TemperatureUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-031 - If OBX 3.1 (Observation Identifier) is valued with 59408-5 OXYGEN SATURATION IN ARTERIAL BLOOD BY PULSE OXIMETRY (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_TemperatureUnit_UCUM.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-027 - OBX-1(SetID) for the first instance of an OBX Segment SHALL have the Literal Value of '1'. Each following occurrence SHALL be numbered consecutively.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-012 - If OBX 3.1 (Observation Identifier) is valued with SS002 TREATING FACILITY LOCATION (PHINQUESTION), then OBX-2 (Value Type) SHALL be valued 'XAD'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-014 - If OBX 3.1 (Observation Identifier) is valued with SS003 FACILITY/VISIT TYPE (PHINQUESTION), then OBX-2 (Value Type) SHALL be valued 'CWE'</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-015 - If OBX 3.1 (Observation Identifier) is valued with SS003 FACILITY/VISIT TYPE (PHINQUESTION), then OBX-5 (Observation Value) SHALL be valued to a member of the set: PHVS_FacilityVisitType_SyndromicSurveillance</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-016 - If OBX 3.1 (Observation Identifier) is valued with 21612-7 AGE – REPORTED (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-029 - If OBX 3.1 (Observation Identifier) is valued with 21612-7 AGE-REPORTED (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_AgeUnit_SyndromicSurveillance</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-011 - If OBX 3.1 (Observation Identifier) is valued with 8661-1 CHIEF COMPLAINT-REPORTED (LOINC), then OBX-2 (Value Type) SHALL be valued 'TX'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-017 - If OBX 3.1 (Observation Identifier) is valued with 56816-2 PATIENT LOCATION (LOINC), then OBX-2 (Value Type) SHALL be valued 'CWE'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-018 - If OBX 3.1 (Observation Identifier) is valued with 56816-2 PATIENT LOCATION (LOINC), then OBX-5 (Observation Value) SHALL be valued to a member of the set: NHSNHealthcareServiceLocationCode</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-019 - If OBX 3.1 (Observation Identifier) is valued with 8302-2 BODY HEIGHT (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-020 - If OBX 3.1 (Observation Identifier) is valued with 8302-2 BODY HEIGHT (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_HeightUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-021 - If OBX 3.1 (Observation Identifier) is valued with 3141-9 BODY WEIGHT MEASURED (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-022 - If OBX 3.1 (Observation Identifier) is valued with 3141-9 BODY WEIGHT MEASURED (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_WeightUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-023 - If OBX 3.1 (Observation Identifier) is valued with 72166-2 TOBACCO SMOKING STATUS (LOINC), then OBX-2 (Value Type) SHALL be valued 'CWE'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-024 - If OBX 3.1 (Observation Identifier) is valued with 72166-2 TOBACCO SMOKING STATUS (LOINC), then OBX-5 (Observation Value) SHALL be valued to a member of the set: PHVS_SmokingStatus_MU</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-030 - If OBX 3.1 (Observation Identifier) is valued with 11289-6 BODY TEMPERATURE, INITIAL (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_TemperatureUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>7</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[2]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-031 - If OBX 3.1 (Observation Identifier) is valued with 59408-5 OXYGEN SATURATION IN ARTERIAL BLOOD BY PULSE OXIMETRY (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_TemperatureUnit_UCUM.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-027 - OBX-1(SetID) for the first instance of an OBX Segment SHALL have the Literal Value of '1'. Each following occurrence SHALL be numbered consecutively.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-012 - If OBX 3.1 (Observation Identifier) is valued with SS002 TREATING FACILITY LOCATION (PHINQUESTION), then OBX-2 (Value Type) SHALL be valued 'XAD'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-014 - If OBX 3.1 (Observation Identifier) is valued with SS003 FACILITY/VISIT TYPE (PHINQUESTION), then OBX-2 (Value Type) SHALL be valued 'CWE'</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-015 - If OBX 3.1 (Observation Identifier) is valued with SS003 FACILITY/VISIT TYPE (PHINQUESTION), then OBX-5 (Observation Value) SHALL be valued to a member of the set: PHVS_FacilityVisitType_SyndromicSurveillance</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-016 - If OBX 3.1 (Observation Identifier) is valued with 21612-7 AGE – REPORTED (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-029 - If OBX 3.1 (Observation Identifier) is valued with 21612-7 AGE-REPORTED (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_AgeUnit_SyndromicSurveillance</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-011 - If OBX 3.1 (Observation Identifier) is valued with 8661-1 CHIEF COMPLAINT-REPORTED (LOINC), then OBX-2 (Value Type) SHALL be valued 'TX'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-017 - If OBX 3.1 (Observation Identifier) is valued with 56816-2 PATIENT LOCATION (LOINC), then OBX-2 (Value Type) SHALL be valued 'CWE'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-018 - If OBX 3.1 (Observation Identifier) is valued with 56816-2 PATIENT LOCATION (LOINC), then OBX-5 (Observation Value) SHALL be valued to a member of the set: NHSNHealthcareServiceLocationCode</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-019 - If OBX 3.1 (Observation Identifier) is valued with 8302-2 BODY HEIGHT (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-020 - If OBX 3.1 (Observation Identifier) is valued with 8302-2 BODY HEIGHT (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_HeightUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-021 - If OBX 3.1 (Observation Identifier) is valued with 3141-9 BODY WEIGHT MEASURED (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-022 - If OBX 3.1 (Observation Identifier) is valued with 3141-9 BODY WEIGHT MEASURED (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_WeightUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-023 - If OBX 3.1 (Observation Identifier) is valued with 72166-2 TOBACCO SMOKING STATUS (LOINC), then OBX-2 (Value Type) SHALL be valued 'CWE'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-024 - If OBX 3.1 (Observation Identifier) is valued with 72166-2 TOBACCO SMOKING STATUS (LOINC), then OBX-5 (Observation Value) SHALL be valued to a member of the set: PHVS_SmokingStatus_MU</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-030 - If OBX 3.1 (Observation Identifier) is valued with 11289-6 BODY TEMPERATURE, INITIAL (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_TemperatureUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>8</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[3]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-031 - If OBX 3.1 (Observation Identifier) is valued with 59408-5 OXYGEN SATURATION IN ARTERIAL BLOOD BY PULSE OXIMETRY (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_TemperatureUnit_UCUM.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-027 - OBX-1(SetID) for the first instance of an OBX Segment SHALL have the Literal Value of '1'. Each following occurrence SHALL be numbered consecutively.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-012 - If OBX 3.1 (Observation Identifier) is valued with SS002 TREATING FACILITY LOCATION (PHINQUESTION), then OBX-2 (Value Type) SHALL be valued 'XAD'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-014 - If OBX 3.1 (Observation Identifier) is valued with SS003 FACILITY/VISIT TYPE (PHINQUESTION), then OBX-2 (Value Type) SHALL be valued 'CWE'</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-015 - If OBX 3.1 (Observation Identifier) is valued with SS003 FACILITY/VISIT TYPE (PHINQUESTION), then OBX-5 (Observation Value) SHALL be valued to a member of the set: PHVS_FacilityVisitType_SyndromicSurveillance</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-016 - If OBX 3.1 (Observation Identifier) is valued with 21612-7 AGE – REPORTED (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-029 - If OBX 3.1 (Observation Identifier) is valued with 21612-7 AGE-REPORTED (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_AgeUnit_SyndromicSurveillance</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-011 - If OBX 3.1 (Observation Identifier) is valued with 8661-1 CHIEF COMPLAINT-REPORTED (LOINC), then OBX-2 (Value Type) SHALL be valued 'TX'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-017 - If OBX 3.1 (Observation Identifier) is valued with 56816-2 PATIENT LOCATION (LOINC), then OBX-2 (Value Type) SHALL be valued 'CWE'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-018 - If OBX 3.1 (Observation Identifier) is valued with 56816-2 PATIENT LOCATION (LOINC), then OBX-5 (Observation Value) SHALL be valued to a member of the set: NHSNHealthcareServiceLocationCode</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-019 - If OBX 3.1 (Observation Identifier) is valued with 8302-2 BODY HEIGHT (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-020 - If OBX 3.1 (Observation Identifier) is valued with 8302-2 BODY HEIGHT (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_HeightUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-021 - If OBX 3.1 (Observation Identifier) is valued with 3141-9 BODY WEIGHT MEASURED (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-022 - If OBX 3.1 (Observation Identifier) is valued with 3141-9 BODY WEIGHT MEASURED (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_WeightUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-023 - If OBX 3.1 (Observation Identifier) is valued with 72166-2 TOBACCO SMOKING STATUS (LOINC), then OBX-2 (Value Type) SHALL be valued 'CWE'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-024 - If OBX 3.1 (Observation Identifier) is valued with 72166-2 TOBACCO SMOKING STATUS (LOINC), then OBX-5 (Observation Value) SHALL be valued to a member of the set: PHVS_SmokingStatus_MU</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-030 - If OBX 3.1 (Observation Identifier) is valued with 11289-6 BODY TEMPERATURE, INITIAL (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_TemperatureUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>9</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[4]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-031 - If OBX 3.1 (Observation Identifier) is valued with 59408-5 OXYGEN SATURATION IN ARTERIAL BLOOD BY PULSE OXIMETRY (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_TemperatureUnit_UCUM.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-027 - OBX-1(SetID) for the first instance of an OBX Segment SHALL have the Literal Value of '1'. Each following occurrence SHALL be numbered consecutively.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-012 - If OBX 3.1 (Observation Identifier) is valued with SS002 TREATING FACILITY LOCATION (PHINQUESTION), then OBX-2 (Value Type) SHALL be valued 'XAD'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-014 - If OBX 3.1 (Observation Identifier) is valued with SS003 FACILITY/VISIT TYPE (PHINQUESTION), then OBX-2 (Value Type) SHALL be valued 'CWE'</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-015 - If OBX 3.1 (Observation Identifier) is valued with SS003 FACILITY/VISIT TYPE (PHINQUESTION), then OBX-5 (Observation Value) SHALL be valued to a member of the set: PHVS_FacilityVisitType_SyndromicSurveillance</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-016 - If OBX 3.1 (Observation Identifier) is valued with 21612-7 AGE – REPORTED (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-029 - If OBX 3.1 (Observation Identifier) is valued with 21612-7 AGE-REPORTED (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_AgeUnit_SyndromicSurveillance</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-011 - If OBX 3.1 (Observation Identifier) is valued with 8661-1 CHIEF COMPLAINT-REPORTED (LOINC), then OBX-2 (Value Type) SHALL be valued 'TX'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-017 - If OBX 3.1 (Observation Identifier) is valued with 56816-2 PATIENT LOCATION (LOINC), then OBX-2 (Value Type) SHALL be valued 'CWE'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-018 - If OBX 3.1 (Observation Identifier) is valued with 56816-2 PATIENT LOCATION (LOINC), then OBX-5 (Observation Value) SHALL be valued to a member of the set: NHSNHealthcareServiceLocationCode</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-019 - If OBX 3.1 (Observation Identifier) is valued with 8302-2 BODY HEIGHT (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-020 - If OBX 3.1 (Observation Identifier) is valued with 8302-2 BODY HEIGHT (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_HeightUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-021 - If OBX 3.1 (Observation Identifier) is valued with 3141-9 BODY WEIGHT MEASURED (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-022 - If OBX 3.1 (Observation Identifier) is valued with 3141-9 BODY WEIGHT MEASURED (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_WeightUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-023 - If OBX 3.1 (Observation Identifier) is valued with 72166-2 TOBACCO SMOKING STATUS (LOINC), then OBX-2 (Value Type) SHALL be valued 'CWE'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-024 - If OBX 3.1 (Observation Identifier) is valued with 72166-2 TOBACCO SMOKING STATUS (LOINC), then OBX-5 (Observation Value) SHALL be valued to a member of the set: PHVS_SmokingStatus_MU</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-030 - If OBX 3.1 (Observation Identifier) is valued with 11289-6 BODY TEMPERATURE, INITIAL (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_TemperatureUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>10</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[5]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-031 - If OBX 3.1 (Observation Identifier) is valued with 59408-5 OXYGEN SATURATION IN ARTERIAL BLOOD BY PULSE OXIMETRY (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_TemperatureUnit_UCUM.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-027 - OBX-1(SetID) for the first instance of an OBX Segment SHALL have the Literal Value of '1'. Each following occurrence SHALL be numbered consecutively.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-012 - If OBX 3.1 (Observation Identifier) is valued with SS002 TREATING FACILITY LOCATION (PHINQUESTION), then OBX-2 (Value Type) SHALL be valued 'XAD'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-014 - If OBX 3.1 (Observation Identifier) is valued with SS003 FACILITY/VISIT TYPE (PHINQUESTION), then OBX-2 (Value Type) SHALL be valued 'CWE'</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-015 - If OBX 3.1 (Observation Identifier) is valued with SS003 FACILITY/VISIT TYPE (PHINQUESTION), then OBX-5 (Observation Value) SHALL be valued to a member of the set: PHVS_FacilityVisitType_SyndromicSurveillance</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-016 - If OBX 3.1 (Observation Identifier) is valued with 21612-7 AGE – REPORTED (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-029 - If OBX 3.1 (Observation Identifier) is valued with 21612-7 AGE-REPORTED (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_AgeUnit_SyndromicSurveillance</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-011 - If OBX 3.1 (Observation Identifier) is valued with 8661-1 CHIEF COMPLAINT-REPORTED (LOINC), then OBX-2 (Value Type) SHALL be valued 'TX'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-017 - If OBX 3.1 (Observation Identifier) is valued with 56816-2 PATIENT LOCATION (LOINC), then OBX-2 (Value Type) SHALL be valued 'CWE'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-018 - If OBX 3.1 (Observation Identifier) is valued with 56816-2 PATIENT LOCATION (LOINC), then OBX-5 (Observation Value) SHALL be valued to a member of the set: NHSNHealthcareServiceLocationCode</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-019 - If OBX 3.1 (Observation Identifier) is valued with 8302-2 BODY HEIGHT (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-020 - If OBX 3.1 (Observation Identifier) is valued with 8302-2 BODY HEIGHT (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_HeightUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-021 - If OBX 3.1 (Observation Identifier) is valued with 3141-9 BODY WEIGHT MEASURED (LOINC), then OBX-2 (Value Type) SHALL be valued 'NM'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-022 - If OBX 3.1 (Observation Identifier) is valued with 3141-9 BODY WEIGHT MEASURED (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_WeightUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-023 - If OBX 3.1 (Observation Identifier) is valued with 72166-2 TOBACCO SMOKING STATUS (LOINC), then OBX-2 (Value Type) SHALL be valued 'CWE'.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-024 - If OBX 3.1 (Observation Identifier) is valued with 72166-2 TOBACCO SMOKING STATUS (LOINC), then OBX-5 (Observation Value) SHALL be valued to a member of the set: PHVS_SmokingStatus_MU</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-030 - If OBX 3.1 (Observation Identifier) is valued with 11289-6 BODY TEMPERATURE, INITIAL (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_TemperatureUnit_UCUM</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>11</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>OBX[6]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-031 - If OBX 3.1 (Observation Identifier) is valued with 59408-5 OXYGEN SATURATION IN ARTERIAL BLOOD BY PULSE OXIMETRY (LOINC), then OBX-6.1 (Unit Identifier) SHALL be valued to a member of the set: PHVS_TemperatureUnit_UCUM.</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>12</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>DG1[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-032 - DG1-1 (Set ID) for the first occurrence of a DG1 Segment SHALL have the Literal Value of '1'.  Each following occurrence SHALL be numbered consecutively</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>12</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>DG1[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>NIST-SS-010 - DG1-3.3 SHALL be valued "I9CDX" or "I10C" or "SCT".</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="CONSTRAINT_SUCCESS" Result="affirmative">
+                <ns6:Location>
+                    <ns6:Line>12</ns6:Line>
+                    <ns6:Column>1</ns6:Column>
+                    <ns6:Path>DG1[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>SS-040 - DG1-6 Diagnosis Type SHALL be either A (Admitting), F (Final) or W (Working).</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="VALUE_SET" Result="alert">
+                <ns6:Location>
+                    <ns6:Line>1</ns6:Line>
+                    <ns6:Column>11</ns6:Column>
+                    <ns6:Path>MSH[1]-4[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>The value set HL70362 has been excluded from the validation</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="VALUE_SET" Result="alert">
+                <ns6:Location>
+                    <ns6:Line>1</ns6:Line>
+                    <ns6:Column>11</ns6:Column>
+                    <ns6:Path>MSH[1]-4[1].1</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>The value set HL70300 has been excluded from the validation</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="VALUE_SET" Result="alert">
+                <ns6:Location>
+                    <ns6:Line>2</ns6:Line>
+                    <ns6:Column>23</ns6:Column>
+                    <ns6:Path>EVN[1]-7[1].1</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>The value set HL70300 has been excluded from the validation</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="VALUE_SET" Result="alert">
+                <ns6:Location>
+                    <ns6:Line>3</ns6:Line>
+                    <ns6:Column>15</ns6:Column>
+                    <ns6:Path>PID[1]-3[1].4</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>The value set HL70363 has been excluded from the validation</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="VALUE_SET" Result="alert">
+                <ns6:Location>
+                    <ns6:Line>3</ns6:Line>
+                    <ns6:Column>15</ns6:Column>
+                    <ns6:Path>PID[1]-3[1].4.1</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>The value set HL70300 has been excluded from the validation</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="VALUE_SET" Result="alert">
+                <ns6:Location>
+                    <ns6:Line>4</ns6:Line>
+                    <ns6:Column>37</ns6:Column>
+                    <ns6:Path>PV1[1]-19[1].4</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>The value set HL70363 has been excluded from the validation</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="VALUE_SET" Result="alert">
+                <ns6:Location>
+                    <ns6:Line>4</ns6:Line>
+                    <ns6:Column>37</ns6:Column>
+                    <ns6:Path>PV1[1]-19[1].4.1</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>The value set HL70300 has been excluded from the validation</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="VALUE_SET" Result="alert">
+                <ns6:Location>
+                    <ns6:Line>5</ns6:Line>
+                    <ns6:Column>7</ns6:Column>
+                    <ns6:Path>PV2[1]-3[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>The value set [NIST]PHVS_Disease_CDC&amp;PHVS_AdministrativeDiagnosis_CDC_ICD-9CM&amp;PHVS_AdministrativeDiagnosis_CDC_ICD-10CM has been excluded from the validation</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="VALUE_SET" Result="alert">
+                <ns6:Location>
+                    <ns6:Line>6</ns6:Line>
+                    <ns6:Column>59</ns6:Column>
+                    <ns6:Path>OBX[1]-5[1].1</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>The value set HL70300 has been excluded from the validation</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="VALUE_SET" Result="alert">
+                <ns6:Location>
+                    <ns6:Line>12</ns6:Line>
+                    <ns6:Column>8</ns6:Column>
+                    <ns6:Path>DG1[1]-3[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>The value set [NIST]PHVS_Disease_CDC&amp;PHVS_AdministrativeDiagnosis_CDC_ICD-9CM&amp;PHVS_AdministrativeDiagnosis_CDC_ICD-10CM has been excluded from the validation</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="O_USAGE" Result="alert">
+                <ns6:Location>
+                    <ns6:Line>4</ns6:Line>
+                    <ns6:Column>72</ns6:Column>
+                    <ns6:Path>PV1[1]-19[1].5</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Optional element Component PV1-19.5 (Identifier Type Code) was populated with the value VN. Depending on the local implementation this element is excluded from the validation</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="O_USAGE" Result="alert">
+                <ns6:Location>
+                    <ns6:Line>4</ns6:Line>
+                    <ns6:Column>10</ns6:Column>
+                    <ns6:Path>PV1[1]-4[1]</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Optional element Field PV1-4 (Admission Type) was populated with the value U. Depending on the local implementation this element is excluded from the validation</ns6:Description>
+            </ns6:Assertion>
+            <ns6:Assertion Type="O_USAGE" Result="alert">
+                <ns6:Location>
+                    <ns6:Line>3</ns6:Line>
+                    <ns6:Column>50</ns6:Column>
+                    <ns6:Path>PID[1]-3[1].5</ns6:Path>
+                </ns6:Location>
+                <ns6:Description>Optional element Component PID-3.5 (Identifier Type Code) was populated with the value MR. Depending on the local implementation this element is excluded from the validation</ns6:Description>
+            </ns6:Assertion>
+        </ns6:AssertionList>
+    </ns6:SpecificReport>
+</ns6:HL7V2MessageValidationReport>

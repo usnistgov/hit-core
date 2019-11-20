@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.ibm.icu.util.Calendar;
+import com.itextpdf.html2pdf.HtmlConverter;
 
 import gov.nist.hit.core.domain.ManualValidationResult;
 import gov.nist.hit.core.domain.TestStep;
@@ -191,6 +192,27 @@ public class TestStepValidationReportServiceImpl implements TestStepValidationRe
         return new FileInputStream(temp);
       }
       return null;
+    } catch (Exception e) {
+      throw new ValidationReportException(e);
+    } catch (TransformerFactoryConfigurationError e) {
+      throw new ValidationReportException(e.getMessage());
+    }
+  }
+  
+  @Override
+  public InputStream generatePdf2(String xml) throws ValidationReportException {
+    try {
+      String xhtml = generateXhtml(xml).replaceAll("<br>", "<br/>");
+      
+      File temp = File.createTempFile("MessageValidationReport2", ".pdf");
+      temp.deleteOnExit();
+      OutputStream os;
+      os = new FileOutputStream(temp);
+          
+      HtmlConverter.convertToPdf(xhtml, os);
+   
+      os.close();
+      return new FileInputStream(temp);
     } catch (Exception e) {
       throw new ValidationReportException(e);
     } catch (TransformerFactoryConfigurationError e) {

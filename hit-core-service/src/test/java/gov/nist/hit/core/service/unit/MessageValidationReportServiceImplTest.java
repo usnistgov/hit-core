@@ -4,10 +4,13 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Test;
+import org.springframework.util.FileCopyUtils;
 
 import gov.nist.hit.core.service.MessageValidationReportService;
 import gov.nist.hit.core.service.impl.MessageValidationReportServiceImpl;
@@ -37,6 +40,20 @@ public class MessageValidationReportServiceImplTest {
     assertNotNull(io);
     saveToFile(new File(outputsFolder + "/1-Message-ValidationReport.pdf"), io);
   }
+  
+//  @Test
+  public void testGenerateMessageValidationPdf2() throws Exception {
+	    String xmlMessageValidationReport =
+	        IOUtils.toString(MessageValidationReportServiceImplTest.class
+	            .getResourceAsStream("/inputs/4-Message-ValidationReport.xml"));
+	    assertNotNull(xmlMessageValidationReport);
+	    
+
+	    InputStream io = service.generatePdf2(xmlMessageValidationReport);
+	    assertNotNull(io);
+	    saveToFile(new File(outputsFolder + "/4-Message-ValidationReport2.pdf"), io);
+	    
+	  }
 
 
   private void saveToFile(File f, String content) throws FileNotFoundException {
@@ -46,8 +63,8 @@ public class MessageValidationReportServiceImplTest {
   }
 
   private void saveToFile(File f, InputStream content) throws IOException {
-    // FileOutputStream out = new FileOutputStream(f);
-    // FileCopyUtils.copy(content, out);
-    // out.close();
+     FileOutputStream out = new FileOutputStream(f);
+     FileCopyUtils.copy(content, out);
+     out.close();
   }
 }

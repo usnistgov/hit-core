@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import javax.xml.transform.Transformer;
@@ -21,6 +22,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.xhtmlrenderer.pdf.ITextRenderer;
+
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.tool.xml.XMLWorkerHelper;
 
 import gov.nist.hit.core.domain.TestStepValidationReport;
 import gov.nist.hit.core.repo.TestStepValidationReportRepository;
@@ -161,6 +167,27 @@ public class MessageValidationReportServiceImpl implements MessageValidationRepo
       OutputStream os;
       os = new FileOutputStream(temp);
       renderer.createPDF(os);
+      os.close();
+      return new FileInputStream(temp);
+    } catch (Exception e) {
+      throw new ValidationReportException(e);
+    } catch (TransformerFactoryConfigurationError e) {
+      throw new ValidationReportException(e.getMessage());
+    }
+  }
+  
+  @Override
+  public InputStream generatePdf2(String xml) throws ValidationReportException {
+    try {
+      String xhtml = generateXhtml(xml).replaceAll("<br>", "<br/>");
+      
+      File temp = File.createTempFile("MessageValidationReport2", ".pdf");
+      temp.deleteOnExit();
+      OutputStream os;
+      os = new FileOutputStream(temp);
+          
+      HtmlConverter.convertToPdf(xhtml, os);
+   
       os.close();
       return new FileInputStream(temp);
     } catch (Exception e) {
