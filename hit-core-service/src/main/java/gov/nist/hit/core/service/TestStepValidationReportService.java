@@ -49,6 +49,8 @@ public interface TestStepValidationReportService {
   String generateXhtml(String xml) throws ValidationReportException;
 
   InputStream generatePdf(String xml) throws ValidationReportException;
+  
+  InputStream generatePdf2(String xml) throws ValidationReportException;
 
   String generateManualXml(ManualValidationResult validationResult);
 
@@ -63,5 +65,7 @@ public interface TestStepValidationReportService {
       throws ValidationReportException;
 
   List<TestStepValidationReport> findAllByTestStep(Long testStepId);
+
+
 
 }

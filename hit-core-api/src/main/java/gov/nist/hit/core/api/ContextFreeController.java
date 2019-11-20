@@ -40,6 +40,8 @@ import gov.nist.hit.core.service.CFTestPlanService;
 import gov.nist.hit.core.service.CFTestStepService;
 import gov.nist.hit.core.service.ResourceLoader;
 import gov.nist.hit.core.service.Streamer;
+import gov.nist.hit.core.service.UserService;
+import gov.nist.hit.core.service.exception.NoUserFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -65,6 +67,9 @@ public class ContextFreeController {
 
 	@Autowired
 	private AccountService accountService;
+	
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	@Qualifier("resourceLoader")
@@ -88,7 +93,7 @@ public class ContextFreeController {
 	public void getTestPlansByScope(
 			@ApiParam(value = "the scope of the test plans", required = false) @RequestParam(required = false) TestScope scope,
 			@ApiParam(value = "the domain of the test plans", required = true) @RequestParam(required = true) String domain,
-			HttpServletRequest request, HttpServletResponse response) throws IOException {
+			HttpServletRequest request, HttpServletResponse response) throws IOException, NoUserFoundException {
 		logger.info("Fetching context-free testplans of scope=" + scope + "...");
 		List<CFTestPlan> results = null;
 		scope = scope == null ? TestScope.GLOBAL : scope;
@@ -96,10 +101,16 @@ public class ContextFreeController {
 			Long userId = SessionContext.getCurrentUserId(request.getSession(false));
 			if (userId != null) {
 				Account account = accountService.findOne(userId);
-				if (account != null) {
-					results = testPlanService.findShortAllByStageAndAuthorAndScopeAndDomain(TestingStage.CF,
-							account.getUsername(), scope, domain);
+				if(account != null) {
+					String email = account.getEmail();
+					if (userService.isAdminByEmail(email) || userService.isAdmin(account.getUsername())) {
+						results = testPlanService.findAllByStageAndScopeAndDomain(TestingStage.CF,scope, domain);
+					}else{
+						results = testPlanService.findShortAllByStageAndAuthorAndScopeAndDomain(TestingStage.CF,
+								account.getUsername(), scope, domain);
+					}
 				}
+				
 			}
 		} else {
 			results = testPlanService.findShortAllByStageAndScopeAndDomain(TestingStage.CF, scope, domain);

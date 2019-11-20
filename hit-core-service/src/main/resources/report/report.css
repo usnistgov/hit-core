@@ -13,18 +13,34 @@
     width: 250px;
 }
 
+
+.row0 {
+    font-weight: bold;
+    font-size: 15px;
+    color: #000000;
+    vertical-align: top;
+    background-color: #d9edf7;
+    width: 200px;
+}
+
 .row1 {
     font-weight: bold;
     font-size: 15px;
     color: #000000;
     vertical-align: top;
     background-color: #d9edf7;
-    width: 100px;
+    width: 150px;
 }
 
 .row2 {
     background-color: #f0f0f0;
     width: 100px;
+}
+
+.row20 {
+    background-color: #f0f0f0;
+    font-size: 13px;
+    width: 120px;
 }
 
 .row3 {
@@ -149,5 +165,19 @@ table {
 table[Attributes Style] {
     width: 100%;
     border-spacing: 1px;
+}
+
+.break-word{
+	overflow-wrap: break-word;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: pre;           /* CSS 2.0 */
+	white-space: pre-wrap;      /* CSS 2.1 */
+	white-space: pre-line;      /* CSS 3.0 */
+	white-space: -pre-wrap;     /* Opera 4-6 */
+	white-space: -o-pre-wrap;   /* Opera 7 */
+	white-space: -moz-pre-wrap; /* Mozilla */
+	white-space: -hp-pre-wrap;  /* HP Printers */
+	word-wrap: break-word;      /* IE 5+ */
 }
  

@@ -38,7 +38,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import gov.nist.auth.hit.core.domain.Account;
 import gov.nist.auth.hit.core.domain.util.UserUtil;
+import gov.nist.hit.core.service.AccountService;
 import gov.nist.hit.core.service.CustomJdbcUserDetailsManager;
 import gov.nist.hit.core.service.UserService;
 import gov.nist.hit.core.service.exception.NoUserFoundException;
@@ -65,7 +67,7 @@ public class UserServiceImpl implements UserService {
 
 	private Set<String> adminEmails;
 
-	Set<String> PUBLIC_AUTHORITIES = new HashSet<>(Arrays.asList(SUPERVISOR_AUTHORITY, ADMIN_AUTHORITY));
+	Set<String> PUBLIC_AUTHORITIES = new HashSet<>(Arrays.asList(PUBLISHER_AUTHORITY,SUPERVISOR_AUTHORITY, ADMIN_AUTHORITY));
 
 	Set<String> ADMIN_AUTHORITIES = new HashSet<>(Arrays.asList(ADMIN_AUTHORITY));
 
@@ -75,6 +77,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	@Qualifier(value = "shaPasswordEncoder")
 	private ShaPasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private AccountService accountService;
 
 	@PostConstruct
 	public void init() {
@@ -295,12 +300,17 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	//allows user to publish or make private 
 	@Override
 	public boolean hasGlobalAuthorities(String username) throws NoUserFoundException {
 		User user = this.retrieveUserByUsername(username);
 		if (user == null) {
 			throw new NoUserFoundException("User could not be found");
 		}
+		if (isAdmin(username)) {
+			return true;
+		}
+
 		Collection<GrantedAuthority> authorit = user.getAuthorities();
 		for (GrantedAuthority auth : authorit) {
 			if (PUBLIC_AUTHORITIES.contains(auth.getAuthority())) {
@@ -322,6 +332,13 @@ public class UserServiceImpl implements UserService {
 		if (user == null) {
 			throw new NoUserFoundException("User could not be found");
 		}
+		Account account = accountService.findByTheAccountsUsername(username);
+		if (account != null ) {
+			if (account.getEmail() != null && this.adminEmails.contains(account.getEmail())) {
+				return true;
+			}
+		}
+		
 		Collection<GrantedAuthority> authorit = user.getAuthorities();
 		for (GrantedAuthority auth : authorit) {
 			if (ADMIN_AUTHORITIES.contains(auth.getAuthority())) {

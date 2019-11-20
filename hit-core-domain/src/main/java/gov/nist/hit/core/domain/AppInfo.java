@@ -101,7 +101,6 @@ public class AppInfo implements Serializable {
 
   private String csrfToken;
 
-
   private String apiDocsPath;
 
   private String mailFrom = "hit-testing@nist.gov";
@@ -129,7 +128,6 @@ public class AppInfo implements Serializable {
   @MapKeyColumn(name = "OPTION_TYPE")
   @Column(name = "OPTION_VALUE")
   private Map<String, String> options = new HashMap<String, String>();
-
 
 
   public AppInfo() {
@@ -341,6 +339,41 @@ public class AppInfo implements Serializable {
     return options;
   }
 
+  @Transient
+  public void setToolScopeSelectionDisplayed(boolean displayed) {
+    this.getOptions().put(Constant.TOOL_SCOPE_SELECTON_DISPLAYED, Boolean.toString(displayed));
+  }
+  
+  @Transient
+  public Boolean isToolScopeSelectionDisplayed() {
+    return this.getOptions().get(Constant.TOOL_SCOPE_SELECTON_DISPLAYED) != null
+        && Boolean.valueOf(this.getOptions().get(Constant.TOOL_SCOPE_SELECTON_DISPLAYED));
+  }
+  
+  @Transient
+  public void setUserLoginSupported(boolean displayed) {
+    this.getOptions().put(Constant.USER_LOGIN_SUPPORTED, Boolean.toString(displayed));
+  }
+  
+  @Transient
+  public Boolean isUserLoginSupported() {
+    return this.getOptions().get(Constant.USER_LOGIN_SUPPORTED) != null
+        && Boolean.valueOf(this.getOptions().get(Constant.USER_LOGIN_SUPPORTED));
+  }
+  
+  @Transient
+  public void setReportSavingSupported(boolean displayed) {
+    this.getOptions().put(Constant.REPORT_SAVING_SUPPORTED, Boolean.toString(displayed));
+  }
+  
+  @Transient
+  public Boolean isReportSavingSupported() {
+    return this.getOptions().get(Constant.REPORT_SAVING_SUPPORTED) != null
+        && Boolean.valueOf(this.getOptions().get(Constant.REPORT_SAVING_SUPPORTED));
+  }
+  
+  
+  
   @Transient
   public void setEmployerRequired(boolean required) {
     this.getOptions().put(Constant.EMPLOYER_REQUIRED, Boolean.toString(required));

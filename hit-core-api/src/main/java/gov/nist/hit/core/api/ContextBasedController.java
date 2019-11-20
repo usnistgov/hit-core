@@ -38,6 +38,8 @@ import gov.nist.hit.core.service.Streamer;
 import gov.nist.hit.core.service.TestCaseService;
 import gov.nist.hit.core.service.TestPlanService;
 import gov.nist.hit.core.service.TestStepService;
+import gov.nist.hit.core.service.UserService;
+import gov.nist.hit.core.service.exception.NoUserFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -62,7 +64,10 @@ public class ContextBasedController {
 	private TestStepService testStepService;
 
 	@Autowired
-	private AccountService userService;
+	private AccountService accountService;
+	
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	private Streamer streamer;
@@ -72,15 +77,19 @@ public class ContextBasedController {
 	public void getTestPlansByScope(
 			@ApiParam(value = "the scope of the test plans", required = false) @RequestParam(required = false) TestScope scope,
 			@ApiParam(value = "the domain of the test plans", required = true) @RequestParam(required = true) String domain,
-			HttpServletRequest request, HttpServletResponse response) throws IOException {
+			HttpServletRequest request, HttpServletResponse response) throws IOException, NoUserFoundException {
 		logger.info("Fetching all testplans of type=" + scope + "...");
 		List<TestPlan> results = null;
 		scope = scope == null ? TestScope.GLOBAL : scope;
 		if (TestScope.USER.equals(scope)) {
 			Long userId = SessionContext.getCurrentUserId(request.getSession(false));
 			if (userId != null) {
-				Account account = userService.findOne(userId);
-				if (account != null) {
+				Account account = accountService.findOne(userId);
+				if(account != null) {
+					String email = account.getEmail();
+					if (userService.isAdminByEmail(email) || userService.isAdmin(account.getUsername())) {
+						results = testPlanService.findShortAllByStageAndScopeAndDomain(TestingStage.CB, scope, domain);
+					}else
 					results = testPlanService.findAllShortByStageAndUsernameAndScopeAndDomain(TestingStage.CB,
 							account.getUsername(), scope, domain);
 				}
@@ -105,7 +114,7 @@ public class ContextBasedController {
 
 	private void recordTestPlan(TestPlan testPlan, Long userId) {
 		if (testPlan != null && userId != null) {
-			userService.recordLastTestPlan(userId, testPlan.getPersistentId());
+			accountService.recordLastTestPlan(userId, testPlan.getPersistentId());
 		}
 	}
 

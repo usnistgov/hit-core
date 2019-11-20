@@ -161,6 +161,8 @@ public abstract class ResourcebundleLoader {
 	public static final String MESSAGECONTENT_INFO_PATTERN = "MessageContentInfo.html";
 	public static final String TOOL_DOWNLOADS_PATTERN = "Documentation/Downloads/";
 	public static final String TOOL_DOWNLOADS_CONF_PATTERN = "Downloads.json";
+	public static final String TOOL_INSTALLATION_GUIDE_PATTERN = "Documentation/InstallationGuides/";
+	public static final String TOOL_INSTALLATION_GUIDE_CONF_PATTERN = "InstallationGuides.json";
 	public static final String TRANSPORT_PATTERN = "Global/Transport/";
 	public static final String TRANSPORT_CONF_PATTERN = "Transport.json";
 	public static final String REGISTRATION = "Registration.json";
@@ -347,6 +349,16 @@ public abstract class ResourcebundleLoader {
 
 	@Value("${domain.management.supported:#{true}}")
 	private boolean domainManagementSupported;
+	
+	@Value("${app.showToolScopeSelectionMenu:#{true}}")
+	private boolean toolScopeSelectionDisplayed;
+	
+	@Value("${app.userLoginSupported:#{true}}")
+	private boolean userLoginSupported;
+	
+	@Value("${app.reportSavingSupported:#{true}}")
+	private boolean reportSavingSupported;
+	
 
 	// conformance profile source Id - integration profile id
 	protected static HashMap<String, String> profilesMap;
@@ -463,6 +475,7 @@ public abstract class ResourcebundleLoader {
 		this.loadProfilesDocs(directory, scope, preloaded, domain);
 		this.loadConstraintsDocs(directory, scope, preloaded, domain);
 		this.loadValuesetsDocs(directory, scope, preloaded, domain);
+		this.loadInstallationGuides(directory, scope, preloaded, domain);
 		this.loadToolDownloads(directory, scope, preloaded, domain);
 		this.loadTransports(directory, scope, preloaded, domain);
 	}
@@ -823,26 +836,29 @@ public abstract class ResourcebundleLoader {
 
 	public void loadInstallationGuides(String rootPath, TestScope scope, boolean preloaded, String domain)
 			throws IOException {
-		if (!appInfoService.get().isDownloadWarDisabled()) {
-			logger.info("loading tool downloads...");
+			logger.info("loading tool installation guides...");
 			JsonNode confObj = toJsonObj(
-					getDomainBasedPath(TOOL_DOWNLOADS_PATTERN, domain) + TOOL_DOWNLOADS_CONF_PATTERN, rootPath);
+					getDomainBasedPath(TOOL_INSTALLATION_GUIDE_PATTERN, domain) + TOOL_INSTALLATION_GUIDE_CONF_PATTERN, rootPath);
 			if (confObj != null && confObj.isArray()) {
 				List<gov.nist.hit.core.domain.Document> docs = new ArrayList<gov.nist.hit.core.domain.Document>();
 				Iterator<JsonNode> it = confObj.elements();
 				while (it.hasNext()) {
 					JsonNode instructionObj = it.next();
 					gov.nist.hit.core.domain.Document document = new gov.nist.hit.core.domain.Document(domain);
-					if (instructionObj.findValue("title") == null || instructionObj.findValue("name") == null
+					if (instructionObj.findValue("title") == null || (instructionObj.findValue("name")== null && instructionObj.findValue("link")== null) 
 							|| instructionObj.findValue("date") == null) {
 						throw new IllegalArgumentException(
-								"The installation guide is missing one of those: title, link, date");
+								"The installation guide is missing one of those: title, link or name and date");
 					}
 
 					document.setTitle(instructionObj.findValue("title").textValue());
-					document.setName(instructionObj.findValue("name").textValue());
-					document.setPath(getDomainBasedPath(TOOL_DOWNLOADS_PATTERN, TOOL_DOCUMENT_DOMAIN)
-							+ instructionObj.findValue("name").textValue());
+					if (instructionObj.findValue("name") != null) {
+						String name = instructionObj.findValue("name").textValue();		
+						document.setName(name);
+						document.setPath(getDomainBasedPath(TOOL_INSTALLATION_GUIDE_PATTERN, TOOL_DOCUMENT_DOMAIN) + name);
+					} else if (instructionObj.findValue("link") != null) {
+						document.setPath(instructionObj.findValue("link").textValue());
+					}
 					document.setDate(instructionObj.findValue("date").textValue());
 					document.setType(DocumentType.INSTALLATION);
 					document.setScope(scope);
@@ -853,8 +869,7 @@ public abstract class ResourcebundleLoader {
 				if (!docs.isEmpty()) {
 					documentRepository.save(docs);
 				}
-			}
-		}
+			}		
 	}
 
 	public void loadToolDownloads(String rootPath, TestScope scope, boolean preloaded, String domain)
@@ -1261,7 +1276,7 @@ public abstract class ResourcebundleLoader {
 			tc.setPosition(testCaseObj.findValue("position").intValue());
 		}
 		if (testCaseObj.has("supplements")) {
-			tc.getSupplements().addAll((testDocuments(location, testCaseObj.findValue("supplements"), domain)));
+			tc.getSupplements().addAll((testDocuments(location, testCaseObj.findValue("supplements"), domain, scope)));
 		}
 		List<Resource> resources = this.getDirectories(location + "*", rootPath);
 		for (Resource resource : resources) {
@@ -1392,7 +1407,7 @@ public abstract class ResourcebundleLoader {
 		}
 
 		if (testStepObj.has("supplements")) {
-			testStep.getSupplements().addAll((testDocuments(location, testStepObj.findValue("supplements"), domain)));
+			testStep.getSupplements().addAll((testDocuments(location, testStepObj.findValue("supplements"), domain, scope)));
 		}
 		testStep.setTestStory(testStory(location, rootPath, domain));
 		testStep.setJurorDocument(jurorDocument(location, rootPath, domain));
@@ -1504,7 +1519,7 @@ public abstract class ResourcebundleLoader {
 				tcg.setPosition(1);
 			}
 			if (testPlanObj.has("supplements")) {
-				tcg.getSupplements().addAll(testDocuments(location, testPlanObj.findValue("supplements"), domain));
+				tcg.getSupplements().addAll(testDocuments(location, testPlanObj.findValue("supplements"), domain, scope));
 			}
 			List<Resource> resources = this.getDirectories(location + "*/", rootPath);
 			for (Resource resource : resources) {
@@ -1561,7 +1576,7 @@ public abstract class ResourcebundleLoader {
 				tcg.setPosition(1);
 			}
 			if (testPlanObj.has("supplements")) {
-				tcg.getSupplements().addAll(testDocuments(location, testPlanObj.findValue("supplements"), domain));
+				tcg.getSupplements().addAll(testDocuments(location, testPlanObj.findValue("supplements"), domain, scope));
 			}
 			tcg.setDomain(domain);
 			List<Resource> resources = this.getDirectories(location + "*/", rootPath);
@@ -1646,7 +1661,7 @@ public abstract class ResourcebundleLoader {
 			tp.setTestPackage(testPackage(location, rootPath, domain, scope, authorUsername, preloaded));
 			tp.setTestPlanSummary(testPlanSummary(location, rootPath, domain, scope, authorUsername, preloaded));
 			if (testPlanObj.has("supplements")) {
-				tp.getSupplements().addAll((testDocuments(location, testPlanObj.findValue("supplements"), domain)));
+				tp.getSupplements().addAll((testDocuments(location, testPlanObj.findValue("supplements"), domain, scope)));
 			}
 
 			List<Resource> resources = this.getDirectories(location + "*/", rootPath);
@@ -1706,7 +1721,7 @@ public abstract class ResourcebundleLoader {
 					!testPlanObj.has("version") ? 1.0 : Double.parseDouble(testPlanObj.findValue("version").asText()));
 			if (testPlanObj.has("supplements")) {
 				testPlan.getSupplements()
-						.addAll(testDocuments(testPlanPath, testPlanObj.findValue("supplements"), domain));
+						.addAll(testDocuments(testPlanPath, testPlanObj.findValue("supplements"), domain, scope));
 			}
 
 			List<Resource> resources = this.getDirectories(testPlanPath + "*/", rootPath);
@@ -1768,7 +1783,7 @@ public abstract class ResourcebundleLoader {
 					authorUsername, preloaded));
 			if (testPlanObj.has("supplements")) {
 				testStep.getSupplements()
-						.addAll(testDocuments(testObjectPath, testPlanObj.findValue("supplements"), domain));
+						.addAll(testDocuments(testObjectPath, testPlanObj.findValue("supplements"), domain, scope));
 			}
 			return testStep;
 		}
@@ -1791,13 +1806,14 @@ public abstract class ResourcebundleLoader {
 		return location.replaceAll("%20", " ");
 	}
 
-	private Set<gov.nist.hit.core.domain.Document> testDocuments(String testPath, JsonNode nodeObj, String domain) {
+	private Set<gov.nist.hit.core.domain.Document> testDocuments(String testPath, JsonNode nodeObj, String domain, TestScope scope) {
 		Set<gov.nist.hit.core.domain.Document> documents = new HashSet<gov.nist.hit.core.domain.Document>();
 		Iterator<JsonNode> it = nodeObj.elements();
 		if (it != null) {
 			while (it.hasNext()) {
 				JsonNode node = it.next();
 				gov.nist.hit.core.domain.Document document = new gov.nist.hit.core.domain.Document(domain);
+				document.setScope(scope);
 				if (node.findValue("title") == null
 						|| (node.findValue("link") == null && node.findValue("name") == null)
 						|| node.findValue("date") == null) {
@@ -1876,6 +1892,9 @@ public abstract class ResourcebundleLoader {
 		appInfo.setUploadMaxSize(appUploadMaxSize);
 		appInfo.setDownloadWarDisabled(appDownloadWarDisabled);
 		appInfo.setDomainManagementSupported(domainManagementSupported);
+		appInfo.setToolScopeSelectionDisplayed(toolScopeSelectionDisplayed);
+		appInfo.setUserLoginSupported(userLoginSupported);
+		appInfo.setReportSavingSupported(reportSavingSupported);
 		appInfoRepository.save(appInfo);
 		logger.info("loading app info...DONE");
 	}

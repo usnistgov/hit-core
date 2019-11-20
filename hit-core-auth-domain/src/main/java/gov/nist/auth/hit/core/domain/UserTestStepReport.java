@@ -1,5 +1,7 @@
 package gov.nist.auth.hit.core.domain;
 
+import java.util.Date;
+
 import javax.persistence.*;
 
 /**
@@ -20,14 +22,17 @@ public class UserTestStepReport {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String xml;
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String html;
     private Double version;
     private Long accountId;
     private Long testStepPersistentId;
+    @Column(columnDefinition = "LONGTEXT")
     private String comments;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date creationDate;
 
     public UserTestStepReport(String xml, String html, Double version, Long accountId, Long testStepPersistentId, String comments) {
         this.xml = xml;
@@ -36,9 +41,11 @@ public class UserTestStepReport {
         this.accountId = accountId;
         this.testStepPersistentId = testStepPersistentId;
         this.comments = comments;
+        this.creationDate = new Date();
     }
 
     public UserTestStepReport() {
+    		this.creationDate = new Date();
     }
 
 
@@ -90,4 +97,13 @@ public class UserTestStepReport {
     public void setHtml(String html) {
         this.html = html;
     }
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+     
 }
