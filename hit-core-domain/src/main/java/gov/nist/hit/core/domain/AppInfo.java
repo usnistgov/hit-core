@@ -340,14 +340,14 @@ public class AppInfo implements Serializable {
   }
 
   @Transient
-  public void setToolScopeSelectionDisplayed(boolean displayed) {
-    this.getOptions().put(Constant.TOOL_SCOPE_SELECTON_DISPLAYED, Boolean.toString(displayed));
+  public void setDomainSelectionSupported(boolean supported) {
+    this.getOptions().put(Constant.DOMAIN_SELECTON_SUPPORTED, Boolean.toString(supported));
   }
   
   @Transient
-  public Boolean isToolScopeSelectionDisplayed() {
-    return this.getOptions().get(Constant.TOOL_SCOPE_SELECTON_DISPLAYED) != null
-        && Boolean.valueOf(this.getOptions().get(Constant.TOOL_SCOPE_SELECTON_DISPLAYED));
+  public Boolean isDomainSelectionSupported() {
+    return this.getOptions().get(Constant.DOMAIN_SELECTON_SUPPORTED) != null
+        && Boolean.valueOf(this.getOptions().get(Constant.DOMAIN_SELECTON_SUPPORTED));
   }
   
   @Transient

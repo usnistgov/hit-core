@@ -59,7 +59,8 @@ public class DocumentationUtils {
       if (!file.exists()) {
         file.createNewFile();
       }
-      FileUtils.copyURLToFile(new URL(tp.getTestPackage().getPdfPath()), file);
+      FileUtils.copyURLToFile(DocumentationUtils.class.getResource("/"+tp.getTestPackage().getPdfPath()), file);
+      
     }
   }
 

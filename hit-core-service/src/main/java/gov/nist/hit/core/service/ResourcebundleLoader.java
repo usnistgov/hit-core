@@ -350,8 +350,8 @@ public abstract class ResourcebundleLoader {
 	@Value("${domain.management.supported:#{true}}")
 	private boolean domainManagementSupported;
 	
-	@Value("${app.showToolScopeSelectionMenu:#{true}}")
-	private boolean toolScopeSelectionDisplayed;
+	@Value("${domain.selection.supported:#{true}}")
+	private boolean domainSelectionSupported;
 	
 	@Value("${app.userLoginSupported:#{true}}")
 	private boolean userLoginSupported;
@@ -1892,7 +1892,7 @@ public abstract class ResourcebundleLoader {
 		appInfo.setUploadMaxSize(appUploadMaxSize);
 		appInfo.setDownloadWarDisabled(appDownloadWarDisabled);
 		appInfo.setDomainManagementSupported(domainManagementSupported);
-		appInfo.setToolScopeSelectionDisplayed(toolScopeSelectionDisplayed);
+		appInfo.setDomainSelectionSupported(domainSelectionSupported);
 		appInfo.setUserLoginSupported(userLoginSupported);
 		appInfo.setReportSavingSupported(reportSavingSupported);
 		appInfoRepository.save(appInfo);
