@@ -7,6 +7,8 @@
  */
 package gov.nist.hit.core.domain;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -49,10 +51,12 @@ public class Document extends TestResource {
   public Document(String domain) {
     super();
     this.domain = domain;
+    this.updateDate = new Date();
   }
 
   public Document() {
     super();
+    this.updateDate = new Date();
   }
 
 

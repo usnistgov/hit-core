@@ -13,11 +13,7 @@
 
 	<dependencies>
 		
-		<dependency>
-			<groupId>gov.nist.hit.core</groupId>
-			<artifactId>hit-core-auth-domain</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+		
 		
 	</dependencies>
 

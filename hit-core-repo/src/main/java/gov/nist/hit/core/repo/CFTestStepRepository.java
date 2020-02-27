@@ -12,6 +12,8 @@
 
 package gov.nist.hit.core.repo;
 
+import java.util.Date;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -30,6 +32,9 @@ public interface CFTestStepRepository extends JpaRepository<CFTestStep, Long> {
   @Transactional(value = "transactionManager")
   @Query("delete from CFTestStep to where to.scope = :scope")
   public void deleteByScope(@Param("scope") TestScope scope);
+  
+  @Query("select ts.updateDate from CFTestStep ts where ts.id = :id")
+  public Date getUpdateDate(@Param("id") Long id);
 
 
 }

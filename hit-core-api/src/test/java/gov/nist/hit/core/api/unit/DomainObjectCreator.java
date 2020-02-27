@@ -12,14 +12,14 @@
 
 package gov.nist.hit.core.api.unit;
 
-import gov.nist.hit.core.domain.Message;
-import gov.nist.hit.core.domain.IntegrationProfile;
-import gov.nist.hit.core.domain.VocabularyLibrary;
-
 import java.io.IOException;
 import java.util.Random;
 
 import org.apache.commons.io.IOUtils;
+
+import gov.nist.hit.core.domain.IntegrationProfile;
+import gov.nist.hit.core.domain.Message;
+import gov.nist.hit.core.domain.VocabularyLibrary;
 
 
 /**

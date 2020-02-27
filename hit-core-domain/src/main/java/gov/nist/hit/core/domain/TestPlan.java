@@ -1,11 +1,11 @@
 package gov.nist.hit.core.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -16,7 +16,12 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,6 +33,7 @@ public class TestPlan extends AbstractTestCase implements Serializable {
   private static final long serialVersionUID = 8324105895492403037L;
 
   @Id
+  @JsonSerialize(using = ToStringSerializer.class)
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
@@ -44,6 +50,7 @@ public class TestPlan extends AbstractTestCase implements Serializable {
 
 
   public TestPlan() {
+	this.updateDate = new Date();
     this.type = ObjectType.TestPlan;
   }
 
@@ -76,6 +83,7 @@ public class TestPlan extends AbstractTestCase implements Serializable {
     this.transport = transport;
     this.domain = domain;
     this.persistentId = persistentId;
+    this.updateDate = new Date();
   }
 
 

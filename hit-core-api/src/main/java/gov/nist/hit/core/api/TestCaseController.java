@@ -13,14 +13,17 @@
 package gov.nist.hit.core.api;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,6 +34,7 @@ import gov.nist.hit.core.domain.TestCase;
 import gov.nist.hit.core.service.Streamer;
 import gov.nist.hit.core.service.TestCaseService;
 import gov.nist.hit.core.service.UserIdService;
+import gov.nist.hit.core.service.exception.DomainException;
 import gov.nist.hit.core.service.exception.TestCaseException;
 
 /**
@@ -89,6 +93,7 @@ public class TestCaseController {
 		result.put("testStory", testCase.getTestStory());
 		result.put("jurorDocument", testCase.getJurorDocument());
 		result.put("supplements", testCase.getSupplements());
+		result.put("updateDate", testCase.getUpdateDate());
 		streamer.stream(response.getOutputStream(), result);
 	}
 
@@ -104,7 +109,17 @@ public class TestCaseController {
 		logger.info("Fetching teststory of testcase/teststep with id=" + testCaseId);
 		TestArtifact artifact = testCaseService.testStory(testCaseId);
 		streamer.stream(response.getOutputStream(), artifact);
-
+	}
+	
+	@RequestMapping(value = "/{testCaseId}/updateDate", method = RequestMethod.GET, produces = "application/json")
+	public Date updateDate(HttpServletRequest request, @PathVariable("testCaseId") Long testCaseId, Authentication authentication)
+			throws DomainException {
+		try {
+			Date date = testCaseService.getUpdateDate(testCaseId);
+			return date;
+		} catch (Exception e) {
+			throw new DomainException(e);
+		}
 	}
 
 }

@@ -362,19 +362,6 @@ public class AppInfo implements Serializable {
   }
   
   @Transient
-  public void setReportSavingSupported(boolean displayed) {
-    this.getOptions().put(Constant.REPORT_SAVING_SUPPORTED, Boolean.toString(displayed));
-  }
-  
-  @Transient
-  public Boolean isReportSavingSupported() {
-    return this.getOptions().get(Constant.REPORT_SAVING_SUPPORTED) != null
-        && Boolean.valueOf(this.getOptions().get(Constant.REPORT_SAVING_SUPPORTED));
-  }
-  
-  
-  
-  @Transient
   public void setEmployerRequired(boolean required) {
     this.getOptions().put(Constant.EMPLOYER_REQUIRED, Boolean.toString(required));
   }

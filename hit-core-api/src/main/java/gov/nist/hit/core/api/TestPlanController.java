@@ -13,14 +13,17 @@
 package gov.nist.hit.core.api;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import gov.nist.hit.core.domain.TestPlan;
 import gov.nist.hit.core.repo.TestPlanRepository;
 import gov.nist.hit.core.service.Streamer;
+import gov.nist.hit.core.service.exception.DomainException;
 import gov.nist.hit.core.service.exception.TestPlanException;
 import io.swagger.annotations.ApiParam;
 
@@ -66,7 +70,7 @@ public class TestPlanController {
 	}
 
 	@RequestMapping(value = "/{testPlanId}/details", method = RequestMethod.GET, produces = "application/json")
-	public void details(HttpServletResponse response,
+	public Map<String, Object> details(HttpServletResponse response,
 			@ApiParam(value = "the id of the test plan", required = true) @PathVariable final Long testPlanId)
 			throws IOException {
 		logger.info("Fetching artifacts of testplan with id=" + testPlanId);
@@ -74,7 +78,19 @@ public class TestPlanController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("testStory", testPlan.getTestStory());
 		result.put("supplements", testPlan.getSupplements());
-		streamer.stream(response.getOutputStream(), result);
+		result.put("updateDate", testPlan.getUpdateDate());
+		return result;
+	}
+	
+	@RequestMapping(value = "/{testPlanId}/updateDate", method = RequestMethod.GET, produces = "application/json")
+	public Date updateDate(HttpServletRequest request, @PathVariable("testPlanId") Long testPlanId, Authentication authentication)
+			throws DomainException {
+		try {
+			Date date = testPlanRepository.getUpdateDate(testPlanId);
+			return date;
+		} catch (Exception e) {
+			throw new DomainException(e);
+		}
 	}
 
 }

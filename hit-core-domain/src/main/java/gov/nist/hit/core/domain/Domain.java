@@ -1,9 +1,13 @@
 package gov.nist.hit.core.domain;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -11,8 +15,16 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
+import gov.nist.hit.core.Constant;
+import gov.nist.hit.core.domain.util.Views;
 
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "domain" }) })
@@ -24,6 +36,7 @@ public class Domain extends TestResource implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
+	@JsonView(Views.Short.class)
 	private String name;
 	private String homeTitle;
 	private boolean disabled = false;
@@ -42,7 +55,7 @@ public class Domain extends TestResource implements Serializable {
 
 	@Column(columnDefinition = "TEXT")
 	private String validationResultInfo;
-	
+
 	@Column(columnDefinition = "TEXT")
 	private String validationConfiguration;
 
@@ -56,14 +69,25 @@ public class Domain extends TestResource implements Serializable {
 
 	private String owner;
 
+	@JsonView(Views.Short.class)
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "Domain_Options", joinColumns = @JoinColumn(name = "Domain_id"))
+	@MapKeyColumn(name = "OPTION_TYPE")
+	@Column(name = "OPTION_VALUE")
+	private Map<String, String> options = new HashMap<String, String>();
+
+
+	
 	public Domain() {
 		this.owner = this.authorUsername;
+		this.updateDate = new Date();
 	}
 
 	public Domain(String name, String domain) {
 		this.name = name;
 		this.domain = domain;
 		this.owner = this.authorUsername;
+		this.updateDate = new Date();
 	}
 
 	public Domain(String name, String domain, TestScope scope, String authorUsername, Set<String> participantEmails) {
@@ -72,6 +96,7 @@ public class Domain extends TestResource implements Serializable {
 		this.authorUsername = authorUsername;
 		this.participantEmails = participantEmails;
 		this.owner = authorUsername;
+		this.updateDate = new Date();
 	}
 
 	public String getName() {
@@ -179,6 +204,29 @@ public class Domain extends TestResource implements Serializable {
 		this.validationConfiguration = validationConfiguration;
 	}
 
+	public Map<String, String> getOptions() {
+		if (this.options == null) {
+			this.options = new HashMap<String, String>();
+		}
+		return options;
+	}
+
+
+	public void setOptions(Map<String, String> options) {
+		this.options = options;
+	}
+
+	@Transient
+	public void setReportSavingSupported(boolean displayed) {
+		this.getOptions().put(Constant.REPORT_SAVING_SUPPORTED, Boolean.toString(displayed));
+	}
+
+	@Transient
+	public Boolean isReportSavingSupported() {
+		return this.getOptions().get(Constant.REPORT_SAVING_SUPPORTED) != null
+				&& Boolean.valueOf(this.getOptions().get(Constant.REPORT_SAVING_SUPPORTED));
+	}
+
 	public void merge(Domain source) {
 		this.homeTitle = source.homeTitle;
 		this.homeContent = source.homeContent;
@@ -194,6 +242,9 @@ public class Domain extends TestResource implements Serializable {
 		this.igVersion = source.igVersion;
 		this.owner = this.authorUsername;
 		this.validationConfiguration = source.validationConfiguration;
+		this.options = source.options;
 	}
+
+
 
 }

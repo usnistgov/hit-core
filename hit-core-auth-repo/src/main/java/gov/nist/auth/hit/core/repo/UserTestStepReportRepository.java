@@ -1,6 +1,9 @@
 package gov.nist.auth.hit.core.repo;
 
 import gov.nist.auth.hit.core.domain.UserTestStepReport;
+
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -20,5 +23,16 @@ import org.springframework.data.jpa.repository.Query;
 public interface UserTestStepReportRepository extends JpaRepository<UserTestStepReport, Long> {
 
     @Query("select utsr from UserTestStepReport utsr where utsr.accountId = ?1 and utsr.testStepPersistentId = ?2")
-    UserTestStepReport findOneByAccountIdAndTestStepId(Long accountId,Long testStepId);
+    UserTestStepReport findOneByAccountIdAndTestStepPersistentId(Long accountId,Long testStepPersistentId);
+    
+    @Query("select utsr from UserTestStepReport utsr where utsr.accountId = ?1 and utsr.domain = ?2")
+    List<UserTestStepReport> findAllByAccountIdAndDomain(Long accountId,String domain);
+
+    @Query("select utsr from UserTestStepReport utsr where utsr.accountId = ?1 and utsr.domain = ?2 and utsr.testStepPersistentId = ?3")
+	List<UserTestStepReport> findAllByAccountIdAndDomainAndTestStepPersistentId(Long accountId, String domain,	Long testStepPersistentId);
+
+    @Query("select utsr from UserTestStepReport utsr where utsr.accountId = ?1 and utsr.domain = ?2 and utsr.testStepPersistentId = ?3 and utsr.testCaseReport IS NULL")
+	List<UserTestStepReport> findIndependantByAccountIdAndDomainAndTestStepPersistentId(Long userId, String domain,
+			Long testStepPersistentId);
+    
 }

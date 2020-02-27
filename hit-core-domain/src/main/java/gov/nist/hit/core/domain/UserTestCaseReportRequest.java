@@ -1,80 +1,94 @@
 package gov.nist.hit.core.domain;
 
+import java.util.ArrayList;
+
 /**
- * This software was developed at the National Institute of Standards and Technology by employees of
- * the Federal Government in the course of their official duties. Pursuant to title 17 Section 105
- * of the United States Code this software is not subject to copyright protection and is in the
- * public domain. This is an experimental system. NIST assumes no responsibility whatsoever for its
- * use by other parties, and makes no guarantees, expressed or implied, about its quality,
- * reliability, or any other characteristic. We would appreciate acknowledgement if the software is
- * used. This software can be redistributed and/or modified freely provided that any derivative
- * works bear some notice that they are derived from it, and any modified versions bear some notice
- * that they have been modified.
+ * This software was developed at the National Institute of Standards and
+ * Technology by employees of the Federal Government in the course of their
+ * official duties. Pursuant to title 17 Section 105 of the United States Code
+ * this software is not subject to copyright protection and is in the public
+ * domain. This is an experimental system. NIST assumes no responsibility
+ * whatsoever for its use by other parties, and makes no guarantees, expressed
+ * or implied, about its quality, reliability, or any other characteristic. We
+ * would appreciate acknowledgement if the software is used. This software can
+ * be redistributed and/or modified freely provided that any derivative works
+ * bear some notice that they are derived from it, and any modified versions
+ * bear some notice that they have been modified.
  * <p/>
  * Created by Maxence Lefort on 9/13/16.
  */
 public class UserTestCaseReportRequest {
-  private Long testCaseId;
+	private Long testCaseId;
 
-  private String result;
+	private ArrayList<Long> testStepReportIds;
+	
+	private String result;
 
-  private String comments;
+	private String comments;
 
-  private String testPlan, testGroup;
+	private String testPlan, testGroup;
 
-  public UserTestCaseReportRequest() {
-    super();
-  }
+	public UserTestCaseReportRequest() {
+		super();
+	}
 
-  public UserTestCaseReportRequest(Long testCaseId, String result, String comments, String testPlan,
-      String testGroup) {
-    this.testCaseId = testCaseId;
-    this.result = result;
-    this.comments = comments;
-    this.testPlan = testPlan;
-    this.testGroup = testGroup;
-  }
+	public UserTestCaseReportRequest(Long testCaseId,ArrayList<Long> testStepReportIds, String result, String comments, String testPlan, String testGroup) {
+		this.testCaseId = testCaseId;
+		this.testStepReportIds = testStepReportIds;
+		this.result = result;
+		this.comments = comments;
+		this.testPlan = testPlan;
+		this.testGroup = testGroup;
+	}
 
-  public Long getTestCaseId() {
-    return testCaseId;
-  }
+	public Long getTestCaseId() {
+		return testCaseId;
+	}
 
-  public void setTestCaseId(Long testCaseId) {
-    this.testCaseId = testCaseId;
-  }
+	public void setTestCaseId(Long testCaseId) {
+		this.testCaseId = testCaseId;
+	}
 
-  public String getResult() {
-    return result;
-  }
+	public String getResult() {
+		return result;
+	}
 
-  public void setResult(String result) {
-    this.result = result;
-  }
+	public void setResult(String result) {
+		this.result = result;
+	}
 
-  public String getComments() {
-    return comments;
-  }
+	public String getComments() {
+		return comments;
+	}
 
-  public void setComments(String comments) {
-    this.comments = comments;
-  }
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
 
-  public String getTestPlan() {
-    return testPlan;
-  }
+	public String getTestPlan() {
+		return testPlan;
+	}
 
-  public void setTestPlan(String testPlan) {
-    this.testPlan = testPlan;
-  }
+	public void setTestPlan(String testPlan) {
+		this.testPlan = testPlan;
+	}
 
-  public String getTestGroup() {
-    return testGroup;
-  }
+	public String getTestGroup() {
+		return testGroup;
+	}
 
-  public void setTestGroup(String testGroup) {
-    this.testGroup = testGroup;
-  }
+	public void setTestGroup(String testGroup) {
+		this.testGroup = testGroup;
+	}
 
+	public ArrayList<Long> getTestStepReportIds() {
+		return testStepReportIds;
+	}
 
+	public void setTestStepReportIds(ArrayList<Long> testStepReportIds) {
+		this.testStepReportIds = testStepReportIds;
+	}
+
+	
 
 }

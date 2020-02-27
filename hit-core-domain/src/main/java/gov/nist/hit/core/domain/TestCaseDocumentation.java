@@ -13,6 +13,7 @@
 package gov.nist.hit.core.domain;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -48,7 +49,14 @@ public class TestCaseDocumentation extends TestResource {
   @Column(columnDefinition = "LONGTEXT")
   private String json;
 
-  public List<TestCaseDocument> getChildren() {
+  
+  
+  public TestCaseDocumentation() {
+	super();
+	this.updateDate = new Date();
+	}
+
+public List<TestCaseDocument> getChildren() {
     return children;
   }
 

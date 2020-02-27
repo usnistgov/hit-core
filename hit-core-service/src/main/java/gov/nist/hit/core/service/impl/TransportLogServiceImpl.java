@@ -29,7 +29,7 @@ public class TransportLogServiceImpl implements TransportLogService {
 
 	@Override
 	public TransportLog save(TransportLog log) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub		
 		return transportLogRepository.saveAndFlush(log);
 	}
 

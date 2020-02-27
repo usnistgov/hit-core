@@ -1,10 +1,10 @@
 package gov.nist.hit.core.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 
-import gov.nist.auth.hit.core.domain.TestingType;
 import io.swagger.annotations.ApiModel;
 
 @Entity
@@ -19,11 +19,14 @@ public class CFTestStep extends TestStep implements Serializable {
     this.testingType = TestingType.DATAINSTANCE;
     this.stage = TestingStage.CF;
     this.scope = TestScope.GLOBAL;
+    this.updateDate = new Date();
   }
 
 
   public CFTestStep(String name) {
     super(name);
+    this.stage = TestingStage.CF;
+    this.updateDate = new Date();
   }
 
   // @LazyCollection(LazyCollectionOption.FALSE)

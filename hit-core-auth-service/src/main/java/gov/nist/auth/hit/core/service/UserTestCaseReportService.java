@@ -1,5 +1,7 @@
 package gov.nist.auth.hit.core.service;
 
+import java.util.List;
+
 import gov.nist.auth.hit.core.domain.UserTestCaseReport;
 
 /**
@@ -21,6 +23,15 @@ public interface UserTestCaseReportService {
 
     UserTestCaseReport save(UserTestCaseReport userTestCaseReport);
 
+    UserTestCaseReport findOne(Long userTestCaseReportId);
+    
     void delete(UserTestCaseReport userTestCaseReport);
+    
+    public void delete(Long id);
+    
+    public List<UserTestCaseReport> findAllByAccountIdAndDomain(Long accountId,String domain);
+
+	public List<UserTestCaseReport> findAllByAccountIdAndDomainAndTestCasePersistentId(Long userId, String domain, Long persistentId);
+
 
 }

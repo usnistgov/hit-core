@@ -16,9 +16,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import gov.nist.auth.hit.core.domain.KeyValuePair;
-import gov.nist.auth.hit.core.domain.TestingType;
 import gov.nist.auth.hit.core.domain.TransportConfig;
 import gov.nist.auth.hit.core.repo.TransportConfigRepository;
+import gov.nist.hit.core.domain.TestingType;
 import gov.nist.hit.core.service.TransportConfigService;
 
 @Service

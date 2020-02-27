@@ -1,5 +1,6 @@
 package gov.nist.hit.core.service;
 
+import java.util.Date;
 import java.util.List;
 
 import gov.nist.hit.core.domain.TestArtifact;
@@ -33,5 +34,9 @@ public interface TestPlanService {
 	public TestPlan findByPersistentId(Long persistentId);
 
 	public boolean updateScope(TestPlan testPlan, TestScope scope);
+
+	public Date getUpdateDate(Long testPlanId);
+
+	public void loadAll();
 
 }

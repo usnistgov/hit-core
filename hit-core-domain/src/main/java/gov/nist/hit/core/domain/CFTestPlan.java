@@ -2,6 +2,7 @@ package gov.nist.hit.core.domain;
 
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +16,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
+import gov.nist.hit.core.domain.util.Views;
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
@@ -35,6 +39,7 @@ public class CFTestPlan extends AbstractTestCase implements Serializable {
     super();
     this.type = ObjectType.TestPlan;
     this.stage = TestingStage.CF;
+    this.updateDate = new Date();
   }
 
   public CFTestPlan(Long id, String name, String description, int position, Long persistentId,
@@ -46,9 +51,10 @@ public class CFTestPlan extends AbstractTestCase implements Serializable {
     this.position = position;
     this.persistentId = persistentId;
     this.domain = domain;
+    this.updateDate = new Date();
   }
 
-
+  @JsonView(Views.NoData.class)
   @ApiModelProperty(required = false, value = "list of test steps of the test plan")
   @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, orphanRemoval = true)
   @JoinTable(name = "testplan_teststep",
@@ -56,7 +62,7 @@ public class CFTestPlan extends AbstractTestCase implements Serializable {
       inverseJoinColumns = {@JoinColumn(name = "teststep_id", referencedColumnName = "id")})
   private Set<CFTestStep> testSteps = new HashSet<CFTestStep>();
 
-
+  @JsonView(Views.NoData.class)
   @ApiModelProperty(required = false, value = "list of test steps groups of the test plan")
   @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
   @JoinTable(name = "testplan_teststepgroup",
@@ -64,22 +70,24 @@ public class CFTestPlan extends AbstractTestCase implements Serializable {
       inverseJoinColumns = {@JoinColumn(name = "teststepgroup_id", referencedColumnName = "id")})
   private Set<CFTestStepGroup> testStepGroups = new HashSet<CFTestStepGroup>();
 
-
+  @JsonView(Views.NoData.class)
   @Override
   public String getName() {
     return name;
   }
-
+  @JsonView(Views.NoData.class)
   @Override
   public void setName(String name) {
     this.name = name;
   }
-
+  
+  @JsonView(Views.NoData.class)
   @Override
   public String getDescription() {
     return description;
   }
-
+  
+  @JsonView(Views.NoData.class)
   @Override
   public void setDescription(String description) {
     this.description = description;

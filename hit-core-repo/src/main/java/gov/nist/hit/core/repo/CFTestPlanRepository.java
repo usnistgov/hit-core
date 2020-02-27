@@ -13,6 +13,7 @@
 package gov.nist.hit.core.repo;
 
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -63,6 +64,9 @@ public interface CFTestPlanRepository extends JpaRepository<CFTestPlan, Long> {
   public List<CFTestPlan> findAllByStageAndAuthorAndScopeAndDomain(TestingStage stage,
       String authorUsername, TestScope scope, String domain);
 
+  @Transactional(value = "transactionManager")
+  @Query("select tp.id from CFTestPlan tp")
+  public List<Long> findAllTestPlanIds();
 
   @Modifying
   @Transactional(value = "transactionManager")
@@ -82,6 +86,10 @@ public interface CFTestPlanRepository extends JpaRepository<CFTestPlan, Long> {
   @Transactional(value = "transactionManager")
   @Query("delete from CFTestPlan to where to.domain = :domain")
   public void deleteByDomain(@Param("domain") String domain);
+
+
+  @Query("select tp.updateDate from CFTestPlan tp where tp.id = :id")
+  public Date getUpdateDate(@Param("id") Long id);
 
 
 

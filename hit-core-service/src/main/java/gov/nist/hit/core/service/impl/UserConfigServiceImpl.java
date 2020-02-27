@@ -55,7 +55,7 @@ public class UserConfigServiceImpl implements UserConfigService {
     }
 
     @Override
-    public UserConfig save(UserConfig userConfig) {
+    public UserConfig save(UserConfig userConfig) {    	
         return userConfigRepository.saveAndFlush(userConfig);
     }
 

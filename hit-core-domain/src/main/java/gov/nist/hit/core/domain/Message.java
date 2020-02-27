@@ -11,6 +11,8 @@
  */
 package gov.nist.hit.core.domain;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,6 +46,7 @@ public class Message extends TestResource {
     this.description = description;
     this.content = content;
     this.domain = domain;
+    this.updateDate = new Date();
   }
 
   public Message(String name, String content) {
@@ -52,6 +55,7 @@ public class Message extends TestResource {
     this.description = null;
     this.content = content;
     this.domain = null;
+    this.updateDate = new Date();
   }
 
   @Override

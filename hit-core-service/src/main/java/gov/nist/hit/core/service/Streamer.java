@@ -72,5 +72,7 @@ public interface Streamer {
   void streamTestCaseDocuments(OutputStream os, List<TestCaseDocumentation> documents)
       throws IOException;
 
+  void stream(OutputStream os, Long number) throws IOException;
+
 
 }

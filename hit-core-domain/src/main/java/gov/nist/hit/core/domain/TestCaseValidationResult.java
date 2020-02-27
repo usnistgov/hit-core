@@ -30,7 +30,7 @@ public class TestCaseValidationResult {
   }
 
 
-
+//not used
   public TestCaseValidationResult(TestCase testCase,
       List<TestStepValidationReport> testStepReports) {
     super();

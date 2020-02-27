@@ -1,10 +1,15 @@
 package gov.nist.hit.core.domain;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -17,6 +22,7 @@ public class TestArtifact extends TestResource {
   private static final long serialVersionUID = 1L;
 
   @Id
+  @JsonSerialize(using = ToStringSerializer.class)
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
@@ -40,11 +46,13 @@ public class TestArtifact extends TestResource {
   public TestArtifact() {
     super();
     this.name = null;
+    this.updateDate = new Date();
   }
 
   public TestArtifact(String name) {
     super();
     this.name = name;
+    this.updateDate = new Date();
   }
 
   public String getPdfPath() {

@@ -1,8 +1,12 @@
 package gov.nist.auth.hit.core.service.impl;
 
+import gov.nist.auth.hit.core.domain.UserTestCaseReport;
 import gov.nist.auth.hit.core.domain.UserTestStepReport;
 import gov.nist.auth.hit.core.repo.UserTestStepReportRepository;
 import gov.nist.auth.hit.core.service.UserTestStepReportService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,9 +30,9 @@ public class UserTestStepReportServiceImpl implements UserTestStepReportService 
     UserTestStepReportRepository userTestStepReportRepository;
 
     @Override
-    public UserTestStepReport findOneByAccountAndTestStepId(Long accountId,Long testStepId) {
-        return userTestStepReportRepository.findOneByAccountIdAndTestStepId(accountId,testStepId);
-    }
+    public UserTestStepReport findOneByAccountIdAndTestStepPersistentId(Long accountId,Long testStepPersistentId) {
+        return userTestStepReportRepository.findOneByAccountIdAndTestStepPersistentId(accountId,testStepPersistentId);
+    }       
 
     @Override
     public UserTestStepReport save(UserTestStepReport userTestStepReport) {
@@ -39,5 +43,34 @@ public class UserTestStepReportServiceImpl implements UserTestStepReportService 
     public void delete(UserTestStepReport userTestStepReport) {
         userTestStepReportRepository.delete(userTestStepReport);
     }
+
+	@Override
+	public List<UserTestStepReport> findAllByAccountIdAndDomain(Long accountId,String domain) {
+		return userTestStepReportRepository.findAllByAccountIdAndDomain(accountId,domain);
+	}
+	
+	@Override
+    public UserTestStepReport findOne(Long userTestStepReportId) {
+      return userTestStepReportRepository.findOne(userTestStepReportId);
+    }
+
+	@Override
+	public void delete(Long id) {
+		userTestStepReportRepository.delete(id);
+	}
+
+	@Override
+	public List<UserTestStepReport> findAllByAccountIdAndDomainAndTestStepPersistentId(Long accountId, String domain,Long testStepPersistentId) {
+		return userTestStepReportRepository.findAllByAccountIdAndDomainAndTestStepPersistentId(accountId,domain,testStepPersistentId);
+
+	}
+
+	@Override
+	public List<UserTestStepReport> findIndependantByAccountIdAndDomainAndTestStepPersistentId(Long userId,
+			String domain, Long testStepPersistentId) {
+		return userTestStepReportRepository.findIndependantByAccountIdAndDomainAndTestStepPersistentId(userId,domain,testStepPersistentId);
+	}
+	
+	
 
 }

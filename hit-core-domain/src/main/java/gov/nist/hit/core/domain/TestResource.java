@@ -1,14 +1,20 @@
 package gov.nist.hit.core.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
+import gov.nist.hit.core.domain.util.Views;
 
 @MappedSuperclass
 public class TestResource implements Serializable {
@@ -18,6 +24,7 @@ public class TestResource implements Serializable {
    */
   private static final long serialVersionUID = 1L;
 
+  @JsonView(Views.Short.class)
   @NotNull
   @Column(nullable = false)
   protected String domain;
@@ -26,6 +33,10 @@ public class TestResource implements Serializable {
   // @NotNull
   // @Column(nullable = false)
   protected String authorUsername;
+  
+  @JsonView(Views.Short.class)
+  @Temporal(TemporalType.TIMESTAMP)
+  protected Date updateDate;
 
   public String getDomain() {
     return domain;
@@ -65,6 +76,18 @@ public class TestResource implements Serializable {
 
   public void setPreloaded(boolean preloaded) {
     this.preloaded = preloaded;
+  }
+
+  public Date getUpdateDate() {
+	  return updateDate;
+  }
+
+  public void setUpdateDate(Date updateDate) {
+	  this.updateDate = updateDate;
+  }
+
+  public void updateUpdateDate() {
+	  this.updateDate = new Date();
   }
 
 

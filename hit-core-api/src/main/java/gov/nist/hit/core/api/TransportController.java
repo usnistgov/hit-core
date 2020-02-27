@@ -28,10 +28,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.nist.auth.hit.core.domain.TestingType;
 import gov.nist.auth.hit.core.domain.TransportConfig;
 import gov.nist.hit.core.api.exception.TransportConfigException;
 import gov.nist.hit.core.domain.SaveConfigRequest;
+import gov.nist.hit.core.domain.TestingType;
 import gov.nist.hit.core.domain.Transaction;
 import gov.nist.hit.core.domain.TransportFormContent;
 import gov.nist.hit.core.domain.TransportForms;

@@ -1,7 +1,5 @@
 package gov.nist.hit.core.api.filter;
 
-import gov.nist.hit.core.domain.ResourceUploadLock;
-
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -16,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import gov.nist.hit.core.domain.ResourceUploadLock;
 
 @WebFilter(urlPatterns = "/api/editResources/*")
 @Order(Ordered.HIGHEST_PRECEDENCE)

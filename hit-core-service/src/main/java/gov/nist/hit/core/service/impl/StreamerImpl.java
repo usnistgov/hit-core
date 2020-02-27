@@ -191,6 +191,14 @@ public class StreamerImpl implements Streamer {
     jGenerator.writeString(content);
     jGenerator.close();
   }
+  
+  @Override
+  public void stream(OutputStream os, Long number) throws IOException {
+    JsonGenerator jGenerator = createGenerator(os);
+    jGenerator.writeNumber(number);
+    jGenerator.close();
+  }
+  
 
   @Override
   public void stream(OutputStream os, InputStream io) throws IOException {

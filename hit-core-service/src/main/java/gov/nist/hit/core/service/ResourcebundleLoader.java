@@ -61,8 +61,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import gov.nist.auth.hit.core.domain.TestingType;
 import gov.nist.auth.hit.core.repo.AccountRepository;
+import gov.nist.hit.core.Constant;
 import gov.nist.hit.core.domain.AppInfo;
 import gov.nist.hit.core.domain.CFTestPlan;
 import gov.nist.hit.core.domain.CFTestStep;
@@ -89,6 +89,7 @@ import gov.nist.hit.core.domain.TestScope;
 import gov.nist.hit.core.domain.TestStep;
 import gov.nist.hit.core.domain.TestStepFieldPair;
 import gov.nist.hit.core.domain.TestingStage;
+import gov.nist.hit.core.domain.TestingType;
 import gov.nist.hit.core.domain.TransportForms;
 import gov.nist.hit.core.domain.VocabularyLibrary;
 import gov.nist.hit.core.repo.AppInfoRepository;
@@ -245,6 +246,12 @@ public abstract class ResourcebundleLoader {
 
 	@Autowired
 	protected TestCaseRepository testCaseRepository;
+	
+	@Autowired
+	private TestPlanService cbTestPlanService;
+	
+	@Autowired
+	private CFTestPlanService cfTestPlanService;
 
 	private Map<Long, String> idLocationMap;
 
@@ -419,6 +426,12 @@ public abstract class ResourcebundleLoader {
 			this.loadDomains(directory);
 			logger.info("resource bundle loaded successfully...");
 		}
+		
+		//preload TestPlans at startup
+		cbTestPlanService.loadAll();
+		cfTestPlanService.loadAll();
+		
+		
 		GCUtil.performGC();
 	}
 
@@ -507,7 +520,15 @@ public abstract class ResourcebundleLoader {
 				entry.getParticipantEmails().add(ownerNode.textValue());
 			}
 		}
-
+		JsonNode optionsJn;
+		if((optionsJn = node.get("options")) != null) {
+			if (optionsJn.get(Constant.REPORT_SAVING_SUPPORTED) != null) {
+				entry.setReportSavingSupported(optionsJn.get(Constant.REPORT_SAVING_SUPPORTED).asBoolean());
+			}else {
+				entry.setReportSavingSupported(true);// default value
+			}
+			
+		}
 		String domainPath = getDomainBasedPath(ResourcebundleLoader.ABOUT_PATTERN, key);
 		Resource resource = this.getResource(domainPath + PROFILE_INFO_PATTERN, rootPath);
 		if (resource != null) {
@@ -1262,6 +1283,7 @@ public abstract class ResourcebundleLoader {
 		if (!testCaseObj.has("id")) {
 			throw new IllegalArgumentException("Missing id for Test Case at " + location);
 		}
+		tc.setStage(stage);
 		tc.setPreloaded(preloaded);
 		tc.setScope(scope);
 		tc.setDomain(domain);
@@ -1505,6 +1527,7 @@ public abstract class ResourcebundleLoader {
 				throw new IllegalArgumentException("Missing id for Test Case Group at " + location);
 			}
 			tcg.setPreloaded(preloaded);
+			tcg.setStage(stage);
 			tcg.setScope(scope);
 			tcg.setAuthorUsername(authorUsername);
 			tcg.setDomain(domain);
@@ -1894,7 +1917,6 @@ public abstract class ResourcebundleLoader {
 		appInfo.setDomainManagementSupported(domainManagementSupported);
 		appInfo.setDomainSelectionSupported(domainSelectionSupported);
 		appInfo.setUserLoginSupported(userLoginSupported);
-		appInfo.setReportSavingSupported(reportSavingSupported);
 		appInfoRepository.save(appInfo);
 		logger.info("loading app info...DONE");
 	}

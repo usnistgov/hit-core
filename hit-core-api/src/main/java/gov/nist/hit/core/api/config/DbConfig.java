@@ -83,16 +83,13 @@ public class DbConfig {
 
 	private Properties jpaProperties() {
 		Properties properties = new Properties();
-		// properties.put("hibernate.cache.use_second_level_cache",
-		// env.getProperty("hibernate.cache.use_second_level_cache"));
-		// properties.put("hibernate.cache.region.factory_class",
-		// env.getProperty("hibernate.cache.region.factory_class"));
-		// properties.put("hibernate.cache.use_query_cache",
-		// env.getProperty("hibernate.cache.use_query_cache"));
+//		 properties.put("hibernate.cache.use_second_level_cache",true);
+//		 properties.put("hibernate.cache.region.factory_class",	"org.hibernate.cache.ehcache.EhCacheRegionFactory");
+//		 properties.put("hibernate.cache.use_query_cache",	 true);
+		 
 		properties.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
 		properties.put("hibernate.dialect", env.getProperty("jpa.databasePlatform"));
-		properties.put("hibernate.globally_quoted_identifiers",
-				env.getProperty("hibernate.globally_quoted_identifiers"));
+		properties.put("hibernate.globally_quoted_identifiers",		env.getProperty("hibernate.globally_quoted_identifiers"));
 
 		return properties;
 	}

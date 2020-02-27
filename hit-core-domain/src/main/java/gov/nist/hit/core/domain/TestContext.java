@@ -1,5 +1,7 @@
 package gov.nist.hit.core.domain;
 
+import java.util.Date;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -53,7 +55,10 @@ public class TestContext extends TestResource {
   @OneToOne(fetch = FetchType.EAGER, optional = false, mappedBy = "testContext")
   protected TestStep testStep;
 
-  public TestContext() {}
+  public TestContext() {
+	  super();
+	  this.updateDate = new Date();
+  }
 
   public long getId() {
     return id;

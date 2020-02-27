@@ -1,11 +1,17 @@
 package gov.nist.hit.core.service.impl;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.ibm.icu.util.Calendar;
 
 import gov.nist.hit.core.domain.TestArtifact;
 import gov.nist.hit.core.domain.TestCase;
@@ -20,6 +26,9 @@ import gov.nist.hit.core.service.TestPlanService;
 @Service
 public class TestPlanServiceImpl implements TestPlanService {
 
+	
+	static private Map<Long,TestPlan> cache = new HashMap<Long,TestPlan>();
+	
 	@Autowired
 	private TestPlanRepository testPlanRepository;
 
@@ -49,9 +58,41 @@ public class TestPlanServiceImpl implements TestPlanService {
 	}
 
 	@Override
+	public void loadAll() {		
+		List<Long> listIds = testPlanRepository.findAllTestPlanIds();
+		for(Long id : listIds) {
+			findOne(id);
+		}	
+	}
+	
+	@Override
 	public TestPlan findOne(Long testPlanId) {
-		// TODO Auto-generated method stub
-		return testPlanRepository.findOne(testPlanId);
+		if (cache.get(testPlanId) != null) {
+			//Rounded to the nearest second to avoid (most) date format conversion issues.
+			Date d = DateUtils.round(testPlanRepository.getUpdateDate(testPlanId), Calendar.SECOND);
+			Date d2 = DateUtils.round(cache.get(testPlanId).getUpdateDate(), Calendar.SECOND);
+//			System.out.println(d.getTime() + " - "+ d2.getTime()   );			
+			if (d2.compareTo(d)== 0) {
+//				System.out.println("returning cache");
+				return cache.get(testPlanId);		
+			}else {
+//				System.out.println("fetching new because new date");
+				TestPlan tp = testPlanRepository.findOne(testPlanId);
+				cache.put(testPlanId, tp);
+				return tp;
+			}			
+		}else {
+//			System.out.println("fetching new because does not existe");
+			TestPlan tp = testPlanRepository.findOne(testPlanId);
+			cache.put(testPlanId, tp);
+			return tp;
+		}
+		
+	}
+	
+	@Override
+	public Date getUpdateDate(Long testPlanId) {		
+		return testPlanRepository.getUpdateDate(testPlanId);		
 	}
 
 	@Override
@@ -77,6 +118,7 @@ public class TestPlanServiceImpl implements TestPlanService {
 	@Override
 	public TestPlan save(TestPlan testPlan) {
 		// TODO Auto-generated method stub
+		testPlan.updateUpdateDate();
 		return testPlanRepository.save(testPlan);
 	}
 

@@ -12,8 +12,6 @@
 
 package gov.nist.hit.core.api.util;
 
-import gov.nist.hit.core.domain.ResponseMessage;
-
 import java.util.List;
 import java.util.Locale;
 
@@ -30,6 +28,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import gov.nist.hit.core.domain.ResponseMessage;
 
 /**
  * 

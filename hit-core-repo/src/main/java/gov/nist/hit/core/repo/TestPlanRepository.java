@@ -13,6 +13,7 @@
 package gov.nist.hit.core.repo;
 
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -84,6 +85,13 @@ public interface TestPlanRepository extends JpaRepository<TestPlan, Long> {
 
   @Query("select tp from TestPlan tp where tp.persistentId = :id")
   public TestPlan getByPersistentId(@Param("id") Long id);
+  
+  @Query("select tp.updateDate from TestPlan tp where tp.id = :id")
+  public Date getUpdateDate(@Param("id") Long id);
+  
+  @Transactional(value = "transactionManager")
+  @Query("select tp.id from TestPlan tp")
+  public List<Long> findAllTestPlanIds();
 
   @Modifying
   @Transactional(value = "transactionManager")

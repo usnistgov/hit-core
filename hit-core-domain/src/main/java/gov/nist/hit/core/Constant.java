@@ -18,6 +18,9 @@ package gov.nist.hit.core;
  */
 public class Constant {
 
+	
+  // App options
+	
   public static final String AUTHENTICATION_REQUIRED = "AUTHENTICATION_REQUIRED";
 
   public static final String EMPLOYER_REQUIRED = "EMPLOYER_REQUIRED";
@@ -48,9 +51,15 @@ public class Constant {
 
   public static final String DOMAIN_MANAGEMENT_SUPPORTED = "DOMAIN_MANAGEMENT_SUPPORTED";
 
-  public static final String DOMAIN_SELECTON_SUPPORTED = "DOMAIN_SELECTON_SUPPORTED";
+  public static final String DOMAIN_SELECTON_SUPPORTED = "DOMAIN_SELECTON_SUPPORTED"; 
   
   public static final String USER_LOGIN_SUPPORTED = "USER_LOGIN_SUPPORTED";
   
+  
+  // Tool Scope options
+  
   public static final String REPORT_SAVING_SUPPORTED = "REPORT_SAVING_SUPPORTED";
+  
+  
+  
 }

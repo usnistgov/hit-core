@@ -11,11 +11,11 @@
  */
 package gov.nist.auth.hit.core.repo.util;
 
-import gov.nist.auth.hit.core.domain.Account;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
+
+import gov.nist.auth.hit.core.domain.Account;
 
 /**
  * @author fdevaulx

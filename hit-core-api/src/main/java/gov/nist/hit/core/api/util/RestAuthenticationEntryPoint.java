@@ -11,8 +11,6 @@
  * */
 package gov.nist.hit.core.api.util;
 
-import gov.nist.hit.core.domain.ResponseMessage;
-
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +27,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import gov.nist.hit.core.domain.ResponseMessage;
 
 /**
  * Just return 401-unauthorized for every unauthorized request. The client side catches this and

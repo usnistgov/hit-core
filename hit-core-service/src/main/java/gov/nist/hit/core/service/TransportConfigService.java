@@ -1,11 +1,11 @@
 package gov.nist.hit.core.service;
 
-import gov.nist.auth.hit.core.domain.KeyValuePair;
-import gov.nist.auth.hit.core.domain.TestingType;
-import gov.nist.auth.hit.core.domain.TransportConfig;
-
 import java.util.List;
 import java.util.Map;
+
+import gov.nist.auth.hit.core.domain.KeyValuePair;
+import gov.nist.auth.hit.core.domain.TransportConfig;
+import gov.nist.hit.core.domain.TestingType;
 
 public interface TransportConfigService {
 

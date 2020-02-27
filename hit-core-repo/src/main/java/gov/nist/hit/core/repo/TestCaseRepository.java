@@ -15,6 +15,8 @@ package gov.nist.hit.core.repo;
 import gov.nist.hit.core.domain.TestArtifact;
 import gov.nist.hit.core.domain.TestCase;
 
+import java.util.Date;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -34,4 +36,6 @@ public interface TestCaseRepository extends JpaRepository<TestCase, Long> {
   @Query("delete from TestCase tc where tc.preloaded = true")
   public void deletePreloaded();
   
+  @Query("select tc.updateDate from TestCase tc where tc.id = :id")
+  public Date getUpdateDate(@Param("id") Long id);
 }

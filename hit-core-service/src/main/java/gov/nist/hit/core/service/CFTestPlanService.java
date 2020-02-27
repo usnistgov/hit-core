@@ -13,6 +13,7 @@
 package gov.nist.hit.core.service;
 
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -48,6 +49,10 @@ public interface CFTestPlanService {
   List<CFTestPlan> findByIds(Set<Long> ids);
 
   void delete(CFTestPlan testPlan);
+  
+  public Date getUpdateDate(Long testPlanId);
+  
+  void loadAll();
 
 
 

@@ -1,5 +1,8 @@
 package gov.nist.auth.hit.core.service;
 
+import java.util.List;
+
+import gov.nist.auth.hit.core.domain.UserTestCaseReport;
 import gov.nist.auth.hit.core.domain.UserTestStepReport;
 
 /**
@@ -17,10 +20,25 @@ import gov.nist.auth.hit.core.domain.UserTestStepReport;
  */
 public interface UserTestStepReportService {
 
-    UserTestStepReport findOneByAccountAndTestStepId(Long accountId,Long testStepId);
+	public UserTestStepReport findOneByAccountIdAndTestStepPersistentId(Long accountId,Long testStepId);
+	
 
-    UserTestStepReport save(UserTestStepReport userTestStepReport);
+    public UserTestStepReport save(UserTestStepReport userTestStepReport);
 
-    void delete(UserTestStepReport userTestStepReport);
+    public void delete(UserTestStepReport userTestStepReport);
+    
+    public List<UserTestStepReport> findAllByAccountIdAndDomain(Long accountId,String domain);
+    
+    UserTestStepReport findOne(Long userTestStepReportId);
+
+	public void delete(Long id);
+
+	List<UserTestStepReport> findAllByAccountIdAndDomainAndTestStepPersistentId(Long userId, String domain,
+			Long testStepPersistentId);
+	
+	List<UserTestStepReport> findIndependantByAccountIdAndDomainAndTestStepPersistentId(Long userId, String domain,
+			Long testStepPersistentId);
+	
+    
 
 }

@@ -1,5 +1,7 @@
 package gov.nist.hit.core.domain;
 
+import java.util.List;
+
 /**
  * This software was developed at the National Institute of Standards and Technology by employees of
  * the Federal Government in the course of their official duties. Pursuant to title 17 Section 105
@@ -14,21 +16,40 @@ package gov.nist.hit.core.domain;
  * Created by Maxence Lefort on 9/13/16.
  */
 public class UserTestStepReportRequest {
-    private Long testStepId;
-
+//    private Long testStepId;
+    
+    private Long testStepValidationReportId;
+    
+    
     public UserTestStepReportRequest() {
     }
 
-    public UserTestStepReportRequest(Long testStepId) {
-        this.testStepId = testStepId;
+    public UserTestStepReportRequest( Long testStepValidationReportId) {
+//        this.testStepId = testStepId;
+        this.testStepValidationReportId = testStepValidationReportId;
     }
+    
 
-    public Long getTestStepId() {
-        return testStepId;
-    }
 
-    public void setTestStepId(Long testStepId) {
-        this.testStepId = testStepId;
-    }
+//    public Long getTestStepId() {
+//        return testStepId;
+//    }
+//
+//    public void setTestStepId(Long testStepId) {
+//        this.testStepId = testStepId;
+//    }
+
+	public Long getTestStepValidationReportId() {
+		return testStepValidationReportId;
+	}
+
+	public void setTestStepValidationReportId(Long testStepValidationReportId) {
+		this.testStepValidationReportId = testStepValidationReportId;
+	}
+
+
+    
+    
+    
 
 }

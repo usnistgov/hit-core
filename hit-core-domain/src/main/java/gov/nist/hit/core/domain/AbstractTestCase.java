@@ -1,5 +1,6 @@
 package gov.nist.hit.core.domain;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,10 +12,14 @@ import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -31,6 +36,7 @@ public abstract class AbstractTestCase extends TestResource
   @Column(columnDefinition = "TEXT")
   protected String name;
 
+  @JsonSerialize(using = ToStringSerializer.class)
   @NotNull
   @Column(unique = true, nullable = false)
   protected Long persistentId;
@@ -67,6 +73,10 @@ public abstract class AbstractTestCase extends TestResource
   @ApiModelProperty(required = true, value = "Supplement documents")
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   protected Set<Document> supplements = new HashSet<Document>();
+  
+  @Temporal(TemporalType.TIMESTAMP)
+  protected Date updateDate;
+  
 
 
   public String getName() {
@@ -163,5 +173,16 @@ public abstract class AbstractTestCase extends TestResource
     this.supplements = supplements;
   }
 
+  public Date getUpdateDate() {
+	  return updateDate;
+  }
+
+  public void setUpdateDate(Date updateDate) {
+	  this.updateDate = updateDate;
+  }
+
+  public void updateUpdateDate() {
+	  this.updateDate = new Date();
+  }
 
 }

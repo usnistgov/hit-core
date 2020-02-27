@@ -1,5 +1,6 @@
 package gov.nist.hit.core.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,8 @@ public class TestStepServiceImpl implements TestStepService {
   @Override
   @Transactional(value = "transactionManager")
   public void save(TestStep testStep) {
-    testStepRepository.saveAndFlush(testStep);
+	  testStep.updateUpdateDate();
+	  testStepRepository.saveAndFlush(testStep);
   }
 
   @Override
@@ -71,6 +73,11 @@ public class TestStepServiceImpl implements TestStepService {
     // TODO Auto-generated method stub
     return testStepRepository.getByPersistentId(persistenceId);
   }
+
+	@Override
+	public Date getUpdateDate(Long testStepId) {
+		return testStepRepository.getUpdateDate(testStepId);
+	}
 
 
 }

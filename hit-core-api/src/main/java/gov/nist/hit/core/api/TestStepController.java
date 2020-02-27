@@ -13,14 +13,17 @@
 package gov.nist.hit.core.api;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,6 +34,7 @@ import gov.nist.hit.core.domain.TestStep;
 import gov.nist.hit.core.repo.TestCaseRepository;
 import gov.nist.hit.core.service.Streamer;
 import gov.nist.hit.core.service.TestStepService;
+import gov.nist.hit.core.service.exception.DomainException;
 import gov.nist.hit.core.service.exception.TestCaseException;
 import io.swagger.annotations.ApiParam;
 
@@ -107,6 +111,7 @@ public class TestStepController {
 		result.put("testDataSpecification", testStep.getTestDataSpecification());
 		result.put("testStory", testStep.getTestStory());
 		result.put("supplements", testStep.getSupplements());
+		result.put("updateDate", testStep.getUpdateDate());
 		streamer.stream(response.getOutputStream(), result);
 	}
 
@@ -133,6 +138,17 @@ public class TestStepController {
 			throws IOException {
 		logger.info("Fetching testDataSpecification of testcase/teststep with id=" + testStepId);
 		streamer.stream(response.getOutputStream(), testStepService.testDataSpecification(testStepId));
+	}
+	
+	@RequestMapping(value = "/{testStepId}/updateDate", method = RequestMethod.GET, produces = "application/json")
+	public Date updateDate(HttpServletRequest request, @PathVariable("testStepId") Long testStepId, Authentication authentication)
+			throws DomainException {
+		try {
+			Date date = testStepService.getUpdateDate(testStepId);
+			return date;
+		} catch (Exception e) {
+			throw new DomainException(e);
+		}
 	}
 
 }

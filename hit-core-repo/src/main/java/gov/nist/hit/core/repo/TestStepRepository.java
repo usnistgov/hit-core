@@ -17,6 +17,7 @@ import gov.nist.hit.core.domain.TestCase;
 import gov.nist.hit.core.domain.TestStep;
 import gov.nist.hit.core.domain.TestingStage;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -52,5 +53,8 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
   @Transactional(value = "transactionManager")
   @Query("delete from TestStep ts where ts.preloaded = true")
   public void deletePreloaded();
+  
+  @Query("select ts.updateDate from TestStep ts where ts.id = :id")
+  public Date getUpdateDate(@Param("id") Long id);
 
 }

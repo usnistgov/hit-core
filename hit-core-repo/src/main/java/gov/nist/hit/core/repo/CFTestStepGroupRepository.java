@@ -12,6 +12,8 @@
 
 package gov.nist.hit.core.repo;
 
+import java.util.Date;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -35,5 +37,8 @@ public interface CFTestStepGroupRepository extends JpaRepository<CFTestStepGroup
   @Transactional(value = "transactionManager")
   @Query("delete from CFTestStepGroup tsg where tsg.preloaded = true")
   public void deletePreloaded();
+  
+  @Query("select cftg.updateDate from CFTestStepGroup cftg where cftg.id = :id")
+  public Date getUpdateDate(@Param("id") Long id);
 
 }

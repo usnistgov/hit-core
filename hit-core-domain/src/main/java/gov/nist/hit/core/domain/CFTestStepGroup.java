@@ -12,6 +12,7 @@
 package gov.nist.hit.core.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,6 +46,7 @@ public class CFTestStepGroup extends AbstractTestCase implements Serializable {
     this.type = ObjectType.TestStepGroup;
     this.stage = TestingStage.CF;
     this.preloaded = false;
+    this.updateDate = new Date();
   }
 
   @ApiModelProperty(required = false, value = "test steps groups of the test step group")

@@ -1,5 +1,6 @@
 package gov.nist.hit.core.service;
 
+import java.util.Date;
 import java.util.List;
 
 import gov.nist.hit.core.domain.TestArtifact;
@@ -27,6 +28,8 @@ public interface TestStepService {
   void save(TestStep testStep);
 
   public TestStep findOneByPersistenceId(Long persistenceId);
+
+  public Date getUpdateDate(Long testStepId);
 
 
 

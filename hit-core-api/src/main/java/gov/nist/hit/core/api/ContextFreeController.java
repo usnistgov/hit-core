@@ -14,7 +14,10 @@ package gov.nist.hit.core.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gov.nist.auth.hit.core.domain.Account;
 import gov.nist.hit.core.domain.CFTestPlan;
+import gov.nist.hit.core.domain.TestPlan;
 import gov.nist.hit.core.domain.TestScope;
 import gov.nist.hit.core.domain.TestingStage;
 import gov.nist.hit.core.service.AccountService;
@@ -41,6 +46,7 @@ import gov.nist.hit.core.service.CFTestStepService;
 import gov.nist.hit.core.service.ResourceLoader;
 import gov.nist.hit.core.service.Streamer;
 import gov.nist.hit.core.service.UserService;
+import gov.nist.hit.core.service.exception.DomainException;
 import gov.nist.hit.core.service.exception.NoUserFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -128,6 +134,30 @@ public class ContextFreeController {
 		Long userId = SessionContext.getCurrentUserId(request.getSession(false));
 		recordTestPlan(testPlan, userId);
 		return testPlan;
+	}
+	
+	@RequestMapping(value = "/testplans/{testPlanId}/updateDate", method = RequestMethod.GET, produces = "application/json")
+	public Date updateDate(HttpServletRequest request, @PathVariable("testPlanId") Long testPlanId, Authentication authentication)
+			throws DomainException {
+		try {
+			Date date = testPlanService.getUpdateDate(testPlanId);
+			return date;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	@RequestMapping(value = "/{testPlanId}/details", method = RequestMethod.GET, produces = "application/json")
+	public Map<String, Object> details(HttpServletResponse response,
+			@ApiParam(value = "the id of the test plan", required = true) @PathVariable final Long testPlanId)
+			throws IOException {
+		logger.info("Fetching artifacts of testplan with id=" + testPlanId);
+		CFTestPlan testPlan = testPlanService.findOne(testPlanId);
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("testStory", testPlan.getTestStory());
+		result.put("supplements", testPlan.getSupplements());
+		result.put("updateDate", testPlan.getUpdateDate());
+		return result;
 	}
 
 	private void recordTestPlan(CFTestPlan testPlan, Long userId) {

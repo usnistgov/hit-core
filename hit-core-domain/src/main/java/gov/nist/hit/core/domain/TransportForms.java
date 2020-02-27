@@ -1,5 +1,7 @@
 package gov.nist.hit.core.domain;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,8 +34,15 @@ public class TransportForms extends TestResource {
   private String sutInitiatorForm;
 
 
+  
+  
+  public TransportForms() {
+	super();
+	this.updateDate = new Date();
+  }
+
   public String getProtocol() {
-    return protocol;
+	  return protocol;
   }
 
   public void setProtocol(String protocol) {

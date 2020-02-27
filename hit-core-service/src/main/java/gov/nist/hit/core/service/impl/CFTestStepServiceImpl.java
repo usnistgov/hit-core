@@ -1,5 +1,7 @@
 package gov.nist.hit.core.service.impl;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +27,18 @@ public class CFTestStepServiceImpl implements CFTestStepService {
 
   @Override
   public void save(CFTestStep testStep) {
+	testStep.updateUpdateDate();
     testStepRepository.saveAndFlush(testStep);
   }
 
   @Override
   public void delete(CFTestStep testStep) {
     testStepRepository.delete(testStep);
+  }
+  
+  @Override
+  public Date getUpdateDate(Long id) {
+	  return testStepRepository.getUpdateDate(id);
   }
 
 

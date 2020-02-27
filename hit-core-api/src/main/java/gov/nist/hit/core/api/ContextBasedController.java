@@ -13,7 +13,10 @@
 package gov.nist.hit.core.api;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,16 +33,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gov.nist.auth.hit.core.domain.Account;
 import gov.nist.hit.core.domain.TestCase;
+import gov.nist.hit.core.domain.TestCaseGroup;
 import gov.nist.hit.core.domain.TestPlan;
 import gov.nist.hit.core.domain.TestScope;
 import gov.nist.hit.core.domain.TestStep;
 import gov.nist.hit.core.domain.TestingStage;
+import gov.nist.hit.core.repo.TestCaseGroupRepository;
 import gov.nist.hit.core.service.AccountService;
 import gov.nist.hit.core.service.Streamer;
 import gov.nist.hit.core.service.TestCaseService;
 import gov.nist.hit.core.service.TestPlanService;
 import gov.nist.hit.core.service.TestStepService;
 import gov.nist.hit.core.service.UserService;
+import gov.nist.hit.core.service.exception.DomainException;
 import gov.nist.hit.core.service.exception.NoUserFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -65,6 +72,9 @@ public class ContextBasedController {
 
 	@Autowired
 	private AccountService accountService;
+	
+	@Autowired
+	protected TestCaseGroupRepository testCaseGroupRepository;
 	
 	@Autowired
 	private UserService userService;
@@ -100,17 +110,44 @@ public class ContextBasedController {
 		streamer.stream(response.getOutputStream(), results);
 	}
 
+	
 	@ApiOperation(value = "Find a context-based test plan by its id", nickname = "getOneTestPlanById")
 	@RequestMapping(value = "/testplans/{testPlanId}", method = RequestMethod.GET, produces = "application/json")
 	public TestPlan testPlan(
 			@ApiParam(value = "the id of the test plan", required = true) @PathVariable final Long testPlanId,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
-		logger.info("Fetching  test case...");
+		logger.info("Fetching  test case...");	
 		TestPlan testPlan = testPlanService.findOne(testPlanId);
 		Long userId = SessionContext.getCurrentUserId(request.getSession(false));
 		recordTestPlan(testPlan, userId);
 		return testPlan;
 	}
+	
+	
+	@RequestMapping(value = "/testplans/{testPlanId}/updateDate", method = RequestMethod.GET, produces = "application/json")
+	public Date updateDate(HttpServletRequest request, @PathVariable("testPlanId") Long testPlanId, Authentication authentication)
+			throws DomainException {
+		try {
+			Date date = testPlanService.getUpdateDate(testPlanId);
+			return date;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	@RequestMapping(value = "testplans/{testPlanId}/details", method = RequestMethod.GET, produces = "application/json")
+	public Map<String, Object> details(HttpServletResponse response,
+			@ApiParam(value = "the id of the test plan", required = true) @PathVariable final Long testPlanId)
+			throws IOException {
+		logger.info("Fetching artifacts of testplan with id=" + testPlanId);
+		TestPlan testPlan = testPlanService.findOne(testPlanId);
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("testStory", testPlan.getTestStory());
+		result.put("supplements", testPlan.getSupplements());
+		result.put("updateDate", testPlan.getUpdateDate());
+		return result;
+	}
+	
 
 	private void recordTestPlan(TestPlan testPlan, Long userId) {
 		if (testPlan != null && userId != null) {
@@ -138,6 +175,36 @@ public class ContextBasedController {
 		TestCase testCase = testCaseService.findOne(testCaseId);
 		return testCase;
 	}
+	
+	/**
+	 * 
+	 * @param testCaseId
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/testcases/{testCaseId}/details", method = RequestMethod.GET, produces = "application/json")
+	public Map<String, Object> tcdetails(HttpServletResponse response, @PathVariable("testCaseId") final Long testCaseId)
+			throws IOException {
+		Map<String, Object> result = new HashMap<String, Object>();
+		logger.info("Fetching testcase " + testCaseId + " artifacts ");
+		TestCase testCase = testCaseService.findOne(testCaseId);
+		result.put("testStory", testCase.getTestStory());
+		result.put("jurorDocument", testCase.getJurorDocument());
+		result.put("supplements", testCase.getSupplements());
+		result.put("updateDate", testCase.getUpdateDate());
+		return result;
+	}
+	
+	@RequestMapping(value = "/testcases/{testCaseId}/updateDate", method = RequestMethod.GET, produces = "application/json")
+	public Date tcUpdateDate(HttpServletRequest request, @PathVariable("testCaseId") Long testCaseId, Authentication authentication)
+			throws DomainException {
+		try {
+			Date date = testCaseService.getUpdateDate(testCaseId);
+			return date;
+		} catch (Exception e) {
+			throw new DomainException(e);
+		}
+	}
 
 	@ApiOperation(value = "Get a context-based test step by id", nickname = "getOneContextBasedTestStepById", hidden = true)
 	@RequestMapping(value = "/teststeps/{testStepId}", method = RequestMethod.GET, produces = "application/json")
@@ -147,5 +214,58 @@ public class ContextBasedController {
 		TestStep testStep = testStepService.findOne(testStepId);
 		return testStep;
 	}
+	
+	@RequestMapping(value = "/teststeps/{testStepId}/details", method = RequestMethod.GET)
+	public Map<String, Object> tsdetails(HttpServletResponse response,
+			@ApiParam(value = "the id of the test step", required = true) @PathVariable final Long testStepId)
+			throws IOException {
+		logger.info("Fetching artifacts of teststep with id=" + testStepId);
+		TestStep testStep = testStepService.findOne(testStepId);
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("jurorDocument", testStep.getJurorDocument());
+		result.put("messageContent", testStep.getMessageContent());
+		result.put("testDataSpecification", testStep.getTestDataSpecification());
+		result.put("testStory", testStep.getTestStory());
+		result.put("supplements", testStep.getSupplements());
+		result.put("updateDate", testStep.getUpdateDate());
+		return result;
+	}
+	
+	@RequestMapping(value = "/teststeps/{testStepId}/updateDate", method = RequestMethod.GET, produces = "application/json")
+	public Date tsupdateDate(HttpServletRequest request, @PathVariable("testStepId") Long testStepId, Authentication authentication)
+			throws DomainException {
+		try {
+			Date date = testStepService.getUpdateDate(testStepId);
+			return date;
+		} catch (Exception e) {
+			throw new DomainException(e);
+		}
+	}
+	
+	@RequestMapping(value = "/testcasegroups/{testCaseGroupId}/details", method = RequestMethod.GET, produces = "application/json")
+	public Map<String, Object> tcsdetails(HttpServletResponse response,
+			@ApiParam(value = "the id of the test case group", required = true) @PathVariable final Long testCaseGroupId)
+			throws IOException {
+		logger.info("Fetching artifacts of test case group with id=" + testCaseGroupId);
+		TestCaseGroup testCaseGroup = testCaseGroupRepository.findOne(testCaseGroupId);
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("testStory", testCaseGroup.getTestStory());
+		result.put("supplements", testCaseGroup.getSupplements());
+		result.put("updateDate", testCaseGroup.getUpdateDate());
+		return result;
+	}
+	
+	@RequestMapping(value = "/testcasegroups/{testCaseGroupId}/updateDate", method = RequestMethod.GET, produces = "application/json")
+	public Date tcgUpdateDate(HttpServletRequest request, @PathVariable("testCaseGroupId") Long testCaseGroupId, Authentication authentication)
+			throws DomainException {
+		try {
+			Date date = testCaseGroupRepository.getUpdateDate(testCaseGroupId);
+			return date;
+		} catch (Exception e) {
+			throw new DomainException(e);
+		}
+	}
+	
+	
 
 }

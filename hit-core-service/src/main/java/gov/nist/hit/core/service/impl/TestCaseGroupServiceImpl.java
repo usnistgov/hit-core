@@ -1,5 +1,7 @@
 package gov.nist.hit.core.service.impl;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,8 +39,17 @@ public class TestCaseGroupServiceImpl implements TestCaseGroupService {
   @Override
   @Transactional(value = "transactionManager")
   public void save(TestCaseGroup testCaseGroup) {
-    testCaseGroupRepository.saveAndFlush(testCaseGroup);
+	  testCaseGroup.updateUpdateDate();
+	  testCaseGroupRepository.saveAndFlush(testCaseGroup);
   }
+
+
+  @Override
+  public Date getUpdateDate(Long id) {
+	  return testCaseGroupRepository.getUpdateDate(id);
+  }
+  
+  
 
 
 }

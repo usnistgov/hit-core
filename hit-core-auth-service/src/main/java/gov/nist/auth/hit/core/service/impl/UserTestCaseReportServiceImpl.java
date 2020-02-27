@@ -1,10 +1,14 @@
 package gov.nist.auth.hit.core.service.impl;
 
-import gov.nist.auth.hit.core.domain.UserTestCaseReport;
-import gov.nist.auth.hit.core.repo.UserTestCaseReportRepository;
-import gov.nist.auth.hit.core.service.UserTestCaseReportService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import gov.nist.auth.hit.core.domain.UserTestCaseReport;
+import gov.nist.auth.hit.core.domain.UserTestStepReport;
+import gov.nist.auth.hit.core.repo.UserTestCaseReportRepository;
+import gov.nist.auth.hit.core.service.UserTestCaseReportService;
 
 /**
  * This software was developed at the National Institute of Standards and Technology by employees of
@@ -34,9 +38,32 @@ public class UserTestCaseReportServiceImpl implements UserTestCaseReportService 
     public UserTestCaseReport save(UserTestCaseReport userTestCaseReport) {
         return userTestCaseReportRepository.saveAndFlush(userTestCaseReport);
     }
+    
+    @Override
+    public UserTestCaseReport findOne(Long userTestCaseReportId) {
+      return userTestCaseReportRepository.findOne(userTestCaseReportId);
+    }
 
     @Override
     public void delete(UserTestCaseReport userTestCaseReport) {
         userTestCaseReportRepository.delete(userTestCaseReport);
     }
+    
+    @Override
+	public void delete(Long id) {
+    	userTestCaseReportRepository.delete(id);
+	}
+    
+    @Override
+	public List<UserTestCaseReport> findAllByAccountIdAndDomain(Long accountId,String domain) {
+		return userTestCaseReportRepository.findAllByAccountIdAndDomain(accountId,domain);
+	}
+
+	@Override
+	public List<UserTestCaseReport> findAllByAccountIdAndDomainAndTestCasePersistentId(Long userId, String domain,
+			Long persistentId) {
+		return userTestCaseReportRepository.findAllByAccountIdAndDomainAndTestCasePersistentId(userId,domain,persistentId);
+	}
+    
+    
 }

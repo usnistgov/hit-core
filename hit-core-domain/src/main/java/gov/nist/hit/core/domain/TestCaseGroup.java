@@ -12,6 +12,7 @@
 package gov.nist.hit.core.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +26,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -35,6 +39,7 @@ public class TestCaseGroup extends AbstractTestCase implements Serializable {
   private static final long serialVersionUID = 2555650104975908781L;
 
   @Id
+  @JsonSerialize(using = ToStringSerializer.class)
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
@@ -43,6 +48,7 @@ public class TestCaseGroup extends AbstractTestCase implements Serializable {
   public TestCaseGroup() {
     super();
     this.type = ObjectType.TestCaseGroup;
+    this.updateDate = new Date();
   }
 
   @ApiModelProperty(required = false, value = "children test case groups of the test case group")

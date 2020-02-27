@@ -89,6 +89,7 @@ public class DomainServiceImpl implements DomainService {
 
 	@Override
 	public void save(Domain entry) {
+		entry.updateUpdateDate();
 		domainRepo.saveAndFlush(entry);
 	}
 

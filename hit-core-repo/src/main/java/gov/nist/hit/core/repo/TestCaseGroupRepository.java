@@ -12,6 +12,8 @@
 
 package gov.nist.hit.core.repo;
 
+import java.util.Date;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -33,5 +35,8 @@ public interface TestCaseGroupRepository extends JpaRepository<TestCaseGroup, Lo
   @Transactional(value = "transactionManager")
   @Query("delete from TestCaseGroup tcg where tcg.preloaded = true")
   public void deletePreloaded();
+  
+  @Query("select tcg.updateDate from TestCaseGroup tcg where tcg.id = :id")
+  public Date getUpdateDate(@Param("id") Long id);
 
 }

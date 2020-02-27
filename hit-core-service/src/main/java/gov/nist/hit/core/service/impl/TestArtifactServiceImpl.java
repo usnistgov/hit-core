@@ -31,7 +31,8 @@ public class TestArtifactServiceImpl implements TestArtifactService {
   @Override
   @Transactional(value = "transactionManager")
   public void save(TestArtifact testArtifact) {
-    testArtifactRepository.saveAndFlush(testArtifact);
+	  testArtifact.updateUpdateDate();
+	  testArtifactRepository.saveAndFlush(testArtifact);
   }
 
 

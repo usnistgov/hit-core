@@ -1,13 +1,13 @@
 package gov.nist.hit.core.service.impl;
 
-import gov.nist.hit.core.domain.TestCaseExecution;
-import gov.nist.hit.core.repo.TestCaseExecutionRepository;
-import gov.nist.hit.core.service.TestCaseExecutionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import gov.nist.hit.core.domain.TestCaseExecution;
+import gov.nist.hit.core.repo.TestCaseExecutionRepository;
+import gov.nist.hit.core.service.TestCaseExecutionService;
 
 /**
  * This software was developed at the National Institute of Standards and Technology by employees of

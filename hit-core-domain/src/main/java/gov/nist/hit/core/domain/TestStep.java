@@ -1,6 +1,7 @@
 package gov.nist.hit.core.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,8 +24,9 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
-import gov.nist.auth.hit.core.domain.TestingType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -36,6 +38,7 @@ public class TestStep extends AbstractTestCase implements Serializable {
   private static final long serialVersionUID = 8805967508478985159L;
 
   @Id
+  @JsonSerialize(using = ToStringSerializer.class)
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
@@ -59,7 +62,6 @@ public class TestStep extends AbstractTestCase implements Serializable {
 
   @ApiModelProperty(required = false, value = "test data specification of the test step")
   @JsonIgnore
-
   @OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
   protected TestArtifact testDataSpecification;
 
@@ -73,6 +75,7 @@ public class TestStep extends AbstractTestCase implements Serializable {
   public TestStep() {
     super();
     this.type = ObjectType.TestStep;
+    this.updateDate = new Date();
   }
 
   @ApiModelProperty(required = false, value = "test context of the test step")
@@ -90,6 +93,7 @@ public class TestStep extends AbstractTestCase implements Serializable {
   public TestStep(String name) {
     super();
     this.name = name;
+    this.updateDate = new Date();
   }
 
   public Long getId() {

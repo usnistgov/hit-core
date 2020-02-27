@@ -12,6 +12,7 @@
 
 package gov.nist.hit.core.api;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,9 +33,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import gov.nist.auth.hit.core.domain.Account;
 import gov.nist.hit.core.domain.Domain;
 import gov.nist.hit.core.domain.TestScope;
+import gov.nist.hit.core.domain.util.Views;
 import gov.nist.hit.core.service.AccountService;
 import gov.nist.hit.core.service.AppInfoService;
 import gov.nist.hit.core.service.DomainService;
@@ -93,9 +97,11 @@ public class DomainController {
 		return appInfoService.get().isDomainManagementSupported();
 	}
 
+	@JsonView(Views.Short.class)
 	@RequestMapping(method = RequestMethod.GET, produces = "application/json")
 	public List<Domain> findDomains(HttpServletRequest request) throws DomainException {
 		try {
+			List<Domain> res;
 			logger.info("Fetching all tool scopes ...");
 			Long userId = SessionContext.getCurrentUserId(request.getSession(false));
 			if (userId != null) {
@@ -110,13 +116,16 @@ public class DomainController {
 					}
 				}
 			}
-			return domainService.findShortAllGlobalDomains();
+			
+			res=  domainService.findShortAllGlobalDomains();
+			return res;
 		} catch (NoUserFoundException e) {
 			throw new DomainException(e);
 		}
 
 	}
 
+	@JsonView(Views.Short.class)
 	@PreAuthorize("hasRole('tester')")
 	@RequestMapping(method = RequestMethod.GET, value = "/findByUser", produces = "application/json")
 	public List<Domain> findDomainByUsername(HttpServletRequest request, Authentication authentication)
@@ -217,6 +226,7 @@ public class DomainController {
 		}
 	}
 
+	@JsonView(Views.Short.class)
 	@PreAuthorize("hasRole('tester')")
 	@RequestMapping(value = "/searchByScope", method = RequestMethod.GET, produces = "application/json")
 	public List<Domain> findUserDomains(HttpServletRequest request,
@@ -302,6 +312,22 @@ public class DomainController {
 			return true;
 		} catch (NoUserFoundException e) {
 			throw new DomainException(e);
+		} catch (Exception e) {
+			throw new DomainException(e);
+		}
+	}
+	
+	
+	@RequestMapping(value = "/{key}/updateDate", method = RequestMethod.GET, produces = "application/json")
+	public Date updateDate(HttpServletRequest request, @PathVariable("key") String key, Authentication authentication)
+			throws DomainException {
+		try {
+			Domain domain = domainService.findOneByKey(key);
+			if (domain != null) {
+				return domain.getUpdateDate();
+			}else {
+				return null;
+			}
 		} catch (Exception e) {
 			throw new DomainException(e);
 		}

@@ -1,6 +1,10 @@
 package gov.nist.auth.hit.core.repo;
 
 import gov.nist.auth.hit.core.domain.UserTestCaseReport;
+import gov.nist.auth.hit.core.domain.UserTestStepReport;
+
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -21,4 +25,10 @@ public interface UserTestCaseReportRepository extends JpaRepository<UserTestCase
 
     @Query("select utcr from UserTestCaseReport utcr where utcr.accountId = ?1 and utcr.testCasePersistentId = ?2")
     UserTestCaseReport findOneByAccountIdAndTestCaseId(Long accountId,Long testCaseId);
+    
+    @Query("select utcr from UserTestCaseReport utcr where utcr.accountId = ?1 and utcr.domain = ?2")
+    List<UserTestCaseReport> findAllByAccountIdAndDomain(Long accountId,String domain);
+
+    @Query("select utcr from UserTestCaseReport utcr where utcr.accountId = ?1  and utcr.domain = ?2 and utcr.testCasePersistentId = ?3")
+	List<UserTestCaseReport> findAllByAccountIdAndDomainAndTestCasePersistentId(Long userId, String domain, Long persistentId);
 }

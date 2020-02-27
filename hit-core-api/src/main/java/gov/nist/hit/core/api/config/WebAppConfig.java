@@ -32,6 +32,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 
@@ -102,6 +103,13 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
 				MediaType.TEXT_HTML, //
 				MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_FORM_URLENCODED));
 		converters.add(stringConverter);
+		
+		
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		 ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
+	      converter.setObjectMapper(objectMapper);
+	      converters.add(converter);
 		super.configureMessageConverters(converters);
 	}
 

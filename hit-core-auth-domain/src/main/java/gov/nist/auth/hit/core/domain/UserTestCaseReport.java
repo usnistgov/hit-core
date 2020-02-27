@@ -1,8 +1,30 @@
 package gov.nist.auth.hit.core.domain;
 
-import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
+import gov.nist.hit.core.domain.TestResult;
+import gov.nist.hit.core.domain.TestingStage;
+import gov.nist.hit.core.domain.util.Views;
 
 /**
  * This software was developed at the National Institute of Standards and Technology by employees of
@@ -22,16 +44,50 @@ public class UserTestCaseReport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonView(Views.NoData.class)
     protected Long id;
+    
+    @JsonView(Views.NoData.class)
+    protected String name;
+    
+    @JsonView(Views.NoData.class)
     private Double version;
-    //private ArrayList<UserTestStepReport> userTestStepReports;
+    
+    @JsonView(Views.NoData.class)
+    @Enumerated(EnumType.STRING)
+	protected TestingStage stage;
+    
+    @JsonView(Views.NoData.class)
+    @Enumerated(EnumType.STRING)
+	protected TestResult result;
+    
+    @JsonView(Views.NoData.class)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "testCaseReport", orphanRemoval = true, cascade = {CascadeType.REMOVE,CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<UserTestStepReport> userTestStepReports;
+    
+    @JsonView(Views.NoData.class)
     private Long accountId;
+    
+    @JsonView(Views.NoData.class)
     private Long testCasePersistentId;
+    
     @Column(columnDefinition = "LONGTEXT")
     private String xml;
+    
+    @Column(columnDefinition = "LONGTEXT")
+    private String html;
+    
+    @JsonView(Views.NoData.class)
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
+    
+    @JsonView(Views.NoData.class)
+    @NotNull
+	@Column(nullable = false)
+	protected String domain;
 
+    
     public Double getVersion() {
         return version;
     }
@@ -41,27 +97,32 @@ public class UserTestCaseReport {
     }
     
 
-    /*public ArrayList<UserTestStepReport> getUserTestStepReports() {
+    public Set<UserTestStepReport> getUserTestStepReports() {
         return userTestStepReports;
     }
 
     public void addUserTestStepReport(UserTestStepReport userTestStepReport){
         if(userTestStepReports==null){
-            userTestStepReports = new ArrayList<>();
+            userTestStepReports = new HashSet<>();
         }
         userTestStepReports.add(userTestStepReport);
     }
 
-    public void setUserTestStepReports(ArrayList<UserTestStepReport> userTestStepReports) {
+    public void setUserTestStepReports(Set<UserTestStepReport> userTestStepReports) {
         this.userTestStepReports = userTestStepReports;
-    }*/
+    }
 
-    public UserTestCaseReport(Long id, Double version, Long accountId, Long testCasePersistentId, String xml) {
+    public UserTestCaseReport(String name, String domain,TestingStage stage,Long id, Double version, Long accountId, Long testCasePersistentId, String xml, String html) {
+    	this.name = name;
+    	this.domain = domain;
+    	this.stage = stage;
 		this.id = id;
 		this.version = version;
 		this.accountId = accountId;
 		this.testCasePersistentId = testCasePersistentId;
 		this.xml = xml;
+		this.html = html;
+		this.creationDate = new Date();
 	}
     
     public UserTestCaseReport() {
@@ -91,4 +152,62 @@ public class UserTestCaseReport {
     public void setXml(String xml) {
         this.xml = xml;
     }
+
+	public String getDomain() {
+		return domain;
+	}
+
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
+
+	public TestResult getResult() {
+		return result;
+	}
+
+	public void setResult(TestResult result) {
+		this.result = result;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Long getId() {
+		return id;
+	}
+	
+	public TestingStage getStage() {
+		return stage;
+	}
+
+	public void setStage(TestingStage stage) {
+		this.stage = stage;
+	}
+
+	public String getHtml() {
+		return html;
+	}
+
+	public void setHtml(String html) {
+		this.html = html;
+	}
+	
+	
+	
+	
+    
+    
 }

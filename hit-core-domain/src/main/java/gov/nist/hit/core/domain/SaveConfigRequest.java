@@ -2,8 +2,6 @@ package gov.nist.hit.core.domain;
 
 import java.util.Map;
 
-import gov.nist.auth.hit.core.domain.TestingType;
-
 public class SaveConfigRequest {
 	private Long userId;
 	private Map<String, String> config;
