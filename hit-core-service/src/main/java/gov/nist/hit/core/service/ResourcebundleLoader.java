@@ -390,6 +390,14 @@ public abstract class ResourcebundleLoader {
 		System.out.println("RELOAD_DB is set to " + create);
 		return (create != null && (Boolean.valueOf(create) == true)) || appInfo == null;
 	}
+	
+	public boolean cacheAtStartUp() throws IOException {
+		String cache = System.getProperty("CACHE_AT_STARTUP");
+		cache = cache == null ? System.getenv("CACHE_AT_STARTUP") : cache;
+		logger.info("CACHE_AT_STARTUP is set to " + cache);
+		System.out.println("CACHE_AT_STARTUP is set to " + (cache == null || (cache != null && Boolean.valueOf(cache) == true)));
+		return (cache == null || (cache != null && Boolean.valueOf(cache) == true));
+	}
 
 	public void clearDB() {
 		appInfoRepository.deleteAll();
@@ -427,9 +435,14 @@ public abstract class ResourcebundleLoader {
 			logger.info("resource bundle loaded successfully...");
 		}
 		
-		//preload TestPlans at startup
-		cbTestPlanService.loadAll();
-		cfTestPlanService.loadAll();
+		if(cacheAtStartUp()) {
+			//preload TestPlans at startup
+			System.out.println("Caching CB test plans..");
+			cbTestPlanService.loadAll();
+			System.out.println("Done.\nCaching CF test plans...");
+			cfTestPlanService.loadAll();
+			System.out.println("Done.");
+		}
 		
 		
 		GCUtil.performGC();

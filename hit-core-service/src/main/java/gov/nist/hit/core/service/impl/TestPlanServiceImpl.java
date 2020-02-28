@@ -67,22 +67,18 @@ public class TestPlanServiceImpl implements TestPlanService {
 	
 	@Override
 	public TestPlan findOne(Long testPlanId) {
-		if (cache.get(testPlanId) != null) {
+		if (cache.get(testPlanId) != null && testPlanRepository.getUpdateDate(testPlanId) != null && cache.get(testPlanId).getUpdateDate() != null) {
 			//Rounded to the nearest second to avoid (most) date format conversion issues.
 			Date d = DateUtils.round(testPlanRepository.getUpdateDate(testPlanId), Calendar.SECOND);
 			Date d2 = DateUtils.round(cache.get(testPlanId).getUpdateDate(), Calendar.SECOND);
-//			System.out.println(d.getTime() + " - "+ d2.getTime()   );			
 			if (d2.compareTo(d)== 0) {
-//				System.out.println("returning cache");
 				return cache.get(testPlanId);		
 			}else {
-//				System.out.println("fetching new because new date");
 				TestPlan tp = testPlanRepository.findOne(testPlanId);
 				cache.put(testPlanId, tp);
 				return tp;
 			}			
 		}else {
-//			System.out.println("fetching new because does not existe");
 			TestPlan tp = testPlanRepository.findOne(testPlanId);
 			cache.put(testPlanId, tp);
 			return tp;

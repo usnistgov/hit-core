@@ -341,13 +341,13 @@ public class AppInfo implements Serializable {
 
   @Transient
   public void setDomainSelectionSupported(boolean supported) {
-    this.getOptions().put(Constant.DOMAIN_SELECTON_SUPPORTED, Boolean.toString(supported));
+    this.getOptions().put(Constant.DOMAIN_SELECTION_SUPPORTED, Boolean.toString(supported));
   }
   
   @Transient
   public Boolean isDomainSelectionSupported() {
-    return this.getOptions().get(Constant.DOMAIN_SELECTON_SUPPORTED) != null
-        && Boolean.valueOf(this.getOptions().get(Constant.DOMAIN_SELECTON_SUPPORTED));
+    return this.getOptions().get(Constant.DOMAIN_SELECTION_SUPPORTED) != null
+        && Boolean.valueOf(this.getOptions().get(Constant.DOMAIN_SELECTION_SUPPORTED));
   }
   
   @Transient
