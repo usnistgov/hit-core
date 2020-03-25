@@ -141,6 +141,12 @@ public class CFTestPlanServiceImpl implements CFTestPlanService {
 
   }
 
+  public boolean removeCacheElement(Long key) {
+	  return cache.remove(key) != null;
+  }
+	
+
+  
 
 
 }

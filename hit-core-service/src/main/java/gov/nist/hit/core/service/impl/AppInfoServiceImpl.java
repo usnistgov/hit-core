@@ -80,5 +80,18 @@ public class AppInfoServiceImpl implements AppInfoService {
   }
 
 
+	@Override
+	public String getUploadsFolderPath() {
+		String sql = "select appInfo.uploadsFolderPath from AppInfo appInfo order by appInfo.date DESC";
+	    Query query = entityManager.createNativeQuery(sql);
+	    query.setMaxResults(1);
+	    List<String> list = query.getResultList();
+	    if (list == null || list.isEmpty()) {
+	      return null;
+	    }
+	    return list.get(0);
+	}
+
+
 
 }

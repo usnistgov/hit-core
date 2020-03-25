@@ -118,7 +118,6 @@ public class ResourcebundleHelper {
 
   public static List<Resource> getResourcesFile(String path) {
     try {
-      System.out.println("PATH : " + file(path));
       Resource[] files = resolver.getResources(file(path));
       List<Resource> resources = Arrays.asList(files);
       Collections.sort(resources, new Comparator<Resource>() {

@@ -9,6 +9,8 @@ public interface AppInfoService {
   public String getUploadPattern();
 
   public String getUploadMaxSize();
+  
+  public String getUploadsFolderPath();
 
   public AppInfo get();
 

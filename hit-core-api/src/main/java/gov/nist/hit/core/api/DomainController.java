@@ -393,7 +393,10 @@ public class DomainController {
 			checkManagementSupport(authentication);
 			Domain found = domainService.findOne(id);
 			if (found == null) {
-				throw new DomainException("Tool Scope with id=" + id + " not found");
+				throw new DomainException("Tool Scope with id=" + id + " not found.");
+			}
+			if(found.getDomain().equalsIgnoreCase("default")) {
+				throw new DomainException("The default Tool Scope cannot be deleted.");
 			}
 			domainService.canDelete(found.getDomain(), authentication);
 			domainService.delete(found);

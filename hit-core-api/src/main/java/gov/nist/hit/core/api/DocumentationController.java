@@ -99,8 +99,8 @@ public class DocumentationController {
 	@Autowired
 	private DomainService domainService;
 
-	@Value("${UPLOADED_RESOURCE_BUNDLE:/sites/data/uploaded_resource_bundles}")
-	private String UPLOADED_RESOURCE_BUNDLE;
+//	@Value("${UPLOADED_RESOURCE_BUNDLE:/sites/data/uploaded_resource_bundles}")
+//	private String UPLOADED_RESOURCE_BUNDLE;
 
 	public String DOCUMENTATION_FOLDER_ROOT = "/documentation";
 
@@ -131,7 +131,7 @@ public class DocumentationController {
 			org.apache.commons.io.IOUtils.copy(part.getInputStream(), baos);
 			byte[] bytes = baos.toByteArray();
 			resultMap.put("success", true);
-			String dirName = UPLOADED_RESOURCE_BUNDLE + DOCUMENTATION_FOLDER_ROOT + "/" + domain + "/" + type;
+			String dirName = appInfoService.getUploadsFolderPath() + DOCUMENTATION_FOLDER_ROOT + "/" + domain + "/" + type;
 			File dir = new File(dirName);
 			if (!dir.exists()) {
 				dir.mkdirs();
@@ -282,7 +282,7 @@ public class DocumentationController {
 				InputStream content = null;
 				path = !path.startsWith("/") ? "/" + path : path;
 				if (path.startsWith(DOCUMENTATION_FOLDER_ROOT)) {
-					path = UPLOADED_RESOURCE_BUNDLE + path;
+					path = appInfoService.getUploadsFolderPath() + path;
 					content = new FileInputStream(path);
 				} else {
 					content = DocumentationController.class.getResourceAsStream(path);

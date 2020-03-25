@@ -3,9 +3,11 @@ package gov.nist.hit.core.service;
 import java.util.Date;
 import java.util.List;
 
+import gov.nist.hit.core.domain.AbstractTestCase;
 import gov.nist.hit.core.domain.TestArtifact;
 import gov.nist.hit.core.domain.TestPlan;
 import gov.nist.hit.core.domain.TestScope;
+import gov.nist.hit.core.domain.TestStep;
 import gov.nist.hit.core.domain.TestingStage;
 
 public interface TestPlanService {
@@ -38,5 +40,9 @@ public interface TestPlanService {
 	public Date getUpdateDate(Long testPlanId);
 
 	public void loadAll();
+
+
+	public TestPlan findTestPlanContainingAbstractTestCase(AbstractTestCase node);
+
 
 }

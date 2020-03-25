@@ -24,9 +24,11 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
+import gov.nist.hit.core.domain.util.Views;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -40,17 +42,18 @@ public class TestStep extends AbstractTestCase implements Serializable {
   @Id
   @JsonSerialize(using = ToStringSerializer.class)
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @JsonView(Views.NoData.class)
   private Long id;
 
 
   @ApiModelProperty(required = true, value = "domain of the test step")
   @NotNull
   @Enumerated(EnumType.STRING)
+  @JsonView(Views.NoData.class)
   protected TestingType testingType;
 
   @ApiModelProperty(required = false, value = "juror document of the test step")
   @JsonIgnore
-
   @OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
   protected TestArtifact jurorDocument;
 
@@ -69,6 +72,7 @@ public class TestStep extends AbstractTestCase implements Serializable {
   @Embedded
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "TestStepProtocols", joinColumns = @JoinColumn(name = "TestStep"))
+  @JsonView(Views.NoData.class)
   private Set<Protocol> protocols = new HashSet<Protocol>();
 
 

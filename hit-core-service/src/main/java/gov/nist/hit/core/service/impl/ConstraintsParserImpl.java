@@ -12,16 +12,6 @@
 
 package gov.nist.hit.core.service.impl;
 
-import gov.nist.hit.core.domain.Usage;
-import gov.nist.hit.core.domain.constraints.ByID;
-import gov.nist.hit.core.domain.constraints.ByName;
-import gov.nist.hit.core.domain.constraints.ByNameOrByID;
-import gov.nist.hit.core.domain.constraints.ConformanceStatement;
-import gov.nist.hit.core.domain.constraints.Constraints;
-import gov.nist.hit.core.domain.constraints.Context;
-import gov.nist.hit.core.domain.constraints.Predicate;
-import gov.nist.hit.core.service.ConstraintsParser;
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -31,6 +21,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -43,16 +34,41 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import gov.nist.hit.core.domain.Usage;
+import gov.nist.hit.core.domain.constraints.ByID;
+import gov.nist.hit.core.domain.constraints.ByName;
+import gov.nist.hit.core.domain.constraints.ByNameOrByID;
+import gov.nist.hit.core.domain.constraints.ConformanceStatement;
+import gov.nist.hit.core.domain.constraints.Constraints;
+import gov.nist.hit.core.domain.constraints.Context;
+import gov.nist.hit.core.domain.constraints.Predicate;
+import gov.nist.hit.core.service.ConstraintsParser;
+
 public class ConstraintsParserImpl implements ConstraintsParser {
 
-  @Override
+	private TransformerFactory transFactory;
+	private Transformer transformer; 
+	private StringWriter buffer;
+	
+  public ConstraintsParserImpl(){
+		super();
+		 
+	     try {
+	    	 transFactory = TransformerFactory.newInstance();
+			transformer = transFactory.newTransformer();
+		     transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+		} catch (TransformerConfigurationException e) {
+			e.printStackTrace();
+		}	
+	}
+
+@Override
   public Constraints confStatements(String xmlConstraints) {
     Constraints constraints = new Constraints();
     if (xmlConstraints != null) {
       Document conformanceContextDoc = this.stringToDom(xmlConstraints);
       if (conformanceContextDoc.getElementsByTagName("Constraints") != null) {
-        Element elmConstraints =
-            (Element) conformanceContextDoc.getElementsByTagName("Constraints").item(0);
+        Element elmConstraints =  (Element) conformanceContextDoc.getElementsByTagName("Constraints").item(0);
         if (elmConstraints != null) {
 
           Context datatypeContextObj = new Context();
@@ -133,6 +149,7 @@ public class ConstraintsParserImpl implements ConstraintsParser {
   }
 
   private void context(Element elmContext, Context contextObj) {
+	  
     if (elmContext != null) {
       NodeList nodes = elmContext.getChildNodes();
       for (int i = 0; i < nodes.getLength(); i++) {
@@ -155,19 +172,22 @@ public class ConstraintsParserImpl implements ConstraintsParser {
 
   private void constraints(Element elmByNameOrByID, ByNameOrByID byNameOrByIDObj) {
     NodeList constraintNodes = elmByNameOrByID.getElementsByTagName("Constraint");
-
     for (int i = 0; i < constraintNodes.getLength(); i++) {
       ConformanceStatement constraintObj = new ConformanceStatement();
       Element elmConstraint = (Element) constraintNodes.item(i);
-
       constraintObj.setConstraintId(elmConstraint.getAttribute("ID"));
+      
       constraintObj.setConstraintTarget(elmConstraint.getAttribute("Target"));
+      
       NodeList descriptionNodes = elmConstraint.getElementsByTagName("Description");
       if (descriptionNodes != null && descriptionNodes.getLength() == 1) {
         constraintObj.setDescription(descriptionNodes.item(0).getTextContent());
       }
+
       constraintObj.setAssertion(this.convertElementToString(elmConstraint.getElementsByTagName(
           "Assertion").item(0)));
+      
+      
       byNameOrByIDObj.getConformanceStatements().add(constraintObj);
     }
 
@@ -189,16 +209,13 @@ public class ConstraintsParserImpl implements ConstraintsParser {
           "Condition").item(0)));
       byNameOrByIDObj.getPredicates().add(predicateObj);
     }
+
   }
 
   private String convertElementToString(Node node) {
-    try {
-      TransformerFactory transFactory = TransformerFactory.newInstance();
-      Transformer transformer = transFactory.newTransformer();
-      StringWriter buffer = new StringWriter();
-      transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+    try {      
+      buffer = new StringWriter();      
       transformer.transform(new DOMSource(node), new StreamResult(buffer));
-
       return buffer.toString();
     } catch (TransformerException e) {
       e.printStackTrace();

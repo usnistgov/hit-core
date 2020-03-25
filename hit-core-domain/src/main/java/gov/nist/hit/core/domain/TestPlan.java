@@ -20,9 +20,11 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
+import gov.nist.hit.core.domain.util.Views;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -35,17 +37,19 @@ public class TestPlan extends AbstractTestCase implements Serializable {
   @Id
   @JsonSerialize(using = ToStringSerializer.class)
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @JsonView(Views.NoData.class)
   private Long id;
 
   @ApiModelProperty(required = false, value = "summary of the test plan")
   @JsonIgnoreProperties(value = {"html", "json"})
-
   @OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
+  @JsonView(Views.NoData.class)
   protected TestArtifact testPlanSummary;
 
   @ApiModelProperty(required = false, value = "test package of the test plan")
   @JsonIgnoreProperties(value = {"html", "json"})
   @OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
+  @JsonView(Views.NoData.class)
   protected TestArtifact testPackage;
 
 
@@ -59,6 +63,7 @@ public class TestPlan extends AbstractTestCase implements Serializable {
   @JoinTable(name = "tp_tc",
       joinColumns = {@JoinColumn(name = "testplan_id", referencedColumnName = "id")},
       inverseJoinColumns = {@JoinColumn(name = "testcase_id", referencedColumnName = "id")})
+  @JsonView(Views.NoData.class)
   private Set<TestCase> testCases = new HashSet<TestCase>();
 
   @ApiModelProperty(required = false, value = "list of test case groups of the test plan")
@@ -66,9 +71,11 @@ public class TestPlan extends AbstractTestCase implements Serializable {
   @JoinTable(name = "tp_tcg",
       joinColumns = {@JoinColumn(name = "testplan_id", referencedColumnName = "id")},
       inverseJoinColumns = {@JoinColumn(name = "testcasegroup_id", referencedColumnName = "id")})
+  @JsonView(Views.NoData.class)
   private Set<TestCaseGroup> testCaseGroups = new HashSet<TestCaseGroup>();
 
   @ApiModelProperty(required = true, value = "transport support of the test plan")
+  @JsonView(Views.NoData.class)
   private boolean transport;
 
 

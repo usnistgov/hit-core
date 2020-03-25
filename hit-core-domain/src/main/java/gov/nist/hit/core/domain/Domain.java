@@ -67,6 +67,7 @@ public class Domain extends TestResource implements Serializable {
 
 	private String igVersion;
 
+	@JsonView(Views.Short.class)
 	private String owner;
 
 	@JsonView(Views.Short.class)

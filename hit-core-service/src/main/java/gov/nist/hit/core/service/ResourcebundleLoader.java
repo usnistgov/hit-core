@@ -34,7 +34,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -366,10 +368,15 @@ public abstract class ResourcebundleLoader {
 	@Value("${app.reportSavingSupported:#{true}}")
 	private boolean reportSavingSupported;
 	
+	@Value("${app.uploadsFolderPath")
+	private String uploadsFolderPath;
+	
 
 	// conformance profile source Id - integration profile id
 	protected static HashMap<String, String> profilesMap;
 
+	private Transformer prettyPrintTf;
+	
 	static {
 		if (profilesMap == null) {
 			profilesMap = new HashMap<String, String>();
@@ -380,6 +387,15 @@ public abstract class ResourcebundleLoader {
 		idLocationMap = new HashMap<>();
 		obm = new com.fasterxml.jackson.databind.ObjectMapper();
 		obm.setSerializationInclusion(Include.NON_NULL);
+				
+		try {
+			prettyPrintTf = TransformerFactory.newInstance().newTransformer();
+			prettyPrintTf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			prettyPrintTf.setOutputProperty(OutputKeys.INDENT, "yes");
+		} catch (TransformerConfigurationException | TransformerFactoryConfigurationError e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	public boolean reloadDb() throws IOException {
@@ -1150,12 +1166,9 @@ public abstract class ResourcebundleLoader {
 	}
 
 	protected String prettyPrint(Document xml) {
-		try {
-			Transformer tf = TransformerFactory.newInstance().newTransformer();
-			tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-			tf.setOutputProperty(OutputKeys.INDENT, "yes");
+		try {			
 			Writer out = new StringWriter();
-			tf.transform(new DOMSource(xml), new StreamResult(out));
+			prettyPrintTf.transform(new DOMSource(xml), new StreamResult(out));
 			return out.toString();
 		} catch (Exception e) {
 
@@ -1285,6 +1298,7 @@ public abstract class ResourcebundleLoader {
 	protected TestCase testCase(String location, TestingStage stage, boolean transportSupported, String rootPath,
 			String domain, TestScope scope, String authorUsername, boolean preloaded) throws Exception {
 		logger.info("Processing test case located at:" + location);
+		long start = System.currentTimeMillis();
 		TestCase tc = new TestCase();
 		Resource res = this.getResource(location + "TestCase.json", rootPath);
 		if (res == null)
@@ -1376,7 +1390,9 @@ public abstract class ResourcebundleLoader {
 			tc.setStage(stage);
 			tc.setDataMappings(dataMappings);
 		}
-
+		long end = System.currentTimeMillis();		
+		float time = (end - start) / 1000F;
+		logger.info("Done processing test case at:" + location + " in "+ time + " seconds");
 		return tc;
 	}
 
@@ -1399,6 +1415,7 @@ public abstract class ResourcebundleLoader {
 	protected TestStep testStep(String location, TestingStage stage, boolean transportSupported, String rootPath,
 			String domain, TestScope scope, String authorUsername, boolean preloaded) throws Exception {
 		logger.info("Processing test step at:" + location);
+		long start = System.currentTimeMillis();
 		TestStep testStep = new TestStep();
 		Resource res = this.getResource(location + "TestStep.json", rootPath);
 		if (res == null)
@@ -1436,7 +1453,7 @@ public abstract class ResourcebundleLoader {
 			}
 		}
 
-		if (!testingType.equals(TestingType.SUT_MANUAL) && !testingType.equals(TestingType.TA_MANUAL)) {
+		if (!testingType.equals(TestingType.SUT_MANUAL) && !testingType.equals(TestingType.TA_MANUAL) && !testingType.equals(TestingType.MANUAL) ) {
 			testStep.setTestContext(
 					testContext(location, testStepObj, stage, rootPath, domain, scope, authorUsername, preloaded));
 		}
@@ -1453,6 +1470,9 @@ public abstract class ResourcebundleLoader {
 			testStep.setPosition(testStepObj.findValue("position").intValue());
 		}
 		testStep.setStage(stage);
+		long end = System.currentTimeMillis();
+		float time = (end - start) / 1000F;
+		logger.info("Done processing test step at:" + location + " in "+ time + " seconds");
 		return testStep;
 	}
 
@@ -1526,6 +1546,7 @@ public abstract class ResourcebundleLoader {
 			String rootPath, String domain, TestScope scope, String authorUsername, boolean preloaded)
 			throws Exception {
 		logger.info("Processing test case group at:" + location);
+		long start = System.currentTimeMillis();
 		Resource descriptorRsrce = this.getResource(location + "TestCaseGroup.json", rootPath);
 		if (descriptorRsrce == null)
 			throw new IllegalArgumentException("No TestCaseGroup.json found at " + location);
@@ -1577,8 +1598,14 @@ public abstract class ResourcebundleLoader {
 					}
 				}
 			}
+			long end = System.currentTimeMillis();
+			float time = (end - start) / 1000F;
+			logger.info("Done processing test case group at:" + location + " in "+ time + " seconds");
 			return tcg;
 		}
+		long end = System.currentTimeMillis();
+		float time = (end - start) / 1000F;
+		logger.info("Done processing test case group at:" + location + " in "+ time + " seconds");
 		return null;
 	}
 
@@ -1647,7 +1674,7 @@ public abstract class ResourcebundleLoader {
 	protected TestPlan testPlan(String location, TestingStage stage, String rootPath, String domain, TestScope scope,
 			String authorUsername, boolean preloaded) throws Exception {
 		logger.info("Processing test plan  at:" + location);
-
+		long start = System.currentTimeMillis();
 		Resource res = this.getResource(location + "TestPlan.json", rootPath);
 		if (res == null)
 			throw new IllegalArgumentException("No TestPlan.json found at " + location);
@@ -1720,8 +1747,14 @@ public abstract class ResourcebundleLoader {
 					}
 				}
 			}
+			long end = System.currentTimeMillis();		
+			float time = (end - start) / 1000F;
+			logger.info("Done processing test plan at:" + location + " in "+ time + " seconds");
 			return tp;
 		}
+		long end = System.currentTimeMillis();		
+		float time = (end - start) / 1000F;
+		logger.info("Done processing test plan at:" + location + " in "+ time + " seconds");
 		return null;
 	}
 
@@ -1930,6 +1963,9 @@ public abstract class ResourcebundleLoader {
 		appInfo.setDomainManagementSupported(domainManagementSupported);
 		appInfo.setDomainSelectionSupported(domainSelectionSupported);
 		appInfo.setUserLoginSupported(userLoginSupported);
+		
+		appInfo.setUploadsFolderPath(uploadsFolderPath);
+		
 		appInfoRepository.save(appInfo);
 		logger.info("loading app info...DONE");
 	}

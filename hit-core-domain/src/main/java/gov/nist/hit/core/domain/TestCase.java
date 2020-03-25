@@ -58,7 +58,6 @@ public class TestCase extends AbstractTestCase implements Serializable {
   @OneToMany(mappedBy = "testCase", orphanRemoval = true, cascade = {CascadeType.ALL})
   protected Collection<DataMapping> dataMappings;
 
-  @JsonView(Views.NoData.class)
   @ApiModelProperty(required = false, value = "juror document of the test case")
   @JsonIgnore
   @OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)

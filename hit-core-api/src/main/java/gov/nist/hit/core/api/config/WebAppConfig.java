@@ -38,7 +38,7 @@ import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 
 @Configuration
 @EnableWebMvc
-// @ComponentScan({ "gov.nist.hit", "gov.nist.auth.hit" })
+//@ComponentScan({ "gov.nist.hit", "gov.nist.auth.hit" })
 public class WebAppConfig extends WebMvcConfigurerAdapter {
 
 	@Override

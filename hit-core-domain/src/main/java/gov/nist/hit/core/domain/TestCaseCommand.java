@@ -19,6 +19,7 @@ package gov.nist.hit.core.domain;
 public class TestCaseCommand {
 
   protected Long testCaseId;
+  protected String name;
 
   public Long getTestCaseId() {
     return testCaseId;
@@ -28,4 +29,13 @@ public class TestCaseCommand {
     this.testCaseId = testCaseId;
   }
 
+public String getName() {
+	return name;
+}
+
+public void setName(String name) {
+	this.name = name;
+}
+
+  
 }

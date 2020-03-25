@@ -18,9 +18,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
+import gov.nist.hit.core.domain.util.Views;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
@@ -33,48 +35,56 @@ public abstract class AbstractTestCase extends TestResource
     implements Comparable<AbstractTestCase> {
 
   @ApiModelProperty(required = true, value = "name of the test case")
-  @Column(columnDefinition = "TEXT")
+  @Column(columnDefinition = "TEXT")@JsonView(Views.NoData.class)
   protected String name;
 
   @JsonSerialize(using = ToStringSerializer.class)
   @NotNull
   @Column(unique = true, nullable = false)
+  @JsonView(Views.NoData.class)
   protected Long persistentId;
 
 
   @ApiModelProperty(required = false, value = "description of the test")
   @Column(columnDefinition = "LONGTEXT")
+  @JsonView(Views.NoData.class)
   protected String description;
 
   @ApiModelProperty(required = true, value = "type of the test")
   @NotNull
   @Enumerated(EnumType.STRING)
+  @JsonView(Views.NoData.class)
   protected ObjectType type;
 
   @ApiModelProperty(required = false, value = "stage of the test")
   @Enumerated(EnumType.STRING)
+  @JsonView(Views.NoData.class)
   protected TestingStage stage;
 
 
   @ApiModelProperty(required = true, value = "position of the test")
   @Min(1)
+  @JsonView(Views.NoData.class)
   protected int position;
 
   @ApiModelProperty(required = true, value = "version of the test")
+  @JsonView(Views.NoData.class)
   protected Double version;
 
   @ApiModelProperty(required = true, value = "test story of the test case")
   @JsonIgnore
-
   @OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
+  @JsonView(Views.NoData.class)
   protected TestArtifact testStory;
 
 
   @ApiModelProperty(required = true, value = "Supplement documents")
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @JsonView(Views.NoData.class)
   protected Set<Document> supplements = new HashSet<Document>();
   
   @Temporal(TemporalType.TIMESTAMP)
+  @JsonView(Views.NoData.class)
   protected Date updateDate;
   
 

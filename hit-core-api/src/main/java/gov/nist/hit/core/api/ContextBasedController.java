@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import gov.nist.auth.hit.core.domain.Account;
 import gov.nist.hit.core.domain.TestCase;
 import gov.nist.hit.core.domain.TestCaseGroup;
@@ -38,6 +40,7 @@ import gov.nist.hit.core.domain.TestPlan;
 import gov.nist.hit.core.domain.TestScope;
 import gov.nist.hit.core.domain.TestStep;
 import gov.nist.hit.core.domain.TestingStage;
+import gov.nist.hit.core.domain.util.Views;
 import gov.nist.hit.core.repo.TestCaseGroupRepository;
 import gov.nist.hit.core.service.AccountService;
 import gov.nist.hit.core.service.Streamer;
@@ -109,7 +112,6 @@ public class ContextBasedController {
 		}
 		streamer.stream(response.getOutputStream(), results);
 	}
-
 	
 	@ApiOperation(value = "Find a context-based test plan by its id", nickname = "getOneTestPlanById")
 	@RequestMapping(value = "/testplans/{testPlanId}", method = RequestMethod.GET, produces = "application/json")

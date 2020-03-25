@@ -88,7 +88,8 @@ public class AppInfo implements Serializable {
 
   @Column(columnDefinition = "TEXT")
   private String acknowledgment;
-
+  
+  private String uploadsFolderPath;
 
   private String subTitle;
 
@@ -553,6 +554,20 @@ public class AppInfo implements Serializable {
   public void setOwnerUsername(String ownerUsername) {
     this.ownerUsername = ownerUsername;
   }
+
+
+
+	public String getUploadsFolderPath() {
+		return uploadsFolderPath;
+	}
+	
+	
+	
+	public void setUploadsFolderPath(String uploadsFolderPath) {
+		this.uploadsFolderPath = uploadsFolderPath;
+	}
+  
+  
 
 
 

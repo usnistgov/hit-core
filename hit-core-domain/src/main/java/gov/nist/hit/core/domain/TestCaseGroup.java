@@ -26,9 +26,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
+import gov.nist.hit.core.domain.util.Views;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -41,6 +43,7 @@ public class TestCaseGroup extends AbstractTestCase implements Serializable {
   @Id
   @JsonSerialize(using = ToStringSerializer.class)
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @JsonView(Views.NoData.class)
   private Long id;
 
 
@@ -55,12 +58,14 @@ public class TestCaseGroup extends AbstractTestCase implements Serializable {
   @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, orphanRemoval = true)
   @JoinTable(name = "tcg_tcg", joinColumns = {@JoinColumn(name = "parent_id")},
       inverseJoinColumns = {@JoinColumn(name = "child_id")})
+  @JsonView(Views.NoData.class)
   private Set<TestCaseGroup> testCaseGroups = new HashSet<TestCaseGroup>();
 
   @ApiModelProperty(required = false, value = "children test cases of the test case group")
   @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, orphanRemoval = true)
   @JoinTable(name = "tcg_tc", joinColumns = {@JoinColumn(name = "testcasegroup_id")},
       inverseJoinColumns = {@JoinColumn(name = "testcase_id")})
+  @JsonView(Views.NoData.class)
   private Set<TestCase> testCases = new HashSet<TestCase>();
 
   public Long getId() {

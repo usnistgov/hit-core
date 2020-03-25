@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ibm.icu.util.Calendar;
 
+import gov.nist.hit.core.domain.AbstractTestCase;
 import gov.nist.hit.core.domain.TestArtifact;
 import gov.nist.hit.core.domain.TestCase;
 import gov.nist.hit.core.domain.TestCaseGroup;
@@ -64,6 +65,73 @@ public class TestPlanServiceImpl implements TestPlanService {
 			findOne(id);
 		}	
 	}
+	
+	
+	private TestPlan findTestPlanContainingAbstractTestCase(AbstractTestCase node,AbstractTestCase lookingFor, TestPlan tp) {
+		
+		if (node instanceof TestStep) {
+			
+			if (lookingFor instanceof TestStep) {
+				if (((TestStep)node).getId().equals(((TestStep)lookingFor).getId())){
+					return tp;
+				}
+			}
+			
+		}else if (node instanceof TestCase) {
+			if (lookingFor instanceof TestCase) {
+				if (((TestCase)node).getId().equals(((TestCase)lookingFor).getId())){
+					return tp;
+				}
+			}			
+			for(TestStep testS : ((TestCase)node).getTestSteps()) {
+				return findTestPlanContainingAbstractTestCase(testS, lookingFor,tp);				
+			}	
+		}else if (node instanceof TestCaseGroup) {
+			if (lookingFor instanceof TestCaseGroup) {
+				if (((TestCaseGroup)node).getId().equals(((TestCaseGroup)lookingFor).getId())){
+					return tp;
+				}
+			}
+			for(TestCase testC : ((TestCaseGroup)node).getTestCases()) {
+				return findTestPlanContainingAbstractTestCase(testC, lookingFor,tp);				
+			}
+			for(TestCaseGroup testCG : ((TestCaseGroup)node).getTestCaseGroups()) {
+				return findTestPlanContainingAbstractTestCase(testCG, lookingFor,tp);				
+			}
+		}else if (node instanceof TestPlan) {
+			//not very useful here
+			if (lookingFor instanceof TestPlan) {
+				if (((TestPlan)node).getId().equals(((TestPlan)lookingFor).getId())){
+					return tp;
+				}
+			}
+			for(TestCase testC : ((TestPlan)node).getTestCases()) {
+				return findTestPlanContainingAbstractTestCase(testC, lookingFor,tp);				
+			}
+			for(TestCaseGroup testCG : ((TestPlan)node).getTestCaseGroups()) {
+				return findTestPlanContainingAbstractTestCase(testCG, lookingFor,tp);				
+			}
+		}else {
+			return null;
+		}
+		return null;
+		
+	}
+	
+	
+	
+	@Override
+	public TestPlan findTestPlanContainingAbstractTestCase(AbstractTestCase node) {	
+		List<TestPlan> testPlans = testPlanRepository.findAllByStageAndDomain(node.getStage(), node.getDomain());
+		for(TestPlan testP : testPlans) {				
+			if (findTestPlanContainingAbstractTestCase(testP,node,testP) != null) {
+				return testP;
+			}
+		}	
+		return null;
+	}
+
+		
 	
 	@Override
 	public TestPlan findOne(Long testPlanId) {

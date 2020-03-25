@@ -50,6 +50,7 @@ public class TestResource implements Serializable {
   @NotNull
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
+  @JsonView(Views.Short.class)
   protected TestScope scope;
 
   protected boolean preloaded = false;
