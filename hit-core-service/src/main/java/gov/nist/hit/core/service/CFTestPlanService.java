@@ -17,7 +17,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import gov.nist.hit.core.domain.AbstractTestCase;
 import gov.nist.hit.core.domain.CFTestPlan;
+import gov.nist.hit.core.domain.TestPlan;
 import gov.nist.hit.core.domain.TestScope;
 import gov.nist.hit.core.domain.TestingStage;
 
@@ -56,6 +58,8 @@ public interface CFTestPlanService {
   
   boolean removeCacheElement(Long key);
 
+  public CFTestPlan findCFTestPlanContainingAbstractTestCase(AbstractTestCase node);
 
+  public String findCFFullPathContainingAbstractTestCase(AbstractTestCase node);
 
 }

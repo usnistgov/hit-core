@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,19 +38,19 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import gov.nist.auth.hit.core.domain.Account;
 import gov.nist.auth.hit.core.domain.UserTestStepReport;
-import gov.nist.auth.hit.core.domain.ValidationLog;
 import gov.nist.auth.hit.core.service.UserTestStepReportService;
+import gov.nist.hit.core.domain.AbstractTestCase;
 import gov.nist.hit.core.domain.ResponseMessage;
-import gov.nist.hit.core.domain.TestResult;
+import gov.nist.hit.core.domain.ResponseMessage.Type;
 import gov.nist.hit.core.domain.TestStep;
 import gov.nist.hit.core.domain.TestStepValidationReport;
-import gov.nist.hit.core.domain.TestStepValidationReportRequest;
 import gov.nist.hit.core.domain.TestingStage;
 import gov.nist.hit.core.domain.UserTestStepReportRequest;
-import gov.nist.hit.core.domain.ResponseMessage.Type;
 import gov.nist.hit.core.domain.util.Views;
 import gov.nist.hit.core.service.AccountService;
+import gov.nist.hit.core.service.CFTestPlanService;
 import gov.nist.hit.core.service.Streamer;
+import gov.nist.hit.core.service.TestPlanService;
 import gov.nist.hit.core.service.TestStepService;
 import gov.nist.hit.core.service.TestStepValidationReportService;
 import gov.nist.hit.core.service.UserService;
@@ -80,6 +79,12 @@ public class UserTestStepValidationReportController {
 
 	@Autowired
 	private TestStepService testStepService;
+	
+	@Autowired
+	private CFTestPlanService cfTestPlanService;
+	
+	@Autowired
+	private TestPlanService testPlanService;
 
 	@Autowired
 	private AccountService accountService;
@@ -225,9 +230,9 @@ public class UserTestStepValidationReportController {
 			String htmlReport = generateHtml(xmlReport);
 			
 		
-			UserTestStepReport userTestStepReport = new UserTestStepReport(testStep.getName(),testStep.getDomain(),testStep.getStage(),report.getResult(),xmlReport, htmlReport, report.getJson(),
+			UserTestStepReport userTestStepReport = new UserTestStepReport(testStep.getName(),findFullPathContainingAbstractTestCase(testStep),testStep.getDomain(),testStep.getStage(),report.getResult(),xmlReport, htmlReport, report.getJson(),
 					testStep.getVersion(), user.getId(), testStep.getPersistentId(), report.getComments());
-			
+						
 			
 			userTestStepReportService.save(userTestStepReport);
 			return userTestStepReport;
@@ -235,6 +240,16 @@ public class UserTestStepValidationReportController {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	private String findFullPathContainingAbstractTestCase(AbstractTestCase node) {
+		if (node.getStage().equals(TestingStage.CF)) {
+			return cfTestPlanService.findCFFullPathContainingAbstractTestCase(node);
+		}else if (node.getStage().equals(TestingStage.CB)) {
+			return testPlanService.findFullPathContainingAbstractTestCase(node);
+		}else {
+			return "";
+		}
 	}
 
 	
@@ -293,6 +308,19 @@ public class UserTestStepValidationReportController {
 	@ApiOperation(value = "get report", nickname = "get report by id")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json")
 	public UserTestStepReport getReport(Authentication authentication, HttpServletRequest request,
+			@PathVariable("id") Long id, HttpServletResponse response) throws Exception {
+		if (id == null) return null;
+		logger.info("retrieving user report with id=" + id + "...");
+		checkPermission(authentication);
+		UserTestStepReport report = userTestStepReportService.findOne(id);
+		return report;
+	}
+	
+	@JsonView(Views.HTML.class)
+	@PreAuthorize("hasRole('tester')")
+	@ApiOperation(value = "get html report", nickname = "get html report by id")
+	@RequestMapping(value = "/{id}/html", method = RequestMethod.GET, produces = "application/json")
+	public UserTestStepReport getHTMLReport(Authentication authentication, HttpServletRequest request,
 			@PathVariable("id") Long id, HttpServletResponse response) throws Exception {
 		if (id == null) return null;
 		logger.info("retrieving user report with id=" + id + "...");

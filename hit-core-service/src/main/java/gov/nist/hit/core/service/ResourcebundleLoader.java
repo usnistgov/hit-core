@@ -371,6 +371,9 @@ public abstract class ResourcebundleLoader {
 	@Value("${app.uploadsFolderPath")
 	private String uploadsFolderPath;
 	
+	@Value("${app.url")
+	private String url;
+	
 
 	// conformance profile source Id - integration profile id
 	protected static HashMap<String, String> profilesMap;
@@ -1965,6 +1968,7 @@ public abstract class ResourcebundleLoader {
 		appInfo.setUserLoginSupported(userLoginSupported);
 		
 		appInfo.setUploadsFolderPath(uploadsFolderPath);
+		appInfo.setUrl(url);
 		
 		appInfoRepository.save(appInfo);
 		logger.info("loading app info...DONE");

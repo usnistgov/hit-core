@@ -8,8 +8,9 @@ public class Views {
 	}
 	
 	
-	public static class Full{
-		
+	public static class Full{	
 	}
     
+	public static class HTML extends NoData{	
+	}
 }

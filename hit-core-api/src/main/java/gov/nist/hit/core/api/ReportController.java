@@ -98,12 +98,13 @@ public class ReportController {
 		List<Report> reports = new ArrayList<Report>();
 		List<UserTestCaseReport> tcreports = userTestCaseReportService.findAllByAccountIdAndDomain(userId,domain);		
 		List<UserTestStepReport> tsreports = userTestStepReportService.findAllByAccountIdAndDomain(userId,domain);
+		UserTestCaseReport t;
 		
 		
 		for (UserTestCaseReport tc : tcreports) {
-			Report rtc = new Report(tc.getId(),tc.getName(),tc.getStage(),ReportType.TESTCASE, tc.getVersion(),tc.getResult(),tc.getAccountId(),tc.getTestCasePersistentId(),tc.getCreationDate(),tc.getDomain());
+			Report rtc = new Report(tc.getId(),tc.getName(),tc.getPath(),tc.getStage(),ReportType.TESTCASE, tc.getVersion(),tc.getResult(),tc.getAccountId(),tc.getTestCasePersistentId(),tc.getCreationDate(),tc.getDomain());
 			for (UserTestStepReport ts : tc.getUserTestStepReports()) {
-				Report rts = new Report(ts.getId(),ts.getName(),tc.getStage(),ReportType.TESTSTEP,ts.getVersion(),ts.getResult(),ts.getAccountId(),ts.getTestStepPersistentId(),ts.getCreationDate(),ts.getDomain());
+				Report rts = new Report(ts.getId(),ts.getName(),ts.getPath(),ts.getStage(),ReportType.TESTSTEP,ts.getVersion(),ts.getResult(),ts.getAccountId(),ts.getTestStepPersistentId(),ts.getCreationDate(),ts.getDomain());
 				rtc.getReports().add(rts);
 			}		
 			reports.add(rtc);
@@ -111,7 +112,8 @@ public class ReportController {
 		//Tests steps  //cf
 		for (UserTestStepReport ts : tsreports) {
 			if (ts.getTestCaseReport() == null) {
-				Report rts = new Report(ts.getId(),ts.getName(),ts.getStage(),ReportType.TESTSTEP,ts.getVersion(),ts.getResult(),ts.getAccountId(),ts.getTestStepPersistentId(),ts.getCreationDate(),ts.getDomain());
+				Report rts = new Report(ts.getId(),ts.getName(),ts.getPath(),ts.getStage(),ReportType.TESTSTEP,ts.getVersion(),ts.getResult(),ts.getAccountId(),ts.getTestStepPersistentId(),ts.getCreationDate(),ts.getDomain());
+				
 				reports.add(rts);
 			}	
 		}					

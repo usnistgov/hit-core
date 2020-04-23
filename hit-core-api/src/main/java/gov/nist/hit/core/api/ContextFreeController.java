@@ -96,7 +96,7 @@ public class ContextFreeController {
 	@ApiOperation(value = "Find all context-free test plans by scope", nickname = "getTestPlansByScope")
 	// @Cacheable(value = "HitCache", key = "'cb-testplans'")
 	@RequestMapping(value = "/testplans", method = RequestMethod.GET, produces = "application/json")
-	public void getTestPlansByScope(
+	public List<CFTestPlan>  getTestPlansByScope(
 			@ApiParam(value = "the scope of the test plans", required = false) @RequestParam(required = false) TestScope scope,
 			@ApiParam(value = "the domain of the test plans", required = true) @RequestParam(required = true) String domain,
 			HttpServletRequest request, HttpServletResponse response) throws IOException, NoUserFoundException {
@@ -107,21 +107,21 @@ public class ContextFreeController {
 			Long userId = SessionContext.getCurrentUserId(request.getSession(false));
 			if (userId != null) {
 				Account account = accountService.findOne(userId);
-				if(account != null) {
+				if (account != null) {
 					String email = account.getEmail();
 					if (userService.isAdminByEmail(email) || userService.isAdmin(account.getUsername())) {
-						results = testPlanService.findAllByStageAndScopeAndDomain(TestingStage.CF,scope, domain);
-					}else{
-						results = testPlanService.findShortAllByStageAndAuthorAndScopeAndDomain(TestingStage.CF,
-								account.getUsername(), scope, domain);
+						results = testPlanService.findShortAllByScopeAndDomain(scope, domain);
+					} else {
+						results = testPlanService.findShortAllByScopeAndUsernameAndDomain(scope, account.getUsername(),
+								domain);
 					}
 				}
-				
+
 			}
 		} else {
 			results = testPlanService.findShortAllByStageAndScopeAndDomain(TestingStage.CF, scope, domain);
 		}
-		streamer.stream2(response.getOutputStream(), results);
+		return results;
 	}
 
 	@ApiOperation(value = "Find a context-free test plan by its id", nickname = "getOneTestPlanById")

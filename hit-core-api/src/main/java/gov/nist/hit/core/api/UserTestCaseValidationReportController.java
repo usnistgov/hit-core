@@ -42,6 +42,7 @@ import gov.nist.auth.hit.core.domain.UserTestCaseReport;
 import gov.nist.auth.hit.core.domain.UserTestStepReport;
 import gov.nist.auth.hit.core.service.UserTestCaseReportService;
 import gov.nist.auth.hit.core.service.UserTestStepReportService;
+import gov.nist.hit.core.domain.AbstractTestCase;
 import gov.nist.hit.core.domain.PersistentReportRequest;
 import gov.nist.hit.core.domain.ResponseMessage;
 import gov.nist.hit.core.domain.ResponseMessage.Type;
@@ -49,12 +50,15 @@ import gov.nist.hit.core.domain.TestCase;
 import gov.nist.hit.core.domain.TestResult;
 import gov.nist.hit.core.domain.TestStep;
 import gov.nist.hit.core.domain.TestStepValidationReport;
+import gov.nist.hit.core.domain.TestingStage;
 import gov.nist.hit.core.domain.UserTestCaseReportRequest;
 import gov.nist.hit.core.domain.util.Views;
 import gov.nist.hit.core.service.AccountService;
+import gov.nist.hit.core.service.CFTestPlanService;
 import gov.nist.hit.core.service.Streamer;
 import gov.nist.hit.core.service.TestCaseService;
 import gov.nist.hit.core.service.TestCaseValidationReportService;
+import gov.nist.hit.core.service.TestPlanService;
 import gov.nist.hit.core.service.TestStepValidationReportService;
 import gov.nist.hit.core.service.UserService;
 import gov.nist.hit.core.service.exception.MessageValidationException;
@@ -85,6 +89,12 @@ public class UserTestCaseValidationReportController {
 
 	@Autowired
 	private TestCaseService testCaseService;
+	
+	@Autowired
+	private CFTestPlanService cfTestPlanService;
+	
+	@Autowired
+	private TestPlanService testPlanService;
 
 	@Autowired
 	private AccountService accountService;
@@ -128,6 +138,8 @@ public class UserTestCaseValidationReportController {
 			UserTestCaseReport userTestCaseReport = new UserTestCaseReport();
 			
 			userTestCaseReport.setName(testCase.getName());
+			userTestCaseReport.setPath(findFullPathContainingAbstractTestCase(testCase));
+			userTestCaseReport.setStage(testCase.getStage());
 			userTestCaseReport.setResult(TestResult.valueOf(command.getResult()));
 			userTestCaseReport.setDomain(testCase.getDomain());
 			userTestCaseReport.setAccountId(user.getId());
@@ -150,6 +162,7 @@ public class UserTestCaseValidationReportController {
 				}
 			}
 			userTestCaseReport.setUserTestStepReports(userTestStepReports);
+			
 			userTestCaseReportService.save(userTestCaseReport);
 			logger.info("Persistent test case, report successfully saved");
 		} catch (Exception e) {
@@ -159,6 +172,17 @@ public class UserTestCaseValidationReportController {
 		//TODO success return
 		return null;
 	}
+	
+	
+	private String findFullPathContainingAbstractTestCase(AbstractTestCase node) {
+		if (node.getStage().equals(TestingStage.CF)) {
+			return cfTestPlanService.findCFFullPathContainingAbstractTestCase(node);
+		}else if (node.getStage().equals(TestingStage.CB)) {
+			return testPlanService.findFullPathContainingAbstractTestCase(node);
+		}else {
+			return "";
+		}
+	}
 
 	private UserTestStepReport generateUserTestStepReport(Long userId, TestStep testStep, Long testCaseId) {
 		TestStepValidationReport report = validationReportService.findOneByTestStepAndUser(testStep.getId(), userId);
@@ -166,7 +190,7 @@ public class UserTestCaseValidationReportController {
 			logger.error("No report found for test step " + testStep.getId() + " and userId " + userId);
 			return null;
 		}
-		UserTestStepReport userTestStepReport = new UserTestStepReport(testStep.getName(), testStep.getDomain(),testStep.getStage(), report.getResult(),
+		UserTestStepReport userTestStepReport = new UserTestStepReport(testStep.getName(),findFullPathContainingAbstractTestCase(testStep), testStep.getDomain(),testStep.getStage(), report.getResult(),
 				report.getXml(), report.getHtml(), report.getJson(), testStep.getVersion(), userId,	testStep.getPersistentId(), report.getComments());
 		return userTestStepReport;
 	}
@@ -336,6 +360,19 @@ public class UserTestCaseValidationReportController {
 	@ApiOperation(value = "get report", nickname = "get report by id")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json")
 	public UserTestCaseReport getReport(Authentication authentication, HttpServletRequest request,
+			@PathVariable("id") Long id, HttpServletResponse response) throws Exception {
+		if (id == null) return null;
+		logger.info("retrieving user report with id=" + id + "...");
+		checkPermission(authentication);
+		UserTestCaseReport report = userTestCaseReportService.findOne(id);
+		return report;
+	}
+	
+	@JsonView(Views.HTML.class)
+	@PreAuthorize("hasRole('tester')")
+	@ApiOperation(value = "get html report", nickname = "get html report by id")
+	@RequestMapping(value = "/{id}/html", method = RequestMethod.GET, produces = "application/json")
+	public UserTestCaseReport getHTMLReport(Authentication authentication, HttpServletRequest request,
 			@PathVariable("id") Long id, HttpServletResponse response) throws Exception {
 		if (id == null) return null;
 		logger.info("retrieving user report with id=" + id + "...");

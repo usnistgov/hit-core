@@ -22,7 +22,8 @@ public class ResponseMessage {
     private final String text;
     private final String resourceId;
     private final String manualHandle;
-    private   boolean skip;
+    private boolean skip;
+    private Object data;
 
     public ResponseMessage(Type type, String text, String resourceId, String manualHandle) {
         this.type = type;
@@ -78,6 +79,16 @@ public class ResponseMessage {
 
 	public void setSkip(boolean skip) {
 		this.skip = skip;
+	}
+
+
+	public Object getData() {
+		return data;
+	}
+
+
+	public void setData(Object data) {
+		this.data = data;
 	}
     
     

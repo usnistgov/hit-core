@@ -1293,9 +1293,14 @@ public class AccountController {
 	}
 
 	private String getUrl(HttpServletRequest request) {
-		String scheme = request.getScheme();
-		String host = request.getHeader("Host");
-		return scheme + "://" + host + "/" + request.getContextPath();
+		if (appInfoService.get().getUrl() == null) {
+			String scheme = request.getScheme();
+			String host = request.getHeader("Host");
+			return scheme + "://" + host + request.getContextPath();
+		}else {
+			return appInfoService.get().getUrl();
+		}
+		
 	}
 
 	@RequestMapping(value = "/accounts/guest", method = RequestMethod.POST)

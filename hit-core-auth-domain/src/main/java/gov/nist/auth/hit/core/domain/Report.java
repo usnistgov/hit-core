@@ -19,6 +19,8 @@ public class Report {
     
     private String name;
     
+    private String path;
+    
     private Double version;
     
 	private TestResult result;
@@ -39,11 +41,12 @@ public class Report {
 	protected String domain;
 
 	
-	public Report(Long id, String name, TestingStage stage, ReportType type, Double version, TestResult result, Long accountId,
+	public Report(Long id, String name,String path, TestingStage stage, ReportType type, Double version, TestResult result, Long accountId,
 			Long persistentId, Date creationDate, String domain) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.path = path;
 		this.stage = stage;
 		this.type = type;
 		this.version = version;
@@ -55,11 +58,12 @@ public class Report {
 		this.reports = new ArrayList<Report>();
 	}
 	
-	public Report(Long id, String name, TestingStage stage, ReportType type, Double version, TestResult result, List<Report> reports, Long accountId,
+	public Report(Long id, String name, String path, TestingStage stage, ReportType type, Double version, TestResult result, List<Report> reports, Long accountId,
 			Long persistentId, Date creationDate, String domain) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.path = path;
 		this.stage = stage;
 		this.type = type;
 		this.version = version;
@@ -161,6 +165,14 @@ public class Report {
 
 	public void setStage(TestingStage stage) {
 		this.stage = stage;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
   

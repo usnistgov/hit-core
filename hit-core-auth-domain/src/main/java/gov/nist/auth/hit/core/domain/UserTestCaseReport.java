@@ -51,6 +51,9 @@ public class UserTestCaseReport {
     protected String name;
     
     @JsonView(Views.NoData.class)
+    protected String path;
+    
+    @JsonView(Views.NoData.class)
     private Double version;
     
     @JsonView(Views.NoData.class)
@@ -75,6 +78,7 @@ public class UserTestCaseReport {
     @Column(columnDefinition = "LONGTEXT")
     private String xml;
     
+    @JsonView(Views.HTML.class)
     @Column(columnDefinition = "LONGTEXT")
     private String html;
     
@@ -204,6 +208,15 @@ public class UserTestCaseReport {
 	public void setHtml(String html) {
 		this.html = html;
 	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+	
 	
 	
 	

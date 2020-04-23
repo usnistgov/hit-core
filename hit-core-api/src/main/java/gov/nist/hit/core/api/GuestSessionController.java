@@ -12,11 +12,20 @@
 
 package gov.nist.hit.core.api;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import gov.nist.hit.core.domain.Notification;
+import gov.nist.hit.core.service.NotificationService;
 
 /**
  * @author Harold Affo (NIST)
@@ -26,26 +35,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/session")
 public class GuestSessionController {
 
-  @RequestMapping(value = "/delete", method = RequestMethod.POST)
-  public boolean destroy(HttpServletRequest request) {
-    // HttpSession session = request.getSession(false);
-    // if (session != null) {
-    // session.invalidate();
-    // }
-    return true;
-  }
+	@Autowired
+	private NotificationService notificationService;
 
-  @RequestMapping(value = "/create", method = RequestMethod.POST)
-  public boolean create(HttpServletRequest request) {
-    // HttpSession session = request.getSession(true);
-    return true;
-  }
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	public boolean destroy(HttpServletRequest request) {
+		// HttpSession session = request.getSession(false);
+		// if (session != null) {
+		// session.invalidate();
+		// }
+		return true;
+	}
 
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	public boolean create(HttpServletRequest request) {
+		// HttpSession session = request.getSession(true);
+		return true;
+	}
 
-  @RequestMapping(method = RequestMethod.GET, value = "/keepAlive")
-  public boolean keepAlive(HttpServletRequest request) {
-    return true;
-  }
-
+	@RequestMapping(method = RequestMethod.GET, value = "/keepAlive")
+	public List<Notification> keepAlive(HttpServletRequest request) {
+		List<Notification> notList = notificationService.findActives();
+			
+		return notList;
+	}
 
 }

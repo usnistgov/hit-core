@@ -123,7 +123,7 @@ public class AppInfo implements Serializable {
 
   private String uploadMaxSize;
   private String uploadContentTypes; // comma separated supported mime-types and extensions
-
+  
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "APP_OPTIONS")
   @MapKeyColumn(name = "OPTION_TYPE")

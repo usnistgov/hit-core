@@ -44,6 +44,9 @@ public class UserTestStepReport {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@JsonView(Views.NoData.class)
 	protected Long id;
+	
+	@JsonView(Views.NoData.class)
+	protected String path;
 		
 	@JsonView(Views.NoData.class)
 	protected String name;
@@ -59,6 +62,7 @@ public class UserTestStepReport {
 	@Column(columnDefinition = "LONGTEXT")
 	private String xml;
 
+	@JsonView(Views.HTML.class)
 	@Column(columnDefinition = "LONGTEXT")
 	private String html;
 
@@ -92,9 +96,10 @@ public class UserTestStepReport {
 	 protected UserTestCaseReport testCaseReport;
 	 
 
-	public UserTestStepReport(String name, String domain,TestingStage stage, TestResult result, String xml, String html, String json,
+	public UserTestStepReport(String name,String path, String domain,TestingStage stage, TestResult result, String xml, String html, String json,
 			Double version, Long accountId, Long testStepPersistentId, String comments) {
 		this.name = name;
+		this.path = path;
 		this.domain = domain;
 		this.stage = stage;
 		this.result = result;
@@ -220,6 +225,14 @@ public class UserTestStepReport {
 
 	public void setTestCaseReport(UserTestCaseReport testCaseReport) {
 		this.testCaseReport = testCaseReport;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 

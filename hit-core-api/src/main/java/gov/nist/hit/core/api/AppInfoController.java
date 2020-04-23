@@ -50,12 +50,14 @@ public class AppInfoController {
 
 	@RequestMapping(method = RequestMethod.GET, produces = "application/json")
 	public AppInfo info(HttpServletRequest request) {
-		AppInfo appInfo = appInfoService.get();
+		AppInfo appInfo = appInfoService.get();		
 		if (appInfo == null) {
 			appInfo = new AppInfo();
 		}
-		String url = baseUrl != null ? baseUrl : getUrl(request);
-		appInfo.setUrl(url);
+		if (appInfo.getUrl() == null) {
+			String url = baseUrl != null ? baseUrl : getUrl(request);
+			appInfo.setUrl(url);
+		}		
 		return appInfo;
 	}
 

@@ -44,5 +44,7 @@ public interface TestPlanService {
 
 	public TestPlan findTestPlanContainingAbstractTestCase(AbstractTestCase node);
 
+	public String findFullPathContainingAbstractTestCase(AbstractTestCase node);
+
 
 }

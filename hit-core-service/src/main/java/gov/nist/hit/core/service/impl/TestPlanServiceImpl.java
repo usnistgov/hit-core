@@ -82,40 +82,61 @@ public class TestPlanServiceImpl implements TestPlanService {
 				if (((TestCase)node).getId().equals(((TestCase)lookingFor).getId())){
 					return tp;
 				}
-			}			
-			for(TestStep testS : ((TestCase)node).getTestSteps()) {
-				return findTestPlanContainingAbstractTestCase(testS, lookingFor,tp);				
-			}	
+			}else {
+				for(TestStep testS : ((TestCase)node).getTestSteps()) {
+					TestPlan testP = findTestPlanContainingAbstractTestCase(testS, lookingFor,tp);
+					if (testP != null ) {
+						return testP;
+					}
+				}	
+			}
+			
 		}else if (node instanceof TestCaseGroup) {
 			if (lookingFor instanceof TestCaseGroup) {
 				if (((TestCaseGroup)node).getId().equals(((TestCaseGroup)lookingFor).getId())){
 					return tp;
 				}
+			}else {
+				for(TestCase testC : ((TestCaseGroup)node).getTestCases()) {
+					TestPlan testP =  findTestPlanContainingAbstractTestCase(testC, lookingFor,tp);
+					if (testP != null ) {
+						return testP;
+					}
+					
+				}
+				for(TestCaseGroup testCG : ((TestCaseGroup)node).getTestCaseGroups()) {
+					TestPlan testP = findTestPlanContainingAbstractTestCase(testCG, lookingFor,tp);
+					if (testP != null ) {
+						return testP;
+					}
+				}
 			}
-			for(TestCase testC : ((TestCaseGroup)node).getTestCases()) {
-				return findTestPlanContainingAbstractTestCase(testC, lookingFor,tp);				
-			}
-			for(TestCaseGroup testCG : ((TestCaseGroup)node).getTestCaseGroups()) {
-				return findTestPlanContainingAbstractTestCase(testCG, lookingFor,tp);				
-			}
+			
 		}else if (node instanceof TestPlan) {
 			//not very useful here
 			if (lookingFor instanceof TestPlan) {
 				if (((TestPlan)node).getId().equals(((TestPlan)lookingFor).getId())){
 					return tp;
 				}
+			}else {
+				for(TestCase testC : ((TestPlan)node).getTestCases()) {
+					TestPlan testP = findTestPlanContainingAbstractTestCase(testC, lookingFor,tp);
+					if (testP != null ) {
+						return testP;
+					}
+				}
+				for(TestCaseGroup testCG : ((TestPlan)node).getTestCaseGroups()) {
+					TestPlan testP = findTestPlanContainingAbstractTestCase(testCG, lookingFor,tp);	
+					if (testP != null ) {
+						return testP;
+					}
+				}
 			}
-			for(TestCase testC : ((TestPlan)node).getTestCases()) {
-				return findTestPlanContainingAbstractTestCase(testC, lookingFor,tp);				
-			}
-			for(TestCaseGroup testCG : ((TestPlan)node).getTestCaseGroups()) {
-				return findTestPlanContainingAbstractTestCase(testCG, lookingFor,tp);				
-			}
+			
 		}else {
 			return null;
 		}
-		return null;
-		
+		return null;	
 	}
 	
 	
@@ -131,6 +152,90 @@ public class TestPlanServiceImpl implements TestPlanService {
 		return null;
 	}
 
+	
+private String findFullPathContainingAbstractTestCase(AbstractTestCase node,AbstractTestCase lookingFor) {
+		
+		if (node instanceof TestStep) {
+			
+			if (lookingFor instanceof TestStep) {
+				if (((TestStep)node).getId().equals(((TestStep)lookingFor).getId())){
+					return node.getName();
+				}
+			}
+			
+		}else if (node instanceof TestCase) {
+			if (lookingFor instanceof TestCase) {
+				if (((TestCase)node).getId().equals(((TestCase)lookingFor).getId())){
+					return node.getName();
+				}
+			}else {
+				for(TestStep testS : ((TestCase)node).getTestSteps()) {
+					String res = findFullPathContainingAbstractTestCase(testS, lookingFor);
+					if (res != null) {
+						return node.getName()+"/"+res;
+					}
+				}	
+			}			
+			
+		}else if (node instanceof TestCaseGroup) {
+			if (lookingFor instanceof TestCaseGroup) {
+				if (((TestCaseGroup)node).getId().equals(((TestCaseGroup)lookingFor).getId())){
+					return node.getName();
+				}
+			}else {
+				for(TestCase testC : ((TestCaseGroup)node).getTestCases()) {
+					String res = findFullPathContainingAbstractTestCase(testC, lookingFor);	
+					if (res != null ) {
+						return node.getName()+"/"+res;
+					}
+				}
+				for(TestCaseGroup testCG : ((TestCaseGroup)node).getTestCaseGroups()) {
+					String res = findFullPathContainingAbstractTestCase(testCG, lookingFor);
+					if (res != null ) {
+						return node.getName()+"/"+res;
+					}
+				}
+			}
+			
+		}else if (node instanceof TestPlan) {
+			//not very useful here
+			if (lookingFor instanceof TestPlan) {
+				if (((TestPlan)node).getId().equals(((TestPlan)lookingFor).getId())){
+					return node.getName();
+				}
+			}else {
+				for(TestCase testC : ((TestPlan)node).getTestCases()) {
+					String res = findFullPathContainingAbstractTestCase(testC, lookingFor);	
+					if (res != null ) {
+						return node.getName()+"/"+res;
+					}
+				}
+				for(TestCaseGroup testCG : ((TestPlan)node).getTestCaseGroups()) {
+					String res = findFullPathContainingAbstractTestCase(testCG, lookingFor);	
+					if (res != null) {
+						return node.getName()+"/"+res;
+					}
+				}
+			}
+			
+		}else {
+			return null;
+		}
+		return null;	
+	}
+
+	@Override
+	public String findFullPathContainingAbstractTestCase(AbstractTestCase node) {	
+		List<TestPlan> testPlans = testPlanRepository.findAllByStageAndScopeAndDomain(node.getStage(),node.getScope(), node.getDomain());
+		for(TestPlan testP : testPlans) {
+			String path =findFullPathContainingAbstractTestCase(testP,node); 
+			if (path != null) {
+				return path;
+			}
+		}	
+		return null;
+	}
+	
 		
 	
 	@Override
