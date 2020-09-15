@@ -29,7 +29,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import gov.nist.hit.core.domain.TestPlan;
+import gov.nist.hit.core.domain.util.Views;
 import gov.nist.hit.core.repo.TestPlanRepository;
 import gov.nist.hit.core.service.Streamer;
 import gov.nist.hit.core.service.exception.DomainException;
@@ -53,6 +56,7 @@ public class TestPlanController {
 	@Autowired
 	private Streamer streamer;
 
+	@JsonView(Views.NoData.class)
 	@RequestMapping(value = "/{testPlanId}", method = RequestMethod.GET, produces = "application/json")
 	public TestPlan testPlan(HttpServletResponse response,
 			@ApiParam(value = "the id of the test plan", required = true) @PathVariable final Long testPlanId)

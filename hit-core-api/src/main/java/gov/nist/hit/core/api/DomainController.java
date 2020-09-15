@@ -56,7 +56,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/domains")
 @PropertySource(value = { "classpath:app-config.properties" })
 @Api(value = "Tool Scope Api", tags = "tool scope api")
-public class DomainController {
+public  class DomainController {
 
 	static final Logger logger = LoggerFactory.getLogger(DomainController.class);
 
@@ -71,6 +71,7 @@ public class DomainController {
 
 	@Autowired
 	private AccountService accountService;
+	
 
 	private void checkManagementSupport(Authentication auth) throws DomainException {
 		if (!isDomainManagementSupported()) {

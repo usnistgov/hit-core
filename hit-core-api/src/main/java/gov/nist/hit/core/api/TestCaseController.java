@@ -85,7 +85,7 @@ public class TestCaseController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/{testCaseId}/details", method = RequestMethod.GET, produces = "application/json")
-	public void details(HttpServletResponse response, @PathVariable("testCaseId") final Long testCaseId)
+	public Map<String, Object> details(HttpServletResponse response, @PathVariable("testCaseId") final Long testCaseId)
 			throws IOException {
 		Map<String, Object> result = new HashMap<String, Object>();
 		logger.info("Fetching testcase " + testCaseId + " artifacts ");
@@ -94,7 +94,7 @@ public class TestCaseController {
 		result.put("jurorDocument", testCase.getJurorDocument());
 		result.put("supplements", testCase.getSupplements());
 		result.put("updateDate", testCase.getUpdateDate());
-		streamer.stream(response.getOutputStream(), result);
+		return result;
 	}
 
 	/**

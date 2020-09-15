@@ -368,10 +368,10 @@ public abstract class ResourcebundleLoader {
 	@Value("${app.reportSavingSupported:#{true}}")
 	private boolean reportSavingSupported;
 	
-	@Value("${app.uploadsFolderPath")
+	@Value("${app.uploadsFolderPath}")
 	private String uploadsFolderPath;
 	
-	@Value("${app.url")
+	@Value("${app.url}")
 	private String url;
 	
 

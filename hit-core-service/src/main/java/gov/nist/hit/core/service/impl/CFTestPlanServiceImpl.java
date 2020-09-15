@@ -1,5 +1,6 @@
 package gov.nist.hit.core.service.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +14,6 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ibm.icu.util.Calendar;
 
 import gov.nist.hit.core.domain.AbstractTestCase;
 import gov.nist.hit.core.domain.CFTestPlan;
@@ -144,7 +144,7 @@ public class CFTestPlanServiceImpl implements CFTestPlanService {
 				}
 			}else {
 				for(CFTestStep testS : ((CFTestPlan)node).getTestSteps()) {
-					CFTestPlan testP = findCFTestPlanContainingAbstractTestCase(testS, lookingFor);
+					CFTestPlan testP = findCFTestPlanContainingAbstractTestCase(testS, lookingFor,tp);
 					if (testP != null ) {
 						return testP;
 					}

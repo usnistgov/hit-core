@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -12,7 +13,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.SAXException;
 
-import com.ibm.icu.util.Calendar;
 
 import gov.nist.hit.core.domain.TestResult;
 import gov.nist.hit.core.domain.TestStep;

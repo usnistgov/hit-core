@@ -73,7 +73,7 @@ public class TestCaseGroupController {
 	}
 
 	@RequestMapping(value = "/{testCaseGroupId}/details", method = RequestMethod.GET, produces = "application/json")
-	public void details(HttpServletResponse response,
+	public Map<String, Object> details(HttpServletResponse response,
 			@ApiParam(value = "the id of the test case group", required = true) @PathVariable final Long testCaseGroupId)
 			throws IOException {
 		logger.info("Fetching artifacts of test case group with id=" + testCaseGroupId);
@@ -82,7 +82,7 @@ public class TestCaseGroupController {
 		result.put("testStory", testCaseGroup.getTestStory());
 		result.put("supplements", testCaseGroup.getSupplements());
 		result.put("updateDate", testCaseGroup.getUpdateDate());
-		streamer.stream(response.getOutputStream(), result);
+		return result;
 	}
 	
 	@RequestMapping(value = "/{testCaseGroupId}/updateDate", method = RequestMethod.GET, produces = "application/json")

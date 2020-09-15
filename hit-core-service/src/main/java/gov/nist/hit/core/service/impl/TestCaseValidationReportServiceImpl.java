@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +28,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import com.ibm.icu.util.Calendar;
 
 import gov.nist.hit.core.domain.TestCase;
 import gov.nist.hit.core.domain.TestCaseValidationResult;
@@ -35,6 +35,7 @@ import gov.nist.hit.core.domain.TestResult;
 import gov.nist.hit.core.domain.TestStep;
 import gov.nist.hit.core.domain.TestStepValidationReport;
 import gov.nist.hit.core.repo.TestStepValidationReportRepository;
+import gov.nist.hit.core.service.AppInfoService;
 import gov.nist.hit.core.service.TestCaseService;
 import gov.nist.hit.core.service.TestCaseValidationReportService;
 import gov.nist.hit.core.service.TestStepService;
@@ -44,7 +45,6 @@ import gov.nist.hit.core.service.util.HtmlUtil;
 import gov.nist.hit.core.service.util.ReportUtil;
 import nu.xom.Attribute;
 
-@PropertySource(value = {"classpath:app-config.properties"})
 @Service
 public class TestCaseValidationReportServiceImpl implements TestCaseValidationReportService {
 
@@ -54,11 +54,9 @@ public class TestCaseValidationReportServiceImpl implements TestCaseValidationRe
   protected static final String CSS = "/report/report.css";
   protected String css = "";
 
-  @Value("${app.header}")
-  private String appName;
 
-  @Value("${app.version}")
-  private String appVersion;
+  @Autowired
+  private AppInfoService appInfoService;
 
 
   @Autowired
@@ -123,12 +121,12 @@ public class TestCaseValidationReportServiceImpl implements TestCaseValidationRe
 
       nu.xom.Element toolName = new nu.xom.Element("testcasevalidationreport:ToolName",
           "http://www.nist.gov/healthcare/validation/testcase/report");
-      toolName.appendChild(appName);
+      toolName.appendChild(appInfoService.get().getName() + " - " + appInfoService.get().getSubTitle());
       headerReport.appendChild(toolName);
 
       nu.xom.Element toolVersion = new nu.xom.Element("testcasevalidationreport:ToolVersion",
           "http://www.nist.gov/healthcare/validation/testcase/report");
-      toolVersion.appendChild(appVersion);
+      toolVersion.appendChild(appInfoService.get().getVersion());
       headerReport.appendChild(toolVersion);
 
 

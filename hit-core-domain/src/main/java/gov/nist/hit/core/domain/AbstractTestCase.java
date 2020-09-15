@@ -74,13 +74,11 @@ public abstract class AbstractTestCase extends TestResource
   @ApiModelProperty(required = true, value = "test story of the test case")
   @JsonIgnore
   @OneToOne(cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
-  @JsonView(Views.NoData.class)
   protected TestArtifact testStory;
 
 
   @ApiModelProperty(required = true, value = "Supplement documents")
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JsonView(Views.NoData.class)
   protected Set<Document> supplements = new HashSet<Document>();
   
   @Temporal(TemporalType.TIMESTAMP)

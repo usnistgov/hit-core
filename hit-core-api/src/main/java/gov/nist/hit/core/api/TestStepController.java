@@ -100,7 +100,7 @@ public class TestStepController {
 	}
 
 	@RequestMapping(value = "/{testStepId}/details", method = RequestMethod.GET)
-	public void details(HttpServletResponse response,
+	public Map<String, Object> details(HttpServletResponse response,
 			@ApiParam(value = "the id of the test step", required = true) @PathVariable final Long testStepId)
 			throws IOException {
 		logger.info("Fetching artifacts of teststep with id=" + testStepId);
@@ -112,7 +112,7 @@ public class TestStepController {
 		result.put("testStory", testStep.getTestStory());
 		result.put("supplements", testStep.getSupplements());
 		result.put("updateDate", testStep.getUpdateDate());
-		streamer.stream(response.getOutputStream(), result);
+		return result;
 	}
 
 	@RequestMapping(value = "/{testStepId}/jurordocument", method = RequestMethod.GET)

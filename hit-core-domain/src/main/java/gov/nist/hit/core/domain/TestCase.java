@@ -50,12 +50,14 @@ public class TestCase extends AbstractTestCase implements Serializable {
   @LazyCollection(LazyCollectionOption.FALSE)
   @ApiModelProperty(required = true, value = "test steps of the test case")
   @OneToMany(mappedBy = "testCase", orphanRemoval = true, cascade = {CascadeType.ALL})
+  @Fetch(value=FetchMode.SELECT)
   private Set<TestStep> testSteps = new HashSet<TestStep>();
 
   @JsonView(Views.NoData.class)
   @LazyCollection(LazyCollectionOption.FALSE)
   @ApiModelProperty(required = false, value = "mapping of data of the test case")
   @OneToMany(mappedBy = "testCase", orphanRemoval = true, cascade = {CascadeType.ALL})
+  @Fetch(value=FetchMode.SELECT)
   protected Collection<DataMapping> dataMappings;
 
   @ApiModelProperty(required = false, value = "juror document of the test case")

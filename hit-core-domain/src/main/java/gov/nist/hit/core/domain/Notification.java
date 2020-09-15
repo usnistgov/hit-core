@@ -26,7 +26,7 @@ public class Notification {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	protected Long id;
 
-	@Column(nullable = true)
+	@Column(nullable = true,columnDefinition = "LONGTEXT")
 	protected String message;
 
 	@Column(nullable = true)
