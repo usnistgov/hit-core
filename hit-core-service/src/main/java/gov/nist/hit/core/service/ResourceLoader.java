@@ -29,13 +29,13 @@ import gov.nist.hit.core.service.util.ResourcebundleHelper;
 public abstract class ResourceLoader extends ResourcebundleLoader {
 
   @Autowired
-  private TestCaseRepository testCaseRepository;
+  protected TestCaseRepository testCaseRepository;
 
   @Autowired
-  private TestCaseGroupRepository testCaseGroupRepository;
+  protected TestCaseGroupRepository testCaseGroupRepository;
 
   @Autowired
-  private TestStepRepository testStepRepository;
+  protected TestStepRepository testStepRepository;
 
   public List<Resource> getApiDirectories(String pattern, String rootPath) throws IOException {
     return ResourcebundleHelper.getDirectoriesFile(rootPath + pattern);

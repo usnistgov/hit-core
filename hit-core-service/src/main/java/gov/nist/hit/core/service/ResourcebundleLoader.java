@@ -250,10 +250,20 @@ public abstract class ResourcebundleLoader {
 	protected TestCaseRepository testCaseRepository;
 	
 	@Autowired
-	private TestPlanService cbTestPlanService;
+	protected TestStepService testStepService;
 	
 	@Autowired
-	private CFTestPlanService cfTestPlanService;
+	protected TestCaseService testCaseService;
+	
+	@Autowired
+	protected TestPlanService cbTestPlanService;
+	
+	@Autowired
+	protected TestCaseGroupService testCaseGroupService;
+	
+	
+	@Autowired
+	protected CFTestPlanService cfTestPlanService;
 
 	private Map<Long, String> idLocationMap;
 
@@ -422,22 +432,28 @@ public abstract class ResourcebundleLoader {
 		appInfoRepository.deleteAll();
 		domainService.deletePreloaded();
 		validationResultRepository.deleteAll();
-		testPlanRepository.deletePreloaded();
-
-		testStepRepository.deletePreloaded();
-		testCaseGroupRepository.deletePreloaded();
-		testCaseRepository.deletePreloaded();
-
+		
+		cbTestPlanService.deleteAllPreloaded();
+		cfTestPlanService.deleteAllPreloaded();
+		
+		testCaseGroupService.deleteAllPreloaded();
 		cfTestStepGroupRepository.deletePreloaded();
-		cfTestPlanRepository.deletePreloaded();
+		
+		testCaseService.deleteAllPreloaded();
+		
+		testStepService.deleteAllPreloaded();
+		
 		vocabularyLibraryRepository.deletePreloaded();
 		constraintsRepository.deletePreloaded();
 		integrationProfileRepository.deletePreloaded();
+		
 		testCaseDocumentationRepository.deleteAll();
 		transportFormsRepository.deleteAll();
 		documentRepository.deleteAll();
 		transportMessageRepository.deleteAll();
 		transactionRepository.deleteAll();
+		
+		
 	}
 
 	public void init() throws Exception {

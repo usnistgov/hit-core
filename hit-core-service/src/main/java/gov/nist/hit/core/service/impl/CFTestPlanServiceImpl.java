@@ -293,6 +293,14 @@ public class CFTestPlanServiceImpl implements CFTestPlanService {
 	  return cache.remove(key) != null;
   }
 	
+  @Override
+ 	public void deleteAllPreloaded() {
+ 		List<CFTestPlan> list = testPlanRepository.getAllPreloaded();
+ 		for(CFTestPlan tc : list) {
+ 			testPlanRepository.delete(tc);
+ 		}
+ 		
+ 	}
 
   
 

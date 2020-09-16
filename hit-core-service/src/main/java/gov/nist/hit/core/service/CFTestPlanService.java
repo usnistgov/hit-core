@@ -62,4 +62,6 @@ public interface CFTestPlanService {
 
   public String findCFFullPathContainingAbstractTestCase(AbstractTestCase node);
 
+  public void deleteAllPreloaded();
+
 }

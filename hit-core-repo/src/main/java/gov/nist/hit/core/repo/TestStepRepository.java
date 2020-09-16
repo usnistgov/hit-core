@@ -54,6 +54,10 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
   @Query("delete from TestStep ts where ts.preloaded = true")
   public void deletePreloaded();
   
+  @Query("select testStep from TestStep testStep where testStep.preloaded = true")
+  public  List<TestStep>  getAllPreloaded();
+  
+  
   @Query("select ts.updateDate from TestStep ts where ts.id = :id")
   public Date getUpdateDate(@Param("id") Long id);
 

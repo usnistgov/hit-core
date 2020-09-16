@@ -79,5 +79,15 @@ public class TestStepServiceImpl implements TestStepService {
 		return testStepRepository.getUpdateDate(testStepId);
 	}
 
+	@Override
+	public void deleteAllPreloaded() {
+		List<TestStep> list = testStepRepository.getAllPreloaded();
+		for(TestStep ts : list) {
+			testStepRepository.delete(ts);
+		}
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

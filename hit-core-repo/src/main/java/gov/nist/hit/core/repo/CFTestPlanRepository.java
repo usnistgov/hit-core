@@ -24,6 +24,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import gov.nist.hit.core.domain.CFTestPlan;
+import gov.nist.hit.core.domain.TestCase;
 import gov.nist.hit.core.domain.TestPlan;
 import gov.nist.hit.core.domain.TestScope;
 import gov.nist.hit.core.domain.TestingStage;
@@ -95,6 +96,7 @@ public interface CFTestPlanRepository extends JpaRepository<CFTestPlan, Long> {
   @Query("select tp from CFTestPlan tp where tp.stage= :stage and tp.domain = :domain")
   public List<CFTestPlan> findAllByStageAndDomain(@Param("stage") TestingStage stage, @Param("domain")String domain);
 
-
+  @Query("select tp from CFTestPlan tp where tp.preloaded = true")
+  public  List<CFTestPlan>  getAllPreloaded();
 
 }

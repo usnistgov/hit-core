@@ -14,8 +14,10 @@ package gov.nist.hit.core.repo;
 
 import gov.nist.hit.core.domain.TestArtifact;
 import gov.nist.hit.core.domain.TestCase;
+import gov.nist.hit.core.domain.TestStep;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -38,4 +40,7 @@ public interface TestCaseRepository extends JpaRepository<TestCase, Long> {
   
   @Query("select tc.updateDate from TestCase tc where tc.id = :id")
   public Date getUpdateDate(@Param("id") Long id);
+  
+  @Query("select testCase from TestCase testCase where testCase.preloaded = true")
+  public  List<TestCase>  getAllPreloaded();
 }

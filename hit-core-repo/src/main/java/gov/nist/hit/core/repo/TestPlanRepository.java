@@ -22,6 +22,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import gov.nist.hit.core.domain.CFTestPlan;
 import gov.nist.hit.core.domain.TestArtifact;
 import gov.nist.hit.core.domain.TestPlan;
 import gov.nist.hit.core.domain.TestScope;
@@ -107,5 +108,8 @@ public interface TestPlanRepository extends JpaRepository<TestPlan, Long> {
   @Transactional(value = "transactionManager")
   @Query("delete from TestPlan to where to.domain = :domain")
   public void deleteByDomain(@Param("domain") String domain);
+  
+  @Query("select tp from TestPlan tp where tp.preloaded = true")
+  public  List<TestPlan>  getAllPreloaded();
 
 }

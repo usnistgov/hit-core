@@ -13,6 +13,7 @@
 package gov.nist.hit.core.repo;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,6 +22,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import gov.nist.hit.core.domain.TestArtifact;
+import gov.nist.hit.core.domain.TestCase;
 import gov.nist.hit.core.domain.TestCaseGroup;
 
 public interface TestCaseGroupRepository extends JpaRepository<TestCaseGroup, Long> {
@@ -38,5 +40,8 @@ public interface TestCaseGroupRepository extends JpaRepository<TestCaseGroup, Lo
   
   @Query("select tcg.updateDate from TestCaseGroup tcg where tcg.id = :id")
   public Date getUpdateDate(@Param("id") Long id);
+  
+  @Query("select testCaseGroup from TestCaseGroup testCaseGroup where testCaseGroup.preloaded = true")
+  public  List<TestCaseGroup>  getAllPreloaded();
 
 }

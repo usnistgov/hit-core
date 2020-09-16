@@ -17,5 +17,7 @@ public interface TestCaseService {
 
   public Date getUpdateDate(Long testCaseId);
 
+  public void deleteAllPreloaded();
+
 
 }

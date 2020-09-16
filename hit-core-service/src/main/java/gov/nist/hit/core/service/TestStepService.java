@@ -31,6 +31,6 @@ public interface TestStepService {
 
   public Date getUpdateDate(Long testStepId);
 
-
+  public void deleteAllPreloaded();
 
 }

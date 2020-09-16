@@ -1,6 +1,7 @@
 package gov.nist.hit.core.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import gov.nist.hit.core.domain.TestArtifact;
 import gov.nist.hit.core.domain.TestCase;
+import gov.nist.hit.core.domain.TestStep;
 import gov.nist.hit.core.repo.TestCaseRepository;
 import gov.nist.hit.core.service.TestCaseService;
 
@@ -48,6 +50,15 @@ public class TestCaseServiceImpl implements TestCaseService {
   public Date getUpdateDate(Long testCaseId) {
 	  return testCaseRepository.getUpdateDate(testCaseId);
   }
+  
+  @Override
+	public void deleteAllPreloaded() {
+		List<TestCase> list = testCaseRepository.getAllPreloaded();
+		for(TestCase tc : list) {
+			testCaseRepository.delete(tc);
+		}
+		
+	}
 
 
 }

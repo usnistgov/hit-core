@@ -46,5 +46,7 @@ public interface TestPlanService {
 
 	public String findFullPathContainingAbstractTestCase(AbstractTestCase node);
 
+	 public void deleteAllPreloaded();
 
+	
 }

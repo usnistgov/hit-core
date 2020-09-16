@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import gov.nist.hit.core.domain.AbstractTestCase;
+import gov.nist.hit.core.domain.CFTestPlan;
 import gov.nist.hit.core.domain.TestArtifact;
 import gov.nist.hit.core.domain.TestCase;
 import gov.nist.hit.core.domain.TestCaseGroup;
@@ -65,6 +66,15 @@ public class TestPlanServiceImpl implements TestPlanService {
 			findOne(id);
 		}	
 	}
+	
+	@Override
+ 	public void deleteAllPreloaded() {
+ 		List<TestPlan> list = testPlanRepository.getAllPreloaded();
+ 		for(TestPlan tc : list) {
+ 			testPlanRepository.delete(tc);
+ 		}
+ 		
+ 	}
 	
 	
 	private TestPlan findTestPlanContainingAbstractTestCase(AbstractTestCase node,AbstractTestCase lookingFor, TestPlan tp) {
@@ -334,5 +344,7 @@ private String findFullPathContainingAbstractTestCase(AbstractTestCase node,Abst
 			}
 		}
 	}
+	
+	
 
 }
