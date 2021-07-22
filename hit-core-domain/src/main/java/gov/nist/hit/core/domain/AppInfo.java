@@ -133,7 +133,7 @@ public class AppInfo implements Serializable {
 
   public AppInfo() {
     uploadMaxSize = "10MB";
-    uploadContentTypes = "text/plain,text/xml,application/xml";
+    uploadContentTypes = "text/plain,text/xml,application/xml,application/hl7,text/hl7";
 
   }
 

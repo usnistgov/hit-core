@@ -94,7 +94,7 @@ public class MessageController {
 	@RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = { "multipart/form-data" })
 	public Map<String, String> upload(@RequestPart("file") MultipartFile part) throws MessageUploadException {
 		try {
-			validateContentType(part);
+//			validateContentType(part);
 			Map<String, String> map = new HashMap<String, String>();
 			InputStream in = part.getInputStream();
 			map.put("name", part.getName());

@@ -52,6 +52,11 @@ public interface CFTestPlanRepository extends JpaRepository<CFTestPlan, Long> {
   @Query("select tp from CFTestPlan tp where tp.stage = :stage and tp.scope = :scope and tp.domain = :domain")
   public List<CFTestPlan> findAllByStageAndScopeAndDomain(@Param("stage") TestingStage stage,
       @Param("scope") TestScope scope, @Param("domain") String domain);
+  
+  @Query("select new gov.nist.hit.core.domain.CFTestPlan(id) from CFTestPlan tp where tp.stage = :stage and tp.scope = :scope and tp.domain = :domain")
+  public List<CFTestPlan> findAllIdByStageAndScopeAndDomain(@Param("stage") TestingStage stage,
+      @Param("scope") TestScope scope, @Param("domain") String domain);
+  
 
   @Query("select new gov.nist.hit.core.domain.CFTestPlan(id, name, description, position,persistentId,domain) from CFTestPlan tp where tp.stage = ?1 and tp.scope = ?2 and tp.domain = ?3")
   public List<CFTestPlan> findShortAllByStageAndScopeAndDomain(TestingStage stage, TestScope scope,

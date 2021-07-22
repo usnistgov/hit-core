@@ -57,6 +57,12 @@ public class TestPlan extends AbstractTestCase implements Serializable {
 	this.updateDate = new Date();
     this.type = ObjectType.TestPlan;
   }
+  
+  public TestPlan(Long id) {
+	this.id = id;
+	this.updateDate = new Date();
+    this.type = ObjectType.TestPlan;
+  }
 
   @ApiModelProperty(required = false, value = "list of test cases of the test plan")
   @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
@@ -91,6 +97,7 @@ public class TestPlan extends AbstractTestCase implements Serializable {
     this.domain = domain;
     this.persistentId = persistentId;
     this.updateDate = new Date();
+    this.type = ObjectType.TestPlan;
   }
 
 

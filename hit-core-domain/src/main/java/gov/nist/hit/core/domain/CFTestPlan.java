@@ -41,10 +41,20 @@ public class CFTestPlan extends AbstractTestCase implements Serializable {
     this.stage = TestingStage.CF;
     this.updateDate = new Date();
   }
+  
+  public CFTestPlan(Long id) {
+	    super();
+	    this.id = id;
+	    this.type = ObjectType.TestPlan;
+	    this.stage = TestingStage.CF;
+	    this.updateDate = new Date();
+	  }
 
   public CFTestPlan(Long id, String name, String description, int position, Long persistentId,
       String domain) {
     super();
+    this.type = ObjectType.TestPlan;
+    this.stage = TestingStage.CF;
     this.id = id;
     this.name = name;
     this.description = description;

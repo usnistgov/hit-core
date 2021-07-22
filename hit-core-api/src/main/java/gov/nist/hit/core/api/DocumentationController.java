@@ -46,12 +46,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import gov.nist.auth.hit.core.domain.Account;
 import gov.nist.hit.core.domain.Document;
 import gov.nist.hit.core.domain.DocumentType;
 import gov.nist.hit.core.domain.TestCaseDocumentation;
 import gov.nist.hit.core.domain.TestScope;
 import gov.nist.hit.core.domain.TestingStage;
+import gov.nist.hit.core.domain.util.Views;
 import gov.nist.hit.core.repo.DocumentRepository;
 import gov.nist.hit.core.service.AccountService;
 import gov.nist.hit.core.service.AppInfoService;

@@ -447,9 +447,9 @@ public abstract class ResourcebundleLoader {
 		constraintsRepository.deletePreloaded();
 		integrationProfileRepository.deletePreloaded();
 		
-		testCaseDocumentationRepository.deleteAll();
+		testCaseDocumentationRepository.deletePreloaded();
 		transportFormsRepository.deleteAll();
-		documentRepository.deleteAll();
+		documentRepository.deletePreloaded();
 		transportMessageRepository.deleteAll();
 		transactionRepository.deleteAll();
 		

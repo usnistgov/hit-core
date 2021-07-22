@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><configuration>
+    
+  <include resource="gov/nist/hit/stats/logger/base.xml" />
+  
+  <!-- Set this property's value to the name of your tool (default: unspecified)-->
+  <property name="HIT_STATS_TOOL_ID" value="GVT" />
+  
+  <!-- Set this property if you want log files to go to a specific directory (default: /var/log/hit-stats) -->
+  <!-- In production, it is recommended that this variable be set by the admin as an environment variable in that case please do not override -->
+  <property name="HIT_STATS_LOG_DIR" value="/var/log/hit-stats" />
+  
+  
+  
+  
+</configuration>

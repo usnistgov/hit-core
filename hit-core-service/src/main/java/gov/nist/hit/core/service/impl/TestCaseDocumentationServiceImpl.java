@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import gov.nist.hit.core.service.ResourceLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +29,10 @@ import gov.nist.hit.core.domain.TestStep;
 import gov.nist.hit.core.domain.TestingStage;
 import gov.nist.hit.core.repo.CFTestPlanRepository;
 import gov.nist.hit.core.repo.TestPlanRepository;
-import gov.nist.hit.core.service.ResourcebundleLoader;
+import gov.nist.hit.core.service.CFTestPlanService;
+import gov.nist.hit.core.service.ResourceLoader;
 import gov.nist.hit.core.service.TestCaseDocumentationService;
+import gov.nist.hit.core.service.TestPlanService;
 import gov.nist.hit.core.service.ZipGenerator;
 import gov.nist.hit.core.service.util.DocumentationUtils;
 
@@ -50,6 +51,11 @@ public class TestCaseDocumentationServiceImpl implements TestCaseDocumentationSe
   protected CFTestPlanRepository cfTestPlanRepository;
 
 
+  @Autowired
+  protected TestPlanService testPlanService;
+  
+  @Autowired
+  protected CFTestPlanService cfTestPlanService;
 
   @Autowired
   private ZipGenerator zipGenerator;
@@ -74,12 +80,25 @@ public class TestCaseDocumentationServiceImpl implements TestCaseDocumentationSe
   @Override
   public List<TestCaseDocumentation> generate(TestScope scope, String domain) throws IOException {
     List<TestCaseDocumentation> documents = new ArrayList<TestCaseDocumentation>();
+    
+
     List<CFTestPlan> cfTestPlans =
-        cfTestPlanRepository.findAllByStageAndScopeAndDomain(TestingStage.CF, scope, domain);
+        cfTestPlanRepository.findAllIdByStageAndScopeAndDomain(TestingStage.CF, scope, domain); 
+    for (int i=0;i<cfTestPlans.size();i++) {
+    	cfTestPlans.set(i,cfTestPlanService.findOne(cfTestPlans.get(i).getId()));
+    } 
+    
     documents.addAll(generateCfDocumentations(cfTestPlans));
+       
+    
+    
     List<TestPlan> cbTestPlans =
-        testPlanRepository.findAllByStageAndScopeAndDomain(TestingStage.CB, scope, domain);
+        testPlanRepository.findAllIdByStageAndScopeAndDomain(TestingStage.CB, scope, domain);
+    for (int i=0;i<cbTestPlans.size();i++) {
+    	cbTestPlans.set(i,testPlanService.findOne(cbTestPlans.get(i).getId()));
+    } 
     documents.addAll(generateCbDocumentations(cbTestPlans));
+    
     return documents;
   }
 
@@ -101,11 +120,12 @@ public class TestCaseDocumentationServiceImpl implements TestCaseDocumentationSe
       throws IOException {
     List<TestCaseDocumentation> documents = new ArrayList<TestCaseDocumentation>();
     TestCaseDocumentation doc = cb("Context-based", TestingStage.CB, testPlans);
+    
     if (doc != null) {
       doc.setJson(obm.writeValueAsString(doc));
       documents.add(doc);
     }
-    return documents;
+        return documents;
   }
 
   public List<TestCaseDocumentation> generateCfDocumentations(List<CFTestPlan> testPlans)
@@ -128,7 +148,9 @@ public class TestCaseDocumentationServiceImpl implements TestCaseDocumentationSe
       documentation.setTitle(title);
       documentation.setStage(stage);
       for (TestPlan testPlan : tps) {
-        documentation.getChildren().add(generate(testPlan));
+    	
+        documentation.getChildren().add(generate(testPlan));       
+        
       }
       return documentation;
     }
@@ -157,14 +179,18 @@ public class TestCaseDocumentationServiceImpl implements TestCaseDocumentationSe
       List<TestCaseGroup> list = new ArrayList<TestCaseGroup>(tp.getTestCaseGroups());
       Collections.sort(list);
       for (TestCaseGroup tcg : list) {
-        doc.getChildren().add(generate(tcg));
+    	  
+    	  doc.getChildren().add(generate(tcg));        
+        
       }
     }
     if (tp.getTestCases() != null && !tp.getTestCases().isEmpty()) {
       List<TestCase> list = new ArrayList<TestCase>(tp.getTestCases());
       Collections.sort(list);
       for (TestCase tc : list) {
-        doc.getChildren().add(generate(tc));
+    	  
+        doc.getChildren().add(generate(tc));        
+        
       }
     }
     return doc;
@@ -177,7 +203,9 @@ public class TestCaseDocumentationServiceImpl implements TestCaseDocumentationSe
       List<TestCaseGroup> list = new ArrayList<TestCaseGroup>(tcg.getTestCaseGroups());
       Collections.sort(list);
       for (TestCaseGroup child : list) {
+    	            
         doc.getChildren().add(generate(child));
+        
       }
     }
 
@@ -185,7 +213,9 @@ public class TestCaseDocumentationServiceImpl implements TestCaseDocumentationSe
       List<TestCase> list = new ArrayList<TestCase>(tcg.getTestCases());
       Collections.sort(list);
       for (TestCase tc : list) {
+    	            
         doc.getChildren().add(generate(tc));
+        
       }
     }
 
@@ -222,15 +252,18 @@ public class TestCaseDocumentationServiceImpl implements TestCaseDocumentationSe
       List<TestStep> list = new ArrayList<TestStep>(tc.getTestSteps());
       Collections.sort(list);
       for (TestStep ts : list) {
+    	           
         doc.getChildren().add(generate(ts));
+         
       }
     }
     return doc;
   }
 
   private gov.nist.hit.core.domain.TestCaseDocument generate(TestStep ts) throws IOException {
-    gov.nist.hit.core.domain.TestCaseDocument doc =
-        resourceLoader.generateTestCaseDocument(ts.getTestContext());
+	      
+    gov.nist.hit.core.domain.TestCaseDocument doc = resourceLoader.generateTestCaseDocument(ts.getTestContext());
+    
     doc = initTestCaseDocument(ts, doc);
     if (ts.getTestContext() != null) {
       doc.setId(ts.getTestContext().getId());

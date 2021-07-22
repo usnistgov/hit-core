@@ -356,14 +356,20 @@ public  class DomainController {
 		}
 
 		Domain found = domainService.findOneByKey(key);
-		if (found != null) {
-			throw new DomainException("A Tool scope with key=" + key + " already exists");
+		String newKey = key;
+		int i = 0;
+		while(found != null) {
+			//create an alternative key
+			i++;
+			newKey = key+"_"+i;			
+			found = domainService.findOneByKey(newKey);
+//			throw new DomainException("A Tool scope with key=" + key + " already exists");
 		}
 
 		Domain result = new Domain();
 		result.setAuthorUsername(authentication.getName());
 		result.setScope(scope);
-		result.setDomain(key);
+		result.setDomain(newKey);
 		result.setName(name);
 		result.setHomeTitle(domain.getHomeTitle());
 		result.setDisabled(false);

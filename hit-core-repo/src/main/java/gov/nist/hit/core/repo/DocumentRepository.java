@@ -76,6 +76,11 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
   @Transactional(value = "transactionManager")
   @Query("delete from Document to where to.domain = :domain")
   public void deleteByDomain(@Param("domain") String domain);
+  
+	@Modifying
+	@Transactional(value = "transactionManager")
+	@Query("delete from Document d where d.preloaded = true")
+	public void deletePreloaded();
 
 
 

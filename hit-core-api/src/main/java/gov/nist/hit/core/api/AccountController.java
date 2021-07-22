@@ -279,8 +279,10 @@ public class AccountController {
 		if (accs != null && !accs.isEmpty()) {
 			for (Account acc : accs) {
 				if (acc.getUsername() != null && !acc.isEntityDisabled()
-						&& !acc.getUsername().equals(authU.getUsername())
-						&& !masterEmails.contains(acc.getUsername())) {
+//						&& !acc.getUsername().equals(authU.getUsername())
+//						&& !masterEmails.contains(acc.getUsername())
+						) 
+				{
 					ShortAccount sacc = new ShortAccount();
 					sacc.setId(acc.getId());
 					sacc.setEmail(acc.getEmail());
@@ -1044,7 +1046,7 @@ public class AccountController {
 			msg.setTo(acc.getEmail());
 			msg.setText("Dear " + acc.getUsername() + ", \n\n"
 					+ "Thank you for submitting an application for use of the " + TOOL_NAME + ".\n\n"
-					+ "Please refer to the Quick Start Guide for Testing, under the Documentation tab, for additional account set-up steps." + "\n\n" + "Sincerely, " + "\n\n"
+					+ "Please refer to the to the documents in the Documentation tab, for additional information." + "\n\n" + "Sincerely, " + "\n\n"
 					+ "The " + TOOL_NAME + " Team" + "\n\n" + "P.S: If you need help, contact us at '"
 					+ appInfoService.get().getAdminEmails().get(0) + "'");
 
@@ -1064,7 +1066,7 @@ public class AccountController {
 			msg.setTo(acc.getEmail());
 			msg.setText("Dear " + acc.getUsername() + ", \n\n" + "You've successfully registered on the " + TOOL_NAME
 					+ " Site." + " \n" + "Your username is: " + acc.getUsername() + " \n\n"
-					+ "Please refer to the to the Quick Start Guide for Testing, under the Documentation tab, for additional account set-up steps." + "\n\n" + "Sincerely, " + "\n\n"
+					+ "Please refer to the to the documents in the Documentation tab, for additional information." + "\n\n" + "Sincerely, " + "\n\n"
 					+ "The " + TOOL_NAME + " Team" + "\n\n" + "P.S: If you need help, contact us at '"
 					+ appInfoService.get().getAdminEmails().get(0) + "'");
 
