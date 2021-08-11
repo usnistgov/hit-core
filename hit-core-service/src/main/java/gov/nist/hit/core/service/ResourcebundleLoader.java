@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -311,6 +313,9 @@ public abstract class ResourcebundleLoader {
 
 	@Value("${app.version}")
 	private String appVersion;
+	
+	@Value("${app.date}")
+	private String appDate;
 
 	@Value("${app.domain}")
 	private String appSubTitle;
@@ -1953,7 +1958,16 @@ public abstract class ResourcebundleLoader {
 		appInfo.setHeader(appHeader);
 		appInfo.setName(appName);
 		appInfo.setVersion(appVersion);
-		appInfo.setDate(new Date().getTime() + "");
+		if(appDate != null) {
+			try {
+				appInfo.setDate(new SimpleDateFormat("MM/dd/yyyy").parse(appDate).getTime() + "");
+			} catch (ParseException e) {
+				appInfo.setDate(new Date().getTime() + "");
+			}  
+		}else {
+			appInfo.setDate(new Date().getTime() + "");
+		}
+		
 		appInfo.setContactEmail(appContactEmail);
 
 		appInfo.setDisclaimer(appDisclaimerContent);
