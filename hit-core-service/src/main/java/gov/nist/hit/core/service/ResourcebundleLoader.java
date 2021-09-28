@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -1890,8 +1891,9 @@ public abstract class ResourcebundleLoader {
 	}
 
 	protected String fileName(Resource resource) throws IOException {
-		String location = resource.getURL().toString();
-		return location.replaceAll("%20", " ");
+		String location = URLDecoder.decode(resource.getURL().toString(), "UTF-8");		
+		return location;
+		//		return location.replaceAll("%20", " ");
 	}
 
 	private Set<gov.nist.hit.core.domain.Document> testDocuments(String testPath, JsonNode nodeObj, String domain, TestScope scope) {
