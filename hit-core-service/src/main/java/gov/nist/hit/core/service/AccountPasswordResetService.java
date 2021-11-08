@@ -10,5 +10,6 @@ public interface AccountPasswordResetService {
 
   AccountPasswordReset save(AccountPasswordReset acc);
 
+  void delete(AccountPasswordReset ac);
 
 }

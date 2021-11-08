@@ -262,13 +262,16 @@ public class TestCaseDocumentationServiceImpl implements TestCaseDocumentationSe
 
   private gov.nist.hit.core.domain.TestCaseDocument generate(TestStep ts) throws IOException {
 	      
-    gov.nist.hit.core.domain.TestCaseDocument doc = resourceLoader.generateTestCaseDocument(ts.getTestContext());
-    
-    doc = initTestCaseDocument(ts, doc);
-    if (ts.getTestContext() != null) {
-      doc.setId(ts.getTestContext().getId());
-    }
-    return doc;
+		gov.nist.hit.core.domain.TestCaseDocument doc;    
+		if (ts.getTestContext() != null) {
+			doc = resourceLoader.generateTestCaseDocument(ts.getTestContext());
+	    	doc = initTestCaseDocument(ts, doc);
+	    	doc.setId(ts.getTestContext().getId());
+	    }else {
+	    	doc = initTestCaseDocument(ts);
+	    }
+	    return doc;
+
   }
 
   private gov.nist.hit.core.domain.TestCaseDocument generate(CFTestStep ts) throws IOException {
