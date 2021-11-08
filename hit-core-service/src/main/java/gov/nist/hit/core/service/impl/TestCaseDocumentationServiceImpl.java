@@ -251,22 +251,24 @@ public class TestCaseDocumentationServiceImpl implements TestCaseDocumentationSe
     if (tc.getTestSteps() != null && !tc.getTestSteps().isEmpty()) {
       List<TestStep> list = new ArrayList<TestStep>(tc.getTestSteps());
       Collections.sort(list);
-      for (TestStep ts : list) {
-    	           
-        doc.getChildren().add(generate(ts));
-         
+      for (TestStep ts : list) {    	
+    	  
+    	  doc.getChildren().add(generate(ts));
+    	  
       }
     }
     return doc;
   }
 
   private gov.nist.hit.core.domain.TestCaseDocument generate(TestStep ts) throws IOException {
-	      
-    gov.nist.hit.core.domain.TestCaseDocument doc = resourceLoader.generateTestCaseDocument(ts.getTestContext());
-    
-    doc = initTestCaseDocument(ts, doc);
-    if (ts.getTestContext() != null) {
-      doc.setId(ts.getTestContext().getId());
+	         
+	gov.nist.hit.core.domain.TestCaseDocument doc;    
+	if (ts.getTestContext() != null) {
+		doc = resourceLoader.generateTestCaseDocument(ts.getTestContext());
+    	doc = initTestCaseDocument(ts, doc);
+    	doc.setId(ts.getTestContext().getId());
+    }else {
+    	doc = initTestCaseDocument(ts);
     }
     return doc;
   }

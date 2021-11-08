@@ -1,5 +1,6 @@
 package gov.nist.hit.core.service;
 
+import gov.nist.auth.hit.core.domain.Account;
 import gov.nist.auth.hit.core.domain.AccountPasswordReset;
 
 public interface AccountPasswordResetService {
@@ -9,6 +10,8 @@ public interface AccountPasswordResetService {
   AccountPasswordReset findOne(Long id);
 
   AccountPasswordReset save(AccountPasswordReset acc);
+  
+  void delete(AccountPasswordReset ac);
 
 
 }

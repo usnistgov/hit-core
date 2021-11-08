@@ -25,6 +25,7 @@ import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,7 @@ import gov.nist.auth.hit.core.domain.Account;
 import gov.nist.auth.hit.core.domain.AccountChangeCredentials;
 import gov.nist.auth.hit.core.domain.AccountPasswordReset;
 import gov.nist.auth.hit.core.domain.CurrentUser;
+import gov.nist.auth.hit.core.domain.ResetPassword;
 import gov.nist.auth.hit.core.domain.ShortAccount;
 import gov.nist.auth.hit.core.domain.util.UserUtil;
 import gov.nist.auth.hit.core.repo.util.AccountSpecsHelper;
@@ -472,7 +474,7 @@ public class AccountController {
 
 		// Generate url and email
 
-		String url = getUrl(request) + "/#/registerResetPassword?userId=" + account.getUsername() + "&username="
+		String url = getUrl(request) + "/#/registerResetPassword?username="
 				+ account.getUsername() + "&token=" + UriUtils.encodeQueryParam(arp.getCurrentToken(), "UTF-8");
 
 		// generate and send email
@@ -644,10 +646,10 @@ public class AccountController {
 	/**
 	 * User forgot his password and requests a password reset
 	 */
-	@RequestMapping(value = "/sooa/accounts/passwordreset", method = RequestMethod.POST)
-	public ResponseMessage requestAccountPasswordReset(@RequestParam(required = false) String username,
+	@RequestMapping(value = "/sooa/accounts/passwordresetrequest", method = RequestMethod.POST)
+	public ResponseMessage requestAccountPasswordReset(@RequestBody ResetPassword resetPassword,
 			HttpServletRequest request) throws Exception {
-
+		String username = resetPassword.getUsername();
 		Account acc = null;
 
 		if (username != null) {
@@ -686,7 +688,7 @@ public class AccountController {
 		// }
 
 		// Generate url and email
-		String url = getUrl(request) + "/#/resetPassword?userId=" + user.getUsername() + "&username="
+		String url = getUrl(request) + "/#/resetPassword?username="
 				+ acc.getUsername() + "&token=" + UriUtils.encodeQueryParam(arp.getCurrentToken(), "UTF-8");
 
 		// System.out.println("****************** "+url+" *******************");
@@ -795,20 +797,19 @@ public class AccountController {
 	 * User has to change his password and accept the agreement to complete the
 	 * registration process
 	 */
-	@RequestMapping(value = "/sooa/accounts/{userId}/passwordreset", method = RequestMethod.POST, params = "token")
-	public ResponseMessage resetAccountPassword(@RequestBody Account acc, @PathVariable String userId,
-			@RequestParam(required = true) String token) {
+	@RequestMapping(value = "/sooa/accounts/passwordreset", method = RequestMethod.POST, params = "token")
+	public ResponseMessage resetAccountPassword(@RequestBody Account acc, @RequestParam(required = true) String token) {
 
 		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ -5 ^^^^^^^^^^^^^^^^^^");
-
+		String username = acc.getUsername();
 		// check there is a username in the request
-		if (acc.getUsername() == null || acc.getUsername().isEmpty()) {
+		if (username == null || username.isEmpty()) {
 			return new ResponseMessage(ResponseMessage.Type.danger, "usernameMissing", null);
 		}
 
 		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ -4 ^^^^^^^^^^^^^^^^^^");
 
-		AccountPasswordReset apr = accountPasswordResetService.findByTheAccountsUsername(acc.getUsername());
+		AccountPasswordReset apr = accountPasswordResetService.findByTheAccountsUsername(username);
 
 		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ -3 ^^^^^^^^^^^^^^^^^^");
 
@@ -834,26 +835,28 @@ public class AccountController {
 
 		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 0 ^^^^^^^^^^^^^^^^^^");
 
-		User onRecordUser = userService.retrieveUserByUsername(userId);
+		User onRecordUser = userService.retrieveUserByUsername(username);
 
 		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ "+onRecordUser.getPassword()+"
 		// ^^^^^^^^^^^^^^^^^^");
 
 		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 1 ^^^^^^^^^^^^^^^^^^");
 
-		Account onRecordAccount = accountService.findByTheAccountsUsername(acc.getUsername());
+		Account onRecordAccount = accountService.findByTheAccountsUsername(username);
 
 		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 2 ^^^^^^^^^^^^^^^^^^");
 
-		userService.changePasswordForUser(onRecordUser.getPassword(), acc.getPassword(), userId);
+		userService.changePasswordForUser(onRecordUser.getPassword(), acc.getPassword(), username);
 		if (!onRecordUser.isCredentialsNonExpired()) {
-			userService.enableUserCredentials(userId);
+			userService.enableUserCredentials(username);
 		}
 		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 3 ^^^^^^^^^^^^^^^^^^");
 
 		// send email notification
 		this.sendResetAccountPasswordNotification(onRecordAccount);
 
+		accountPasswordResetService.delete(apr);
+		
 		return new ResponseMessage(ResponseMessage.Type.success, "accountPasswordReset",
 				onRecordAccount.getId().toString());
 	}
@@ -861,81 +864,81 @@ public class AccountController {
 	/**
 	 * 
 	 * */
-	@RequestMapping(value = "/sooa/accounts/register/{userId}/passwordreset", method = RequestMethod.POST, params = "token")
-	public ResponseMessage resetRegisteredAccountPassword(@RequestBody AccountChangeCredentials racc,
-			@PathVariable String userId, @RequestParam(required = true) String token) {
-
-		// check there is a username in the request
-		if (racc.getUsername() == null || racc.getUsername().isEmpty()) {
-			return new ResponseMessage(ResponseMessage.Type.danger, "usernameMissing", null);
-		}
-
-		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 0 ^^^^^^^^^^^^^^^^^^");
-
-		AccountPasswordReset apr = accountPasswordResetService.findByTheAccountsUsername(racc.getUsername());
-
-		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 1 ^^^^^^^^^^^^^^^^^^");
-
-		// check there is a reset request on record
-		if (apr == null) {
-			return new ResponseMessage(ResponseMessage.Type.danger, "noResetRequestFound", null);
-		}
-
-		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 2 ^^^^^^^^^^^^^^^^^^");
-
-		// check that for username, the token in record is the token passed in
-		// request
-		if (!apr.getCurrentToken().equals(token)) {
-			return new ResponseMessage(ResponseMessage.Type.danger, "incorrectToken", null);
-		}
-
-		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 3 ^^^^^^^^^^^^^^^^^^");
-
-		// check token is not expired
-		if (apr.isTokenExpired()) {
-			return new ResponseMessage(ResponseMessage.Type.danger, "expiredToken", null);
-		}
-
-		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 4 "+userId+"
-		// ^^^^^^^^^^^^^^^^^^");
-
-		User onRecordUser = userService.retrieveUserByUsername(userId);
-		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ "+onRecordUser.getPassword()+"
-		// ^^^^^^^^^^^^^^^^^^");
-
-		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 5 ^^^^^^^^^^^^^^^^^^");
-
-		Account onRecordAccount = accountService.findByTheAccountsUsername(racc.getUsername());
-
-		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 6 ^^^^^^^^^^^^^^^^^^");
-
-		// change the password
-		userService.changePasswordForUser(onRecordUser.getPassword(), racc.getPassword(), userId);
-		if (!onRecordUser.isCredentialsNonExpired()) {
-			userService.enableUserCredentials(userId);
-		}
-		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 7 ^^^^^^^^^^^^^^^^^^");
-
-		// update the agreement
-		onRecordAccount.setSignedConfidentialityAgreement(racc.getSignedConfidentialityAgreement());
-		onRecordAccount.setPending(false);
-		onRecordAccount.setGuestAccount(false);
-
-		accountService.save(onRecordAccount);
-
-		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 8 ^^^^^^^^^^^^^^^^^^");
-		Long expireTokenTime = (new Date()).getTime() - AccountPasswordReset.tokenValidityTimeInMilis;
-		Date expireTokenDate = new Date();
-		expireTokenDate.setTime(expireTokenTime);
-		apr.setTimestamp(expireTokenDate);
-		accountPasswordResetService.save(apr);
-
-		// send email notification
-		this.sendResetRegistrationAccountPasswordNotification(onRecordAccount);
-
-		return new ResponseMessage(ResponseMessage.Type.success, "registeredAccountPasswordReset",
-				onRecordAccount.getId().toString());
-	}
+//	@RequestMapping(value = "/sooa/accounts/register/{userId}/passwordreset", method = RequestMethod.POST, params = "token")
+//	public ResponseMessage resetRegisteredAccountPassword(@RequestBody AccountChangeCredentials racc,
+//			@PathVariable String userId, @RequestParam(required = true) String token) {
+//
+//		// check there is a username in the request
+//		if (racc.getUsername() == null || racc.getUsername().isEmpty()) {
+//			return new ResponseMessage(ResponseMessage.Type.danger, "usernameMissing", null);
+//		}
+//
+//		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 0 ^^^^^^^^^^^^^^^^^^");
+//
+//		AccountPasswordReset apr = accountPasswordResetService.findByTheAccountsUsername(racc.getUsername());
+//
+//		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 1 ^^^^^^^^^^^^^^^^^^");
+//
+//		// check there is a reset request on record
+//		if (apr == null) {
+//			return new ResponseMessage(ResponseMessage.Type.danger, "noResetRequestFound", null);
+//		}
+//
+//		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 2 ^^^^^^^^^^^^^^^^^^");
+//
+//		// check that for username, the token in record is the token passed in
+//		// request
+//		if (!apr.getCurrentToken().equals(token)) {
+//			return new ResponseMessage(ResponseMessage.Type.danger, "incorrectToken", null);
+//		}
+//
+//		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 3 ^^^^^^^^^^^^^^^^^^");
+//
+//		// check token is not expired
+//		if (apr.isTokenExpired()) {
+//			return new ResponseMessage(ResponseMessage.Type.danger, "expiredToken", null);
+//		}
+//
+//		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 4 "+userId+"
+//		// ^^^^^^^^^^^^^^^^^^");
+//
+//		User onRecordUser = userService.retrieveUserByUsername(userId);
+//		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ "+onRecordUser.getPassword()+"
+//		// ^^^^^^^^^^^^^^^^^^");
+//
+//		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 5 ^^^^^^^^^^^^^^^^^^");
+//
+//		Account onRecordAccount = accountService.findByTheAccountsUsername(racc.getUsername());
+//
+//		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 6 ^^^^^^^^^^^^^^^^^^");
+//
+//		// change the password
+//		userService.changePasswordForUser(onRecordUser.getPassword(), racc.getPassword(), userId);
+//		if (!onRecordUser.isCredentialsNonExpired()) {
+//			userService.enableUserCredentials(userId);
+//		}
+//		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 7 ^^^^^^^^^^^^^^^^^^");
+//
+//		// update the agreement
+//		onRecordAccount.setSignedConfidentialityAgreement(racc.getSignedConfidentialityAgreement());
+//		onRecordAccount.setPending(false);
+//		onRecordAccount.setGuestAccount(false);
+//
+//		accountService.save(onRecordAccount);
+//
+//		// logger.debug("^^^^^^^^^^^^^^^^^^^^^ 8 ^^^^^^^^^^^^^^^^^^");
+//		Long expireTokenTime = (new Date()).getTime() - AccountPasswordReset.tokenValidityTimeInMilis;
+//		Date expireTokenDate = new Date();
+//		expireTokenDate.setTime(expireTokenTime);
+//		apr.setTimestamp(expireTokenDate);
+//		accountPasswordResetService.save(apr);
+//
+//		// send email notification
+//		this.sendResetRegistrationAccountPasswordNotification(onRecordAccount);
+//
+//		return new ResponseMessage(ResponseMessage.Type.success, "registeredAccountPasswordReset",
+//				onRecordAccount.getId().toString());
+//	}
 
 	/**
 	 * 
