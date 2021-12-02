@@ -25,7 +25,7 @@ public class HTTPSecurityFilter implements Filter {
 	 * SSL Content - fix: Cache-Control flaw: Cross-Frame Scripting - fix:
 	 * X-Frame-Options flaw: Cross-Site Scripting - fix: X-XSS-Protection flaw:
 	 * Force SSL - fix: Strict-Transport-Security
-	 * 
+	 *
 	 * assure no-cache for login page to prevent IE from caching
 	 */
 
@@ -55,7 +55,7 @@ public class HTTPSecurityFilter implements Filter {
 				httpResponse.setHeader("X-XSS-Protection", "1; mode=block");
 				httpResponse.setHeader("Access-Control-Allow-Origin", "*");
 				httpResponse.setHeader("Vary", "Origin");
-				httpResponse.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self'; style-src 'self' 'unsafe-inline' 'unsafe-eval' ; font-src 'self'; frame-src 'self'; object-src 'self'");
+				httpResponse.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; style-src 'self' 'unsafe-inline' 'unsafe-eval' ; font-src 'self'; frame-src 'self'; object-src 'self'");
 				httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
 			    httpResponse.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
 			    httpResponse.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers,Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization,appVersion,rsbVersion");
