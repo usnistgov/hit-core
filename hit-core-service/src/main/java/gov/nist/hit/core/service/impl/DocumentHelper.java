@@ -8,14 +8,14 @@ package gov.nist.hit.core.service.impl;
  * this software.
  */
 
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 /**
  * @author Harold Affo (NIST)
  */
 public class DocumentHelper {
 
-  private static final Logger logger = Logger.getLogger(DocumentHelper.class);
+  private static final Logger logger = LogManager.getLogger(DocumentHelper.class);
 
   private final String RELEASENOTE_PATTERN = "Documentation/ReleaseNotes";
 

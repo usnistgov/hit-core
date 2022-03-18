@@ -10,7 +10,12 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import org.apache.log4j.PropertyConfigurator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.ConfigurationSource;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.core.config.properties.PropertiesConfigurationBuilder;
 
 /**
  * @author Harold Affo (NIST)
@@ -40,7 +45,17 @@ public class Log4jConfigListener implements ServletContextListener {
 				f.mkdir();
 			}
 			p.put("log.dir", logDir);
-			PropertyConfigurator.configure(p);
+			
+			LoggerContext context = (LoggerContext)LogManager.getContext(false);
+			Configuration config = new PropertiesConfigurationBuilder()
+			            .setConfigurationSource(ConfigurationSource.NULL_SOURCE)
+			            .setRootProperties(p)
+			            .setLoggerContext(context)
+			            .build();
+			 context.setConfiguration(config);
+			 Configurator.initialize(config);
+			
+//			PropertyConfigurator.configure(p);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

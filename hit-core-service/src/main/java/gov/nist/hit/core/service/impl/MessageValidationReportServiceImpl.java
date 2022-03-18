@@ -18,7 +18,8 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -37,7 +38,7 @@ import gov.nist.hit.core.service.util.HtmlUtil;
 @Service
 public class MessageValidationReportServiceImpl implements MessageValidationReportService {
 
-  private final static Logger logger = Logger.getLogger(MessageValidationReportServiceImpl.class);
+  private final static Logger logger = LogManager.getLogger(MessageValidationReportServiceImpl.class);
   private static final String HTML_XSL = "/report/message-validation-report-html.xsl";
   private static final String PDF_XSL = "/report/message-validation-report-pdf.xsl";
 

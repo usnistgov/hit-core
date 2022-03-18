@@ -17,6 +17,8 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URLDecoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -312,6 +314,9 @@ public abstract class ResourcebundleLoader {
 
 	@Value("${app.version}")
 	private String appVersion;
+	
+	@Value("${app.date}")
+	private String appDate;
 
 	@Value("${app.domain}")
 	private String appSubTitle;
@@ -417,7 +422,6 @@ public abstract class ResourcebundleLoader {
 		String create = System.getProperty("RELOAD_DB");
 		create = create == null ? System.getenv("RELOAD_DB") : create;
 		logger.info("RELOAD_DB is set to " + create);
-		System.out.println("RELOAD_DB is set to " + create);
 		return (create != null && (Boolean.valueOf(create) == true)) || appInfo == null;
 	}
 	
@@ -425,7 +429,6 @@ public abstract class ResourcebundleLoader {
 		String cache = System.getProperty("CACHE_AT_STARTUP");
 		cache = cache == null ? System.getenv("CACHE_AT_STARTUP") : cache;
 		logger.info("CACHE_AT_STARTUP is set to " + cache);
-		System.out.println("CACHE_AT_STARTUP is set to " + (cache == null || (cache != null && Boolean.valueOf(cache) == true)));
 		return (cache == null || (cache != null && Boolean.valueOf(cache) == true));
 	}
 
@@ -470,6 +473,26 @@ public abstract class ResourcebundleLoader {
 			this.loadDomains(directory);
 			logger.info("resource bundle loaded successfully...");
 		}
+		
+		//set url defined in config unless it's overwritten in system env with TOOL_URL. If none of these are present it's is computed as best as possible in info(HttpServletRequest)	
+		String envurl = System.getProperty("TOOL_URL");
+		envurl = envurl == null ? System.getenv("TOOL_URL") : envurl;
+		if (envurl != null && !envurl.isEmpty()) {
+			logger.info("TOOL_URL is set to " + envurl);
+			System.out.println("TOOL_URL is set to " + envurl);
+			this.appInfoService.get().setUrl(envurl);
+		}
+		
+		String isDevTool = System.getProperty("IS_DEV_TOOL");
+		isDevTool = isDevTool == null ? System.getenv("IS_DEV_TOOL") : isDevTool;
+		System.out.println("IS_DEV_TOOL is set to " + isDevTool);
+		logger.info("IS_DEV_TOOL is set to " + isDevTool);
+		if (Boolean.valueOf(isDevTool) == true) {
+			 this.appInfoService.get().setDevTool(true);
+		}else{
+			this.appInfoService.get().setDevTool(false);
+		}
+		
 		
 		if(cacheAtStartUp()) {
 			//preload TestPlans at startup
@@ -1955,7 +1978,15 @@ public abstract class ResourcebundleLoader {
 		appInfo.setHeader(appHeader);
 		appInfo.setName(appName);
 		appInfo.setVersion(appVersion);
-		appInfo.setDate(new Date().getTime() + "");
+		if(appDate != null) {
+			try {
+				appInfo.setDate(new SimpleDateFormat("MM/dd/yyyy").parse(appDate).getTime() + "");
+			} catch (ParseException e) {
+				appInfo.setDate(new Date().getTime() + "");
+			}  
+		}else {
+			appInfo.setDate(new Date().getTime() + "");
+		}
 		appInfo.setContactEmail(appContactEmail);
 
 		appInfo.setDisclaimer(appDisclaimerContent);
@@ -1987,6 +2018,8 @@ public abstract class ResourcebundleLoader {
 		
 		appInfo.setUploadsFolderPath(uploadsFolderPath);
 		appInfo.setUrl(url);
+				
+		
 		
 		appInfoRepository.save(appInfo);
 		logger.info("loading app info...DONE");

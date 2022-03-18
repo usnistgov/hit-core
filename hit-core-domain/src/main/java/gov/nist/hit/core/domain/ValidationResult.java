@@ -11,11 +11,9 @@
  */
 package gov.nist.hit.core.domain;
 
-import io.swagger.annotations.ApiModel;
-
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import io.swagger.annotations.ApiModel;
 
 /**
  * Validation Result by category.

@@ -482,6 +482,11 @@ public class AppInfo implements Serializable {
     return this.getOptions().get(Constant.DOMAIN_MANAGEMENT_SUPPORTED) != null
         && Boolean.valueOf(this.getOptions().get(Constant.DOMAIN_MANAGEMENT_SUPPORTED));
   }
+  
+  @Transient
+  public void setDevTool(boolean isDevTool) {
+    this.getOptions().put(Constant.IS_DEV_TOOL, Boolean.toString(isDevTool));
+  }
 
 
 
