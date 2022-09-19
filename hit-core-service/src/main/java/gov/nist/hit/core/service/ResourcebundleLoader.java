@@ -2016,7 +2016,15 @@ public abstract class ResourcebundleLoader {
 		appInfo.setDomainSelectionSupported(domainSelectionSupported);
 		appInfo.setUserLoginSupported(userLoginSupported);
 		
-		appInfo.setUploadsFolderPath(uploadsFolderPath);
+		
+		String uploadsFolderPathFromSystemEnv = System.getProperty("UPLOAD_PATH");
+		uploadsFolderPathFromSystemEnv = uploadsFolderPathFromSystemEnv == null ? System.getenv("UPLOAD_PATH") : uploadsFolderPathFromSystemEnv;	
+		if (uploadsFolderPathFromSystemEnv != null) {
+			appInfo.setUploadsFolderPath(uploadsFolderPathFromSystemEnv);
+		}else {
+			appInfo.setUploadsFolderPath(uploadsFolderPath);
+		}
+		
 		appInfo.setUrl(url);
 				
 		
