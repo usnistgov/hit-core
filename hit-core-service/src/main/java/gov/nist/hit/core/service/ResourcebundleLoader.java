@@ -72,6 +72,7 @@ import gov.nist.hit.core.domain.AppInfo;
 import gov.nist.hit.core.domain.CFTestPlan;
 import gov.nist.hit.core.domain.CFTestStep;
 import gov.nist.hit.core.domain.CFTestStepGroup;
+import gov.nist.hit.core.domain.CoConstraints;
 import gov.nist.hit.core.domain.Constraints;
 import gov.nist.hit.core.domain.DataMapping;
 import gov.nist.hit.core.domain.DocumentType;
@@ -84,6 +85,7 @@ import gov.nist.hit.core.domain.MappingSourceRandom;
 import gov.nist.hit.core.domain.Message;
 import gov.nist.hit.core.domain.ProfileModel;
 import gov.nist.hit.core.domain.Protocol;
+import gov.nist.hit.core.domain.Slicings;
 import gov.nist.hit.core.domain.TestArtifact;
 import gov.nist.hit.core.domain.TestCase;
 import gov.nist.hit.core.domain.TestCaseDocument;
@@ -96,17 +98,20 @@ import gov.nist.hit.core.domain.TestStepFieldPair;
 import gov.nist.hit.core.domain.TestingStage;
 import gov.nist.hit.core.domain.TestingType;
 import gov.nist.hit.core.domain.TransportForms;
+import gov.nist.hit.core.domain.ValueSetBindings;
 import gov.nist.hit.core.domain.VocabularyLibrary;
 import gov.nist.hit.core.repo.AppInfoRepository;
 import gov.nist.hit.core.repo.CFTestPlanRepository;
 import gov.nist.hit.core.repo.CFTestStepGroupRepository;
 import gov.nist.hit.core.repo.CFTestStepRepository;
+import gov.nist.hit.core.repo.CoConstraintsRepository;
 import gov.nist.hit.core.repo.ConformanceProfileRepository;
 import gov.nist.hit.core.repo.ConstraintsRepository;
 import gov.nist.hit.core.repo.DataMappingRepository;
 import gov.nist.hit.core.repo.DocumentRepository;
 import gov.nist.hit.core.repo.IntegrationProfileRepository;
 import gov.nist.hit.core.repo.MessageRepository;
+import gov.nist.hit.core.repo.SlicingsRepository;
 import gov.nist.hit.core.repo.TestCaseDocumentationRepository;
 import gov.nist.hit.core.repo.TestCaseGroupRepository;
 import gov.nist.hit.core.repo.TestCaseRepository;
@@ -116,6 +121,7 @@ import gov.nist.hit.core.repo.TestStepValidationReportRepository;
 import gov.nist.hit.core.repo.TransactionRepository;
 import gov.nist.hit.core.repo.TransportFormsRepository;
 import gov.nist.hit.core.repo.TransportMessageRepository;
+import gov.nist.hit.core.repo.ValueSetBindingsRepository;
 import gov.nist.hit.core.repo.VocabularyLibraryRepository;
 import gov.nist.hit.core.service.exception.ProfileParserException;
 import gov.nist.hit.core.service.util.FileUtil;
@@ -246,6 +252,15 @@ public abstract class ResourcebundleLoader {
 	@Autowired
 	protected VocabularyLibraryRepository vocabularyLibraryRepository;
 
+	@Autowired
+	protected ValueSetBindingsRepository valueSetBindingsRepository;
+	
+	@Autowired
+	protected CoConstraintsRepository coConstraintsRepository;
+	
+	@Autowired
+	protected SlicingsRepository slicingsRepository;
+	
 	@Autowired
 	protected TestCaseGroupRepository testCaseGroupRepository;
 
@@ -1188,6 +1203,45 @@ public abstract class ResourcebundleLoader {
 			constraints.setDescription(metaDataElement.getAttribute("Description"));
 		return constraints;
 	}
+	
+	public Slicings slicings(String content, String domain, TestScope scope, String username, boolean preloaded) {
+		Document doc = this.stringToDom(content);
+		Slicings slicings = new Slicings();
+		slicings.setXml(content);
+		Element constraintsElement = (Element) doc.getElementsByTagName("ProfileSlicing").item(0);
+		slicings.setSourceId(constraintsElement.getAttribute("SlicingIdentifier"));
+		slicings.setDomain(domain);
+		slicings.setScope(scope);
+		slicings.setAuthorUsername(username);
+		slicings.setPreloaded(preloaded);		
+		return slicings;
+	}
+	
+	public CoConstraints coConstraints(String content, String domain, TestScope scope, String username, boolean preloaded) {
+		Document doc = this.stringToDom(content);
+		CoConstraints coConstraints = new CoConstraints();
+		coConstraints.setXml(content);
+		Element constraintsElement = (Element) doc.getElementsByTagName("CoConstraintContext").item(0);
+		coConstraints.setSourceId(constraintsElement.getAttribute("CoConstraintsIdentifier"));
+		coConstraints.setDomain(domain);
+		coConstraints.setScope(scope);
+		coConstraints.setAuthorUsername(username);
+		coConstraints.setPreloaded(preloaded);		
+		return coConstraints;
+	}
+	
+	public ValueSetBindings valuesetbindings(String content, String domain, TestScope scope, String username, boolean preloaded) {
+		Document doc = this.stringToDom(content);
+		ValueSetBindings valuesetbindings = new ValueSetBindings();
+		valuesetbindings.setXml(content);
+		Element constraintsElement = (Element) doc.getElementsByTagName("ValueSetBindingsContext").item(0);
+		valuesetbindings.setSourceId(constraintsElement.getAttribute("BidningIdentifier"));
+		valuesetbindings.setDomain(domain);
+		valuesetbindings.setScope(scope);
+		valuesetbindings.setAuthorUsername(username);
+		valuesetbindings.setPreloaded(preloaded);		
+		return valuesetbindings;
+	}
 
 	protected Document stringToDom(String xmlSource) {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -1275,7 +1329,7 @@ public abstract class ResourcebundleLoader {
 		}
 		return c;
 	}
-
+	
 	protected VocabularyLibrary getVocabularyLibrary(String sourceId) throws IOException {
 		VocabularyLibrary v = vocabularyLibraryRepository.findOneBySourceId(sourceId);
 		if (v == null) {
@@ -1284,6 +1338,30 @@ public abstract class ResourcebundleLoader {
 		return v;
 	}
 
+	protected ValueSetBindings getValueSetBindingsBySourceId(String sourceId) throws IOException {
+		ValueSetBindings v = valueSetBindingsRepository.findOneBySourceId(sourceId);
+		if (v == null) {
+			throw new IllegalArgumentException("ValueSetBindings with sourceid = " + sourceId + " not found");
+		}
+		return v;
+	}
+	
+	protected CoConstraints getCoConstraintsBySourceId(String sourceId) throws IOException {
+		CoConstraints c = coConstraintsRepository.findOneBySourceId(sourceId);
+		if (c == null) {
+			throw new IllegalArgumentException("CoConstraints with sourceid = " + sourceId + " not found");
+		}
+		return c;
+	}
+	
+	protected Slicings getSlicingsBySourceId(String sourceId) throws IOException {
+		Slicings s = slicingsRepository.findOneBySourceId(sourceId);
+		if (s == null) {
+			throw new IllegalArgumentException("Slicings with sourceid = " + sourceId + " not found");
+		}
+		return s;
+	}
+	
 	public String domainPath(String path) {
 		return path;
 	}
@@ -2019,11 +2097,15 @@ public abstract class ResourcebundleLoader {
 		
 		String uploadsFolderPathFromSystemEnv = System.getProperty("UPLOAD_PATH");
 		uploadsFolderPathFromSystemEnv = uploadsFolderPathFromSystemEnv == null ? System.getenv("UPLOAD_PATH") : uploadsFolderPathFromSystemEnv;	
+		logger.info("UPLOAD_PATH is set to " + uploadsFolderPathFromSystemEnv);
+		System.out.println("UPLOAD_PATH is set to " + uploadsFolderPathFromSystemEnv);
 		if (uploadsFolderPathFromSystemEnv != null) {
 			appInfo.setUploadsFolderPath(uploadsFolderPathFromSystemEnv);
 		}else {
 			appInfo.setUploadsFolderPath(uploadsFolderPath);
 		}
+		
+		
 		
 		appInfo.setUrl(url);
 				

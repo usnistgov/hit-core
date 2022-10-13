@@ -637,4 +637,14 @@ public abstract class ResourceLoader extends ResourcebundleLoader {
   public abstract List<ResourceUploadStatus> addOrReplaceIntegrationProfile(String rootPath,
       String domain, TestScope scope, String username, boolean preloaded) throws IOException;
 
+  public abstract List<ResourceUploadStatus> addOrReplaceValueSetBindings(String rootPath, String domain, TestScope scope,
+		String authorUsername, boolean preloaded)throws IOException;
+  
+  public abstract List<ResourceUploadStatus> addOrReplaceCoConstraints(String rootPath, String domain, TestScope scope,
+			String authorUsername, boolean preloaded)throws IOException;
+  
+  public abstract List<ResourceUploadStatus> addOrReplaceSlicings(String rootPath, String domain, TestScope scope,
+			String authorUsername, boolean preloaded)throws IOException;
+
+
 }

@@ -5,4 +5,9 @@ public class GVTSaveInstance {
   public IntegrationProfile ip;
   public Constraints ct;
   public VocabularyLibrary vs;
+  public CoConstraints coct;
+  public Slicings slicings;
+  public ValueSetBindings vsBindings;
+  
+  
 }
