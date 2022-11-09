@@ -1209,7 +1209,7 @@ public abstract class ResourcebundleLoader {
 		Slicings slicings = new Slicings();
 		slicings.setXml(content);
 		Element constraintsElement = (Element) doc.getElementsByTagName("ProfileSlicing").item(0);
-		slicings.setSourceId(constraintsElement.getAttribute("SlicingIdentifier"));
+		slicings.setSourceId(constraintsElement.getAttribute("ID"));
 		slicings.setDomain(domain);
 		slicings.setScope(scope);
 		slicings.setAuthorUsername(username);
@@ -1222,7 +1222,7 @@ public abstract class ResourcebundleLoader {
 		CoConstraints coConstraints = new CoConstraints();
 		coConstraints.setXml(content);
 		Element constraintsElement = (Element) doc.getElementsByTagName("CoConstraintContext").item(0);
-		coConstraints.setSourceId(constraintsElement.getAttribute("CoConstraintsIdentifier"));
+		coConstraints.setSourceId(constraintsElement.getAttribute("ID"));
 		coConstraints.setDomain(domain);
 		coConstraints.setScope(scope);
 		coConstraints.setAuthorUsername(username);
@@ -1235,7 +1235,7 @@ public abstract class ResourcebundleLoader {
 		ValueSetBindings valuesetbindings = new ValueSetBindings();
 		valuesetbindings.setXml(content);
 		Element constraintsElement = (Element) doc.getElementsByTagName("ValueSetBindingsContext").item(0);
-		valuesetbindings.setSourceId(constraintsElement.getAttribute("BidningIdentifier"));
+		valuesetbindings.setSourceId(constraintsElement.getAttribute("ID"));
 		valuesetbindings.setDomain(domain);
 		valuesetbindings.setScope(scope);
 		valuesetbindings.setAuthorUsername(username);
