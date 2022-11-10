@@ -51,23 +51,49 @@ public class TransactionServiceImpl implements TransactionService {
   public List<Transaction> findAllByUser(Long userId) {
     return transactionRepository.findAllByUser(userId);
   }
+  
+  
 
-  @Override
-  public Transaction findOneByTestStepIdAndProperties(Map<String, String> criteria,
-      Long testStepId) {
-    String sql = toQuery(criteria);
-    sql = sql + " AND tr.testStepId = " + testStepId;
-    Query q = entityManager.createNativeQuery(sql, Transaction.class);
-    Transaction tr = getSingleResult(q);
-    return tr;
-  }
+//  @Override
+//  public Transaction findOneByTestStepIdAndProperties(Map<String, String> criteria,
+//      Long testStepId) {
+//    String sql = toQuery(criteria);
+//    sql = sql + " AND tr.testStepId = " + testStepId;
+//    Query q = entityManager.createNativeQuery(sql, Transaction.class);
+//    Transaction tr = getSingleResult(q);
+//    return tr;
+//  }
 
   @Override
   public Transaction findOneByProperties(Map<String, String> criteria) {
-    String sql = toQuery(criteria);
-    Query q = entityManager.createNativeQuery(sql, Transaction.class);
-    Transaction tr = getSingleResult(q);
-    return tr;
+
+			List<Transaction> list = transactionRepository.findAll();
+			if (list != null && list.size()>0) {
+				for (Transaction t : list) {
+					
+					boolean matches = true;
+					Iterator<Entry<String, String>> it = criteria.entrySet().iterator();
+				    int i = 1;
+				    while (it.hasNext() && matches == true) {
+				    	Map.Entry<String, String> pair = it.next();
+				    	String key = pair.getKey();
+				        String value = pair.getValue();
+				    	if (t.getProperties().containsKey(key) && t.getProperties().get(key).equals(value)) {
+				    		 matches = true;
+				    	}else {
+				    		 matches = false;
+				    		 
+				    	}				    				    	
+				    }
+					if (matches == true) {
+						return t;
+					}
+					
+				}
+				return null;
+			}else {
+				return null;
+			}	
   }
 
   private String toQuery(Map<String, String> criteria) {
@@ -75,26 +101,34 @@ public class TransactionServiceImpl implements TransactionService {
     ArrayList<String> conditions = new ArrayList<>();
     Iterator<Entry<String, String>> it = criteria.entrySet().iterator();
     int i = 1;
+    
     while (it.hasNext()) {
-      Map.Entry<String, String> pair = it.next();
-      String key = pair.getKey();
-      String value = pair.getValue();
-      String alias = "transaction_config" + i;
-      sql += " LEFT OUTER JOIN transaction_config " + alias + " ON tr.id = " + alias
-          + ".transaction_id AND " + alias + ".property_key = '" + key + "' AND " + alias
-          + ".property_value = '" + value + "'";
-      conditions.add(alias + ".property_key is not null");
-      i++;
-    }
-    if (conditions.size() > 1) {
-      sql += " WHERE ";
-      for (int j = 0; j < conditions.size(); j++) {
-        if (j > 0) {
-          sql += " AND ";
-        }
-        sql += conditions.get(j);
+        Map.Entry<String, String> pair = it.next();
+        String key = pair.getKey();
+        String value = pair.getValue();
+        String alias = "transaction_config" + i;
+        sql += " LEFT OUTER JOIN transaction_config " + alias + " ON tr.id = " + alias
+            + ".transaction_id AND " + alias + ".property_key = '" + key + "' AND " + alias
+            + ".property_value = '" + value + "'";
+        conditions.add(alias + ".property_key is not null");
+        i++;
       }
-    }
+      if (conditions.size() > 1) {
+        sql += " WHERE ";
+        for (int j = 0; j < conditions.size(); j++) {
+          if (j > 0) {
+            sql += " AND ";
+          }
+          sql += conditions.get(j);
+        }
+      }
+      
+    
+    
+    
+    
+    
+    
     return sql;
   }
 
@@ -141,9 +175,45 @@ public class TransactionServiceImpl implements TransactionService {
 
   @Override
   public List<Transaction> findAllByProperties(Map<String, String> criteria) {
-    String sql = toQuery(criteria);
-    Query q = entityManager.createNativeQuery(sql, Transaction.class);
-    return q.getResultList();
+	  List<Transaction> result = new ArrayList<Transaction>();
+	  List<Transaction> list = transactionRepository.findAll();
+		if (list != null && list.size()>0) {
+			for (Transaction t : list) {
+				
+				boolean matches = true;
+				Iterator<Entry<String, String>> it = criteria.entrySet().iterator();
+			    int i = 1;
+			    while (it.hasNext() && matches == true) {
+			    	Map.Entry<String, String> pair = it.next();
+			    	String key = pair.getKey();
+			        String value = pair.getValue();
+			    	if (t.getProperties().containsKey(key) && t.getProperties().get(key).equals(value)) {
+			    		 matches = true;
+			    	}else {
+			    		 matches = false;
+			    		 
+			    	}				    				    	
+			    }
+				if (matches == true) {
+					result.add(t);
+				}
+				
+			}
+			if (result.size()>0) {
+				return result;	
+			}else {
+				return null;
+			}
+			
+		}else {
+			return null;
+		}	 
+	  
+	  
+	  
+//    String sql = toQuery(criteria);
+//    Query q = entityManager.createNativeQuery(sql, Transaction.class);
+//    return q.getResultList();
   }
 
   @Override
