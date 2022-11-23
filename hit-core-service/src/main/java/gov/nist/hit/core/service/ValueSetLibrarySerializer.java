@@ -219,6 +219,7 @@ public abstract class ValueSetLibrarySerializer {
 
   private Document toDoc(String xmlSource) {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setXIncludeAware(false);
     factory.setNamespaceAware(true);
     factory.setIgnoringComments(false);
     factory.setIgnoringElementContentWhitespace(true);

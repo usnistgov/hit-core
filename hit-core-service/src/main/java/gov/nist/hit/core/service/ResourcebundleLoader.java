@@ -1245,6 +1245,7 @@ public abstract class ResourcebundleLoader {
 
 	protected Document stringToDom(String xmlSource) {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setXIncludeAware(false);
 		factory.setNamespaceAware(true);
 		factory.setIgnoringComments(false);
 		factory.setIgnoringElementContentWhitespace(true);

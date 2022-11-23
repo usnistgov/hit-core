@@ -228,6 +228,7 @@ public class ConstraintsParserImpl implements ConstraintsParser {
 
   private Document stringToDom(String xmlSource) {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setXIncludeAware(false);
     factory.setNamespaceAware(true);
     factory.setIgnoringComments(false);
     factory.setIgnoringElementContentWhitespace(true);

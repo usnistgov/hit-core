@@ -17,7 +17,7 @@ public interface TransactionService extends Serializable {
 
   List<Transaction> findAllByUser(Long userId);
 
-  Transaction findOneByTestStepIdAndProperties(Map<String, String> criteria, Long testStepId);
+  // Transaction findOneByTestStepIdAndProperties(Map<String, String> criteria, Long testStepId);
 
   Transaction findOneByProperties(Map<String, String> criteria);
 

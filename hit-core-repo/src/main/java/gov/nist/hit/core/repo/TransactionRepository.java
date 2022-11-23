@@ -27,5 +27,11 @@ public interface TransactionRepository
 
   @Query("select transaction from Transaction transaction where transaction.userId = :userId")
   List<Transaction> findAllByUser(@Param("userId") Long userId);
+  
+  //doesn't work for now
+  @Query("select transaction from Transaction transaction INNER JOIN transaction.properties p1 INNER JOIN transaction.properties p2 INNER JOIN transaction.properties p3  WHERE (KEY(p1) = 'username' AND  VALUE(p1) = :username) AND   (KEY(p2) = 'password' AND  VALUE(p2) = :password)  AND  (KEY(p3) = 'facilityID' AND  VALUE(p3) = :facilityID)")
+//  @Query("select transaction from Transaction transaction INNER JOIN transaction.properties p1  WHERE (KEY(p1) = 'username' AND  KEY(p1) = :username) ")
+//  Transaction findOneByProperties(@Param("username") String username);
+  List<Transaction> findOneByProperties(@Param("username") String username,@Param("password") String d,@Param("facilityID") String facilityID);
 
 }

@@ -281,6 +281,20 @@ public class DocumentationController {
 			HttpServletRequest request, HttpServletResponse response) throws DownloadDocumentException {
 		try {
 			if (path != null) {
+				//check if it's a valid document
+				List<Document> alldocs = documentRepository.findAll();
+				boolean found =false;
+				for(Document d :alldocs ) {
+					if (d.getPath().equals(path)){
+						found = true;
+						break;
+					}
+				}
+				if (found == false) {
+					throw new DownloadDocumentException("Cannot download the document, document requested invalid");
+				}
+				
+				
 				String fileName = null;
 				InputStream content = null;
 				path = !path.startsWith("/") ? "/" + path : path;
