@@ -128,15 +128,64 @@ public class TransportConfigServiceImpl implements TransportConfigService {
     return sql;
   }
 
-  @Override
-  public TransportConfig findOneByPropertiesAndProtocol(Map<String, String> criteria,
-      TestingType type, String protocol) {
-    String sql = toInitiatorQuery(criteria, type, protocol);
-    Query q =
-        entityManagerFactory.createEntityManager().createNativeQuery(sql, TransportConfig.class);
+  private TransportConfig toInitiatorTransportConfigWithPreparedStatement(Map<String, String> criteria, TestingType type, String protocol) {
+    String table = type == TestingType.SUT_INITIATOR ? "sut_initiator_config" : "ta_initiator_config";
+    
+    PreparedStatement myStmt; 
+    ArrayList<String> params = new ArrayList<>();
+    String sql = "SELECT * FROM TransportConfig tr";
+    ArrayList<String> conditions = new ArrayList<>();
+    Iterator<Entry<String, String>> it = criteria.entrySet().iterator();
+    int i = 1;
+    while (it.hasNext()) {
+      Map.Entry<String, String> pair = it.next();
+      String key = pair.getKey();
+      String value = pair.getValue();
+      String alias = table + i;
+      sql += " LEFT OUTER JOIN " + table + " " + alias + " ON tr.id = " + alias
+          + ".transport_config_id AND " + alias + ".property_key = '" + key + "' AND " + alias
+          + ".property_value = ?";
+      conditions.add(alias + ".property_key is not null");
+      params.add(value);
+      i++;
+    }
+    if (conditions.size() > 1) {
+      sql += " WHERE ";
+      for (int j = 0; j < conditions.size(); j++) {
+        if (j > 0) {
+          sql += " AND ";
+        }
+        sql += conditions.get(j);
+      }
+      sql += " AND tr.protocol = '" + protocol + "'";
+    } else {
+      sql += " WHERE tr.protocol = '" + protocol + "'";
+    }
+
+
+    Query q = entityManagerFactory.createEntityManager().createNativeQuery(sql, TransportConfig.class);
+    int j;
+    for (j=0;j<params.size();j++) {
+        q.setParameter(j+1, params.get(j));
+    }
     TransportConfig tr = getSingleResult(q);
     return tr;
+        
   }
+
+
+@Override
+public TransportConfig findOneByPropertiesAndProtocol(Map<String, String> criteria,
+  TestingType type, String protocol) {
+
+TransportConfig tr2 = toInitiatorTransportConfigWithPreparedStatement(criteria, type, protocol);
+ 
+//    String sql = toInitiatorQuery(criteria, type, protocol);
+//    Query q =
+//        entityManagerFactory.createEntityManager().createNativeQuery(sql, TransportConfig.class);
+//    TransportConfig tr = getSingleResult(q);
+return tr2;
+}
 
 
   @Override
