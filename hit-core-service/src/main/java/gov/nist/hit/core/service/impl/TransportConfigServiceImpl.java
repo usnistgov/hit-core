@@ -1,5 +1,6 @@
 package gov.nist.hit.core.service.impl;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -178,6 +179,7 @@ public class TransportConfigServiceImpl implements TransportConfigService {
 public TransportConfig findOneByPropertiesAndProtocol(Map<String, String> criteria,
     TestingType type, String protocol) {
 
+	System.out.println("prep statetement");
 TransportConfig tr2 = toInitiatorTransportConfigWithPreparedStatement(criteria, type, protocol);
  
 //    String sql = toInitiatorQuery(criteria, type, protocol);
