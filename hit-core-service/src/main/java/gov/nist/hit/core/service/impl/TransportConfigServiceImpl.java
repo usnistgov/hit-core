@@ -1,5 +1,6 @@
 package gov.nist.hit.core.service.impl;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
