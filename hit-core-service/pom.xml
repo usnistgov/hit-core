@@ -107,7 +107,7 @@
 		<dependency>
 			<groupId>gov.nist.healthcare.hl7.v2.unifiedreport</groupId>
 			<artifactId>report</artifactId>
-			<version>1.0.10-SNAPSHOT</version>
+			<version>1.0.10-LEGACY</version>
 		</dependency>
 		
 	</dependencies>
