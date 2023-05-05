@@ -54,6 +54,10 @@ public interface CFTestPlanService {
   
   public Date getUpdateDate(Long testPlanId);
   
+  public TestScope getScope(Long testPlanId);
+  
+  public String getDomain(Long testPlanId);
+  
   void loadAll();
   
   boolean removeCacheElement(Long key);

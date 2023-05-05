@@ -305,6 +305,7 @@ public class AccountController {
 
 	}
 
+	@PreAuthorize("hasPermission(#id, 'accessAccountBasedResource')")
 	@RequestMapping(value = "/accounts/{id}", method = RequestMethod.GET)
 	public Account getAccountById(@PathVariable Long id) {
 

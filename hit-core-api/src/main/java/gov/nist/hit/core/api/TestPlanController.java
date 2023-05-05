@@ -32,8 +32,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import gov.nist.hit.core.domain.TestPlan;
+import gov.nist.hit.core.domain.TestScope;
 import gov.nist.hit.core.domain.util.Views;
 import gov.nist.hit.core.repo.TestPlanRepository;
+import gov.nist.hit.core.service.DomainService;
 import gov.nist.hit.core.service.Streamer;
 import gov.nist.hit.core.service.exception.DomainException;
 import gov.nist.hit.core.service.exception.TestPlanException;
@@ -54,14 +56,22 @@ public class TestPlanController {
 	protected TestPlanRepository testPlanRepository;
 
 	@Autowired
+	private DomainService domainService;
+	
+	@Autowired
 	private Streamer streamer;
 
 	@JsonView(Views.NoData.class)
 	@RequestMapping(value = "/{testPlanId}", method = RequestMethod.GET, produces = "application/json")
 	public TestPlan testPlan(HttpServletResponse response,
-			@ApiParam(value = "the id of the test plan", required = true) @PathVariable final Long testPlanId)
-			throws IOException {
+			@ApiParam(value = "the id of the test plan", required = true) @PathVariable final Long testPlanId, Authentication auth)
+			throws Exception {
 		logger.info("Fetching test plan with id=" + testPlanId);
+		TestScope ts = testPlanRepository.getScope(testPlanId);
+		if (ts!= null && ts.equals(TestScope.USER)) {
+			String domain = testPlanRepository.getDomain(testPlanId);
+			domainService.hasPermission(domain, auth);
+		}					
 		return findTestPlan(testPlanId);
 	}
 
