@@ -43,6 +43,7 @@ import gov.nist.hit.core.domain.TestingStage;
 import gov.nist.hit.core.service.AccountService;
 import gov.nist.hit.core.service.CFTestPlanService;
 import gov.nist.hit.core.service.CFTestStepService;
+import gov.nist.hit.core.service.DomainService;
 import gov.nist.hit.core.service.ResourceLoader;
 import gov.nist.hit.core.service.Streamer;
 import gov.nist.hit.core.service.UserService;
@@ -76,6 +77,9 @@ public class ContextFreeController {
 	
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private DomainService domainService;
 
 	@Autowired
 	@Qualifier("resourceLoader")
@@ -128,8 +132,16 @@ public class ContextFreeController {
 	@RequestMapping(value = "/testplans/{testPlanId}", method = RequestMethod.GET, produces = "application/json")
 	public CFTestPlan testPlan(
 			@ApiParam(value = "the id of the test plan", required = true) @PathVariable final Long testPlanId,
-			HttpServletRequest request, HttpServletResponse response) throws IOException {
+            HttpServletRequest request, HttpServletResponse response,Authentication auth) throws Exception {
 		logger.info("Fetching  test case...");
+
+		
+		TestScope ts = testPlanService.getScope(testPlanId);
+		if (ts!= null && ts.equals(TestScope.USER)) {
+			String domain = testPlanService.getDomain(testPlanId);
+			domainService.hasPermission(domain, auth);
+		}		
+
 		CFTestPlan testPlan = testPlanService.findOne(testPlanId);
 		Long userId = SessionContext.getCurrentUserId(request.getSession(false));
 		recordTestPlan(testPlan, userId);

@@ -66,6 +66,7 @@ import gov.nist.hit.core.service.ZipGenerator;
 import gov.nist.hit.core.service.exception.DocumentationException;
 import gov.nist.hit.core.service.exception.DownloadDocumentException;
 import gov.nist.hit.core.service.exception.MessageUploadException;
+import gov.nist.hit.core.service.exception.NoUserFoundException;
 import io.swagger.annotations.ApiParam;
 
 /**
@@ -203,30 +204,49 @@ public class DocumentationController {
 	@RequestMapping(value = "/testcases", method = RequestMethod.GET, produces = "application/json")
 	public List<TestCaseDocumentation> testCases(HttpServletResponse response,
 			@RequestParam(required = true) String domain, @RequestParam(required = true) TestScope scope,
-			HttpServletRequest request) throws IOException {
+			HttpServletRequest request) throws IOException, NoUserFoundException {
 		logger.info("Fetching test case documentation");
-		if (TestScope.USER.equals(scope)) {
-			Long userId = SessionContext.getCurrentUserId(request.getSession(false));
-			if (userId != null) {
-				Account account = accountService.findOne(userId);
-				if (account != null) {
-					return testCaseDocumentationService.generate(scope, domain, account.getUsername());
+		Long userId = SessionContext.getCurrentUserId(request.getSession(false));
+		if (userId != null) {	
+			Account account = accountService.findOne(userId);
+			if (account != null) {
+				String email = account.getEmail();
+				if (userService.isAdminByEmail(email) || userService.isAdmin(account.getUsername())) {
+					if (TestScope.USER.equals(scope)) {
+						return testCaseDocumentationService.generate(TestScope.USER, domain);
+					}else if (TestScope.GLOBALANDUSER.equals(scope)) {
+						List<TestCaseDocumentation> res = new ArrayList<TestCaseDocumentation>();
+						res = testCaseDocumentationService.generate(TestScope.USER, domain);
+						res.addAll(testCaseDocumentationService.generate(TestScope.GLOBAL, domain));
+						return res;
+					}
+				
+				}else{			
+					if (TestScope.USER.equals(scope)) {			
+						if (userId != null) {					
+							if (account != null) {
+								return testCaseDocumentationService.generate(scope, domain, account.getUsername());
+							}
+						}
+					} else if (TestScope.GLOBALANDUSER.equals(scope)) {
+						List<TestCaseDocumentation> res = new ArrayList<TestCaseDocumentation>();
+						if (userId != null) {
+							if (account != null) {
+								res = testCaseDocumentationService.generate(TestScope.USER, domain, account.getUsername());
+							}
+						}		
+						res.addAll(testCaseDocumentationService.generate(TestScope.GLOBAL, domain));
+						return res;
+					}  else {
+						return testCaseDocumentationService.generate(scope, domain);
+					} 
 				}
 			}
-		} else if (TestScope.GLOBALANDUSER.equals(scope)) {
-			List<TestCaseDocumentation> res = new ArrayList<TestCaseDocumentation>();
-			Long userId = SessionContext.getCurrentUserId(request.getSession(false));
-			if (userId != null) {
-				Account account = accountService.findOne(userId);
-				if (account != null) {
-					res = testCaseDocumentationService.generate(TestScope.USER, domain, account.getUsername());
-				}
-			}		
-			res.addAll(testCaseDocumentationService.generate(TestScope.GLOBAL, domain));
-			return res;
-		}  else {
-			return testCaseDocumentationService.generate(scope, domain);
-		} 
+		}
+		
+		
+		
+		
 		return null;
 	}
 

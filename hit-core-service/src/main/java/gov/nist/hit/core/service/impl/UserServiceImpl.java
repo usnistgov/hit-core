@@ -265,7 +265,8 @@ public class UserServiceImpl implements UserService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public User retrieveUserByUsername(String username) {
-		return (User) jdbcUserDetailsManager.loadUserByUsername(username);
+			return (User) jdbcUserDetailsManager.loadUserByUsername(username);
+
 	}
 
 	/*
@@ -328,10 +329,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean isAdmin(String username) throws NoUserFoundException {
+		if (username == null) {
+			return false;
+		}		
 		User user = this.retrieveUserByUsername(username);
-		if (user == null) {
-			throw new NoUserFoundException("User could not be found");
+		if (user == null) {			
+			return false;
+//			throw new NoUserFoundException("User could not be found");
 		}
+		
 		Account account = accountService.findByTheAccountsUsername(username);
 		if (account != null ) {
 			if (account.getEmail() != null && this.adminEmails.contains(account.getEmail())) {

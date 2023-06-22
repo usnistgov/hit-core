@@ -252,6 +252,17 @@ public class CFTestPlanServiceImpl implements CFTestPlanService {
 		return testPlanRepository.getUpdateDate(testPlanId);
 	}
 
+  
+  @Override
+	public TestScope getScope(Long testPlanId) {
+		return testPlanRepository.getScope(testPlanId);
+	}
+  
+  @Override
+	public String getDomain(Long testPlanId) {
+		return testPlanRepository.getDomain(testPlanId);
+	}
+
 
   @Override
   public List<CFTestPlan> findShortAllByScopeAndUsernameAndDomain(TestScope scope,

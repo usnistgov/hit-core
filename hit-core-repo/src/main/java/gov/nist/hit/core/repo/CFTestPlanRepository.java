@@ -98,6 +98,12 @@ public interface CFTestPlanRepository extends JpaRepository<CFTestPlan, Long> {
   @Query("select tp.updateDate from CFTestPlan tp where tp.id = :id")
   public Date getUpdateDate(@Param("id") Long id);
 
+  @Query("select tp.scope from CFTestPlan tp where tp.id = :id")
+  public TestScope getScope(@Param("id") Long id);
+  
+  @Query("select tp.domain from CFTestPlan tp where tp.id = :id")
+  public String getDomain(@Param("id") Long id);
+
   @Query("select tp from CFTestPlan tp where tp.stage= :stage and tp.domain = :domain")
   public List<CFTestPlan> findAllByStageAndDomain(@Param("stage") TestingStage stage, @Param("domain")String domain);
 

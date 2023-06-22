@@ -95,6 +95,12 @@ public interface TestPlanRepository extends JpaRepository<TestPlan, Long> {
   @Query("select tp.updateDate from TestPlan tp where tp.id = :id")
   public Date getUpdateDate(@Param("id") Long id);
   
+  @Query("select tp.domain from TestPlan tp where tp.id = :id")
+  public String getDomain(@Param("id") Long id);
+  
+  @Query("select tp.scope from TestPlan tp where tp.id = :id")
+  public TestScope getScope(@Param("id") Long id);
+
   @Transactional(value = "transactionManager")
   @Query("select tp.id from TestPlan tp")
   public List<Long> findAllTestPlanIds();
