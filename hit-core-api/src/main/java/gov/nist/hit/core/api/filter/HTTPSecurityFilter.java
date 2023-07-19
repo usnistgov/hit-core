@@ -55,7 +55,7 @@ public class HTTPSecurityFilter implements Filter {
 				httpResponse.setHeader("X-XSS-Protection", "1; mode=block");
 				httpResponse.setHeader("Access-Control-Allow-Origin", "*");
 				httpResponse.setHeader("Vary", "Origin");
-				httpResponse.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; style-src 'self' 'unsafe-inline' 'unsafe-eval' ; font-src 'self'; frame-src 'self'; object-src 'self'");
+				httpResponse.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' https://*.googletagmanager.com https://www.youtube.com https://www.google-analytics.com https://ssl.google-analytics.com https://dap.digitalgov.gov 'unsafe-inline' 'unsafe-eval'; img-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com data: *.nist.gov:* ; style-src 'self' 'unsafe-inline' 'unsafe-eval' ; font-src 'self'; frame-src 'self'; object-src 'self'; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://dap.digitalgov.gov");
 				httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
 			    httpResponse.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
 			    httpResponse.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers,Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization,appVersion,rsbVersion");
