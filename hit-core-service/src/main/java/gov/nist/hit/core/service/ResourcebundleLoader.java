@@ -475,6 +475,26 @@ public abstract class ResourcebundleLoader {
 			logger.info("resource bundle loaded successfully...");
 		}
 		
+		//set url defined in config unless it's overwritten in system env with TOOL_URL. If none of these are present it's is computed as best as possible in info(HttpServletRequest)	
+		String envurl = System.getProperty("TOOL_URL");
+		envurl = envurl == null ? System.getenv("TOOL_URL") : envurl;
+		if (envurl != null && !envurl.isEmpty()) {
+			logger.info("TOOL_URL is set to " + envurl);
+			System.out.println("TOOL_URL is set to " + envurl);
+			this.appInfoService.get().setUrl(envurl);
+		}
+		
+		String isDevTool = System.getProperty("IS_DEV_TOOL");
+		isDevTool = isDevTool == null ? System.getenv("IS_DEV_TOOL") : isDevTool;
+		System.out.println("IS_DEV_TOOL is set to " + isDevTool);
+		logger.info("IS_DEV_TOOL is set to " + isDevTool);
+		if (Boolean.valueOf(isDevTool) == true) {
+			 this.appInfoService.get().setDevTool(true);
+		}else{
+			this.appInfoService.get().setDevTool(false);
+		}
+		
+		
 		if(cacheAtStartUp()) {
 			//preload TestPlans at startup
 			System.out.println("Caching CB test plans..");
