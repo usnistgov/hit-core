@@ -60,6 +60,8 @@ public class Constant {
   
   public static final String REPORT_SAVING_SUPPORTED = "REPORT_SAVING_SUPPORTED";
   
+  //Tool Dev or Prod
   
+  public static final String IS_DEV_TOOL = "IS_DEV_TOOL"; 
   
 }
