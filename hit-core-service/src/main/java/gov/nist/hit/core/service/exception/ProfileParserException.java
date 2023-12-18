@@ -21,9 +21,13 @@ public class ProfileParserException extends ProfileException {
 
 	public ProfileParserException(String message) {
 		super(message);
+		System.out.println("test");
+
 	}
 
 	public ProfileParserException(RuntimeException exception) {
 		super(exception);
+		System.out.println("ouhooh");
+
 	}
 }

@@ -23,7 +23,7 @@ import java.util.Map;
 public class ProfileModel {
   private ProfileElement message; 
   private Map<String, ProfileElement> datatypes;
-  private Map<String, ProfileElement> segments;    
+  private Map<String, ProfileElement> segments;     //segments and groups
 
   public ProfileElement getMessage() {
     return message;

@@ -20,6 +20,7 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import gov.nist.hit.core.domain.constraints.ConformanceStatement;
+import gov.nist.hit.core.domain.valuesetbindings.ValueSetBinding;
 
 public class ProfileElement {
 
@@ -47,6 +48,8 @@ public class ProfileElement {
   protected List<ConformanceStatement> conformanceStatements =
       new ArrayList<ConformanceStatement>();
 
+  protected List<ValueSetBinding> valuesetbindings =
+	      new ArrayList<ValueSetBinding>();
 
   protected String ref;
 
@@ -69,9 +72,11 @@ public class ProfileElement {
   protected boolean hide;
 
   @JsonIgnore
-
   protected ProfileElement parent;
 
+  @JsonIgnore
+  protected Map<String, ArrayList<String>> vsMap;
+  
 
   public String getName() {
     return name;
@@ -326,8 +331,27 @@ public class ProfileElement {
   }
 
 
+  public List<ValueSetBinding> getValuesetbindings() {
+	return valuesetbindings;
+}
 
-  @Override
+
+public void setValuesetbindings(List<ValueSetBinding> valuesetbindings) {
+	this.valuesetbindings = valuesetbindings;
+}
+
+
+public Map<String, ArrayList<String>> getVsMap() {
+	return vsMap;
+}
+
+
+public void setVsMap(Map<String, ArrayList<String>> vsMap) {
+	this.vsMap = vsMap;
+}
+
+
+@Override
   public ProfileElement clone() throws CloneNotSupportedException {
     ProfileElement element = new ProfileElement();
     element.setChildren(clone(children));

@@ -534,6 +534,11 @@ public abstract class ResourcebundleLoader {
 	public abstract ProfileModel parseProfile(String integrationProfileXml, String conformanceProfileId,
 			String constraintsXml, String additionalConstraintsXml)
 			throws ProfileParserException, UnsupportedOperationException;
+	
+	public abstract ProfileModel parseEnhanced(String integrationProfileXml, String conformanceProfileId,
+			String constraintsXml, String additionalConstraintsXml, String valueSetBindings, String coConstraints,
+			String slicings)
+					throws ProfileParserException, UnsupportedOperationException;
 
 	public abstract VocabularyLibrary vocabLibrary(String content, String domain, TestScope scope,
 			String authorUsername, boolean preloaded)
@@ -1283,10 +1288,26 @@ public abstract class ResourcebundleLoader {
 			String json = obm.writeValueAsString(profileModel);
 			return json;
 		} catch (UnsupportedOperationException e) {
+			System.out.println("ohoh");
+		}
+		return null;
+	}
+	
+	public String jsonConformanceProfileEnhanced(String integrationProfileXml, String conformanceProfileId,
+			String constraintsXml, String additionalConstraintsXml, String valueSetBindings, String coConstraints, String slicings)
+			throws ProfileParserException, JsonProcessingException, com.fasterxml.jackson.core.JsonProcessingException {
+		try {
+			ProfileModel profileModel = parseEnhanced(integrationProfileXml, conformanceProfileId, constraintsXml,
+					additionalConstraintsXml,valueSetBindings, coConstraints, slicings);
+			String json = obm.writeValueAsString(profileModel);
+			return json;
+		} catch (UnsupportedOperationException e) {
 
 		}
 		return null;
 	}
+
+	
 
 	public String getConformanceProfileContent(String integrationProfileXml, String messageId) {
 		Document doc = stringToDom(integrationProfileXml);
