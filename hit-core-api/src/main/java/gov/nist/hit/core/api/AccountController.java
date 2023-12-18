@@ -305,6 +305,7 @@ public class AccountController {
 
 	}
 
+	@PreAuthorize("hasPermission(#id, 'accessAccountBasedResource')")
 	@RequestMapping(value = "/accounts/{id}", method = RequestMethod.GET)
 	public Account getAccountById(@PathVariable Long id) {
 
@@ -1153,6 +1154,7 @@ public class AccountController {
 					+ "**** If you have not requested a password reset, please disregard this email **** \n\n\n"
 					+ "You password reset request has been processed.\n"
 					+ "Copy and paste the following url to your browser to initiate the password change:\n" + url
+					+ " \n\n" + "This link is valid for 20 min,"
 					+ " \n\n" + "Sincerely, " + "\n\n" + "The " + TOOL_NAME + " Team" + "\n\n"
 					+ "P.S: If you need help, contact us at '" + appInfoService.get().getAdminEmails().get(0) + "'");
 

@@ -11,10 +11,9 @@
  */
 package gov.nist.auth.hit.core.domain;
 
-import gov.nist.auth.hit.core.domain.util.UserUtil;
-
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,6 +27,8 @@ import org.springframework.security.crypto.codec.Base64;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import gov.nist.auth.hit.core.domain.util.UserUtil;
+
 /**
  * @author fdevaulx
  * 
@@ -37,7 +38,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class AccountPasswordReset implements Serializable {
 
   private static final long serialVersionUID = 20130625L;
-  public static final Long tokenValidityTimeInMilis = 172800000L;
+  public static final Long tokenValidityTimeInMilis = 1200000L; //20 min
 
 
   @Id
@@ -129,16 +130,16 @@ public class AccountPasswordReset implements Serializable {
   }
 
   public String getNewToken() throws Exception {
-    if (this.getUsername() == null) {
-      throw new Exception("usernameIsNull");
-    }
-
-    String result = this.getUsername() + UserUtil.generateRandom();
-    // base 64 encoding
-    byte[] bs = Base64.encode(result.getBytes());
-
-    result = new String(bs, "UTF-8");
-
+//    if (this.getUsername() == null) {
+//      throw new Exception("usernameIsNull");
+//    }
+//
+//    String result = this.getUsername() + UserUtil.generateRandom();
+//    // base 64 encoding
+//    byte[] bs = Base64.encode(result.getBytes());
+//
+//    result = new String(bs, "UTF-8");
+	String result = new String(Base64.encode(UUID.randomUUID().toString().getBytes()));
     return result;
   }
 
