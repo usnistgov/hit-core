@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import gov.nist.auth.hit.core.domain.Account;
 import gov.nist.auth.hit.core.domain.TransportConfig;
 import gov.nist.hit.core.api.exception.TransportConfigException;
 import gov.nist.hit.core.domain.SaveConfigRequest;
@@ -37,10 +39,14 @@ import gov.nist.hit.core.domain.TransportFormContent;
 import gov.nist.hit.core.domain.TransportForms;
 import gov.nist.hit.core.domain.TransportMessage;
 import gov.nist.hit.core.repo.TransportFormsRepository;
+import gov.nist.hit.core.service.AccountService;
 import gov.nist.hit.core.service.Streamer;
 import gov.nist.hit.core.service.TransactionService;
 import gov.nist.hit.core.service.TransportConfigService;
 import gov.nist.hit.core.service.TransportMessageService;
+import gov.nist.hit.core.service.UserService;
+import gov.nist.hit.core.service.exception.DomainException;
+import gov.nist.hit.core.service.exception.NoUserFoundException;
 import io.swagger.annotations.ApiOperation;
 
 /**
@@ -67,6 +73,12 @@ public class TransportController {
 
 	@Autowired
 	private Streamer streamer;
+	
+	@Autowired
+	private AccountService accountService;
+	
+	@Autowired
+	private UserService userService;
 
 	@RequestMapping(value = "/config/form", method = RequestMethod.GET)
 	public TransportFormContent getConfigurationForm(@RequestParam("type") TestingType type,
@@ -82,24 +94,39 @@ public class TransportController {
 	}
 
 	@RequestMapping(value = "/config/save", method = RequestMethod.POST)
-	public boolean saveConfig(@RequestBody SaveConfigRequest request) throws TransportConfigException {
-		TransportConfig config = transportConfigService.findOneByUserAndProtocolAndDomain(request.getUserId(),
-				request.getProtocol(), request.getDomain());
-		if (config != null) {
-			if (TestingType.SUT_INITIATOR.equals(request.getType())) {
-				Map<String, String> newValues = request.getConfig();
-				Map<String, String> sutConfig = config.getSutInitiator();
-				for (String key : newValues.keySet()) {
-					sutConfig.put(key, newValues.get(key));
+	public boolean saveConfig(HttpServletRequest req, @RequestBody SaveConfigRequest request) throws TransportConfigException {
+		Long userId = SessionContext.getCurrentUserId(req.getSession(false));	
+		Account account = accountService.findOne(userId);	
+		try {
+			if (account != null && request.getUserId() == userId ||  (request.getUserId() != userId && account.getUsername() != null && userService.isAdmin(account.getUsername())  )) {				
+				TransportConfig config = transportConfigService.findOneByUserAndProtocolAndDomain(request.getUserId(),
+						request.getProtocol(), request.getDomain());
+				if (config != null) {
+					if (TestingType.SUT_INITIATOR.equals(request.getType())) {
+						Map<String, String> newValues = request.getConfig();
+						Map<String, String> sutConfig = config.getSutInitiator();
+						for (String key : newValues.keySet()) {
+							sutConfig.put(key, newValues.get(key));
+						}
+					} else if (TestingType.TA_INITIATOR.equals(request.getType())) {
+						config.setTaInitiator(request.getConfig());
+					}
+					transportConfigService.save(config);
+					return true;
+				}else {
+					throw new TransportConfigException("No transport's configuration found for domain=" + request.getDomain()
+					+ ", protocol=" + request.getProtocol());
 				}
-			} else if (TestingType.TA_INITIATOR.equals(request.getType())) {
-				config.setTaInitiator(request.getConfig());
+			} else {
+				throw new TransportConfigException("You do not have the permission to change this account's transport configuration");					
+				
+				
 			}
-			transportConfigService.save(config);
-			return true;
+		} catch (NoUserFoundException e) {
+			throw new TransportConfigException("No user found");
 		}
-		throw new TransportConfigException("No transport's configuration found for domain=" + request.getDomain()
-				+ ", protocol=" + request.getProtocol());
+
+		
 	}
 
 	@RequestMapping(value = "/transaction/{transactionId}/delete", method = RequestMethod.POST)
