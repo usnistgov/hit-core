@@ -98,7 +98,7 @@ public class TransportController {
 		Long userId = SessionContext.getCurrentUserId(req.getSession(false));	
 		Account account = accountService.findOne(userId);	
 		try {
-			if (account != null && request.getUserId() == userId ||  (request.getUserId() != userId && account.getUsername() != null && userService.isAdmin(account.getUsername())  )) {				
+			if (account != null && request.getUserId().equals(userId) ||  (request.getUserId() != userId && account.getUsername() != null && userService.isAdmin(account.getUsername())  )) {				
 				TransportConfig config = transportConfigService.findOneByUserAndProtocolAndDomain(request.getUserId(),
 						request.getProtocol(), request.getDomain());
 				if (config != null) {
