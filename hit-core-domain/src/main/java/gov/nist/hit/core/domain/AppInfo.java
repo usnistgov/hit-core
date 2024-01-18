@@ -45,7 +45,7 @@ public class AppInfo implements Serializable {
   private static final long serialVersionUID = 8805967508478985159L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private String url;
@@ -126,8 +126,8 @@ public class AppInfo implements Serializable {
   
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "APP_OPTIONS")
-  @MapKeyColumn(name = "OPTION_TYPE")
-  @Column(name = "OPTION_VALUE")
+  @MapKeyColumn(name = "OPTION_TYPE", length = 100)
+  @Column(name = "OPTION_VALUE", length = 100)
   private Map<String, String> options = new HashMap<String, String>();
 
 

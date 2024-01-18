@@ -26,7 +26,7 @@ import javax.validation.constraints.NotNull;
 public class TransportLog extends LogEntry {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected Long id;
 
 	@NotNull

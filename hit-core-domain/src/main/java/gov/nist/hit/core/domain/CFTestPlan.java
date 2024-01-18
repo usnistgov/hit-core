@@ -27,7 +27,7 @@ public class CFTestPlan extends AbstractTestCase implements Serializable {
   private static final long serialVersionUID = 880596750847898513L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   // @ApiModelProperty(required = true, value = "category of the test plan",

@@ -20,13 +20,13 @@ public class VocabularyLibrary extends ValidationArtifact implements Serializabl
   private static final long serialVersionUID = 1L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   protected Long id;
 
   @JsonIgnore
 
   @NotNull
-  @Column(unique = true)
+  @Column(unique = true, length = 100)
   protected String sourceId;
 
   @JsonIgnore

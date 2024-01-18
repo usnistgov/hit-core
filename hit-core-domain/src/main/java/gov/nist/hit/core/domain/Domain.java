@@ -33,7 +33,7 @@ public class Domain extends TestResource implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@JsonView(Views.Short.class)
@@ -73,8 +73,8 @@ public class Domain extends TestResource implements Serializable {
 	@JsonView(Views.Short.class)
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "Domain_Options", joinColumns = @JoinColumn(name = "Domain_id"))
-	@MapKeyColumn(name = "OPTION_TYPE")
-	@Column(name = "OPTION_VALUE")
+	@MapKeyColumn(name = "OPTION_TYPE", length = 100)
+	@Column(name = "OPTION_VALUE", length = 100)
 	private Map<String, String> options = new HashMap<String, String>();
 
 

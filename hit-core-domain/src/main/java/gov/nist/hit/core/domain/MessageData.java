@@ -48,7 +48,7 @@ public abstract class MessageData implements java.io.Serializable {
   protected String valueSet;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   public MessageData(Long id, String location, String displayName, String dataType,

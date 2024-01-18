@@ -41,7 +41,7 @@ public class Account implements Serializable {
   private static final long serialVersionUID = 20130625L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   protected Long id;
 
   @Transient

@@ -26,7 +26,7 @@ public class Message extends TestResource {
   private static final long serialVersionUID = 1L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   protected Long id;
 
   @Column(nullable = true)

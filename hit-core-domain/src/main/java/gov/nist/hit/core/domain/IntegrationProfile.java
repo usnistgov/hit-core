@@ -34,7 +34,7 @@ public class IntegrationProfile extends ValidationArtifact implements Serializab
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected Long id;
 
 	@NotNull
@@ -44,7 +44,7 @@ public class IntegrationProfile extends ValidationArtifact implements Serializab
 
 	@JsonIgnore
 	@NotNull
-	@Column(unique = true)
+	@Column(unique = true, length = 100)
 	protected String sourceId;
 
 	@Column(nullable = true)

@@ -11,7 +11,7 @@ public class Constraints implements Serializable {
 	private static final long serialVersionUID = 1L;
 	// @Id 
 	// @Column(name = "ID")
-	// @GeneratedValue(strategy = GenerationType.AUTO)
+	// @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String id;
 
 	// @OneToOne(optional = false, fetch = FetchType.EAGER, cascade =

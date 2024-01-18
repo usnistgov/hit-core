@@ -42,7 +42,7 @@ public class AccountPasswordReset implements Serializable {
 
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   protected Long id;
 
 

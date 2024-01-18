@@ -39,13 +39,13 @@ public class CoConstraints extends ValidationArtifact implements Serializable {
 
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   protected Long id;
 
   @JsonIgnore
 
   @NotNull
-  @Column(unique = true)
+  @Column(unique = true, length = 100)
   protected String sourceId;
 
   @Column(nullable = true)

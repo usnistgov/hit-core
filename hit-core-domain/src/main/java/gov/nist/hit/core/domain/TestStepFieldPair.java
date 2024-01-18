@@ -30,7 +30,7 @@ public class TestStepFieldPair extends MappingSource implements Serializable {
   /*
    * @Id
    * 
-   * @GeneratedValue(strategy = GenerationType.AUTO) protected Long id;
+   * @GeneratedValue(strategy = GenerationType.IDENTITY) protected Long id;
    */
 
   @JsonIgnore

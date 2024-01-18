@@ -19,7 +19,7 @@ import java.io.Serializable;
 @Entity
 public abstract class MappingSource implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
     public Long getId() {

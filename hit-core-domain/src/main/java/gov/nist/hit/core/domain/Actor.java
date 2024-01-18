@@ -24,7 +24,7 @@ public class Actor implements Serializable {
   private static final long serialVersionUID = 8805967508478985159L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   protected Long id;
 
   private String name;

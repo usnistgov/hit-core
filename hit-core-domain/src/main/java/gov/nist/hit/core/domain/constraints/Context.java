@@ -12,7 +12,7 @@ public class Context implements Serializable, Cloneable {
 
 	// @Id 
 	// @Column(name = "ID")
-	// @GeneratedValue(strategy = GenerationType.AUTO)
+	// @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String id;
 
 	// @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

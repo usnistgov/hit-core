@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiModel;
 public class Document extends TestResource {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.TABLE)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   protected Long id;
 
   private static final long serialVersionUID = 1L;

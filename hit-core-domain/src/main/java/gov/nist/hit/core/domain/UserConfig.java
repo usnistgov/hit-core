@@ -34,7 +34,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class UserConfig implements Serializable {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   protected Long id;
 
   @JsonIgnore
