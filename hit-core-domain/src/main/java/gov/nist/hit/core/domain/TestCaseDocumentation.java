@@ -34,7 +34,7 @@ public class TestCaseDocumentation extends TestResource {
   private static final long serialVersionUID = 1L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   protected Long id;
 
   private String title;

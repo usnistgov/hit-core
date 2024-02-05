@@ -43,7 +43,7 @@ import gov.nist.hit.core.domain.util.Views;
 public class UserTestCaseReport {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonView(Views.NoData.class)
     protected Long id;
     

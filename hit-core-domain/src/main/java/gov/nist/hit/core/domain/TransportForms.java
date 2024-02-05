@@ -16,7 +16,7 @@ public class TransportForms extends TestResource {
   private static final long serialVersionUID = 8805967508478985159L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
   @NotNull

@@ -37,7 +37,7 @@ public class TestCase extends AbstractTestCase implements Serializable {
   @JsonView(Views.NoData.class)
   @Id
   @JsonSerialize(using = ToStringSerializer.class)
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
   public TestCase() {

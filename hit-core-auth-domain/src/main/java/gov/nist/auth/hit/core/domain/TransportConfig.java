@@ -30,7 +30,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class TransportConfig {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   protected Long id;
 
   @ApiModelProperty(required = true, value = "protocol of the transaction",

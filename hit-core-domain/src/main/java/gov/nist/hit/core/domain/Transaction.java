@@ -43,7 +43,7 @@ public class Transaction implements java.io.Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   protected Long id;
 
   @ApiModelProperty(required = true, value = "message sent by the sut (system under test)")

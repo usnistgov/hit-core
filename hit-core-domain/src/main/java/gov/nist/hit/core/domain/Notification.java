@@ -23,7 +23,7 @@ import javax.persistence.Id;
 public class Notification {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	protected Long id;
 
 	@Column(nullable = true,columnDefinition = "LONGTEXT")

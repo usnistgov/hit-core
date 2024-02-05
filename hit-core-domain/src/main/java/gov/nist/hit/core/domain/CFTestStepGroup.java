@@ -36,7 +36,7 @@ public class CFTestStepGroup extends AbstractTestCase implements Serializable {
   private static final long serialVersionUID = 2555650104975908781L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
 

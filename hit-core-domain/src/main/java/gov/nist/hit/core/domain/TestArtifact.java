@@ -23,7 +23,7 @@ public class TestArtifact extends TestResource {
 
   @Id
   @JsonSerialize(using = ToStringSerializer.class)
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
   @ApiModelProperty(required = true, value = "name of the artifact")
