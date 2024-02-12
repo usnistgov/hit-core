@@ -136,6 +136,9 @@ public abstract class ResourcebundleLoader {
 	final static public String PROFILE_PATTERN = "Global/Profiles/";
 	final static public String VALUESET_PATTERN = "Global/Tables/";
 	final static public String CONSTRAINT_PATTERN = "Global/Constraints/";
+	final static public String COCONSTRAINT_PATTERN = "Global/CoConstraints/";
+	final static public String VALUESETBINDINGS_PATTERN = "Global/ValueSetBindings/";
+	final static public String SLICINGS_PATTERN = "Global/Slicings/";
 	final static public String CONSTRAINTS_FILE_PATTERN = "Constraints.xml";
 	final static public String VALUESETS_FILE_PATTERN = "ValueSets.xml";
 	final static public String PROFILE_FILE_PATTERN = "Profile.xml";
@@ -465,6 +468,7 @@ public abstract class ResourcebundleLoader {
 		vocabularyLibraryRepository.deletePreloaded();
 		constraintsRepository.deletePreloaded();
 		integrationProfileRepository.deletePreloaded();
+		valueSetBindingsRepository.deletePreloaded();
 		
 		testCaseDocumentationRepository.deletePreloaded();
 		transportFormsRepository.deleteAll();
@@ -572,8 +576,9 @@ public abstract class ResourcebundleLoader {
 		this.loadConstraints(directory, scope, preloaded, domain);
 		this.loadVocabularyLibraries(directory, scope, preloaded, domain);
 		this.loadIntegrationProfiles(directory, scope, preloaded, domain);
+		this.loadValueSetBindinds(directory, scope, preloaded, domain);
 		this.loadContextFreeTestCases(directory, scope, preloaded, domain);
-		this.loadContextBasedTestCases(directory, scope, preloaded, domain);
+		this.loadContextBasedTestCases(directory, scope, preloaded, domain);		
 		this.loadUserDocs(directory, scope, preloaded, domain);
 		this.loadKownIssues(directory, scope, preloaded, domain);
 		this.loadReleaseNotes(directory, scope, preloaded, domain);
@@ -1123,6 +1128,24 @@ public abstract class ResourcebundleLoader {
 			}
 		}
 	}
+	
+	public void loadValueSetBindinds(String rootPath, TestScope scope, boolean preloaded, String domain)
+			throws IOException {
+		logger.info("loading value set libraries of domain=" + domain);
+		List<Resource> resources = getResources(getDomainBasedPath(VALUESETBINDINGS_PATTERN, domain) + "*.xml", rootPath);
+		if (resources != null && !resources.isEmpty()) {
+			for (Resource resource : resources) {
+				String content = FileUtil.getContent(resource);
+				try {
+					ValueSetBindings valuesetbindings = valuesetbindings(content, domain, scope, getDomainAuthorname(domain),
+							preloaded);
+					this.valueSetBindingsRepository.save(valuesetbindings);					
+				} catch (UnsupportedOperationException e) {
+				}
+			}
+		}
+	}
+	
 
 	protected Constraints additionalConstraints(String content, String domain, TestScope scope, String username,
 			boolean preloaded) throws IOException {
