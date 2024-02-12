@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import javax.xml.transform.Transformer;
@@ -18,15 +17,13 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.itextpdf.html2pdf.HtmlConverter;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.tool.xml.XMLWorkerHelper;
 
 import gov.nist.hit.core.domain.TestStepValidationReport;
 import gov.nist.hit.core.repo.TestStepValidationReportRepository;
@@ -37,7 +34,7 @@ import gov.nist.hit.core.service.util.HtmlUtil;
 @Service
 public class MessageValidationReportServiceImpl implements MessageValidationReportService {
 
-  private final static Logger logger = Logger.getLogger(MessageValidationReportServiceImpl.class);
+  private final static Logger logger = LogManager.getLogger(MessageValidationReportServiceImpl.class);
   private static final String HTML_XSL = "/report/message-validation-report-html.xsl";
   private static final String PDF_XSL = "/report/message-validation-report-pdf.xsl";
 

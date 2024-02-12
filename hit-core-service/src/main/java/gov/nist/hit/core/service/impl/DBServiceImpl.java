@@ -9,14 +9,17 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import gov.nist.hit.core.service.DBService;
 
 @Service
 public class DBServiceImpl implements DBService {
 
-  private final static Logger logger = Logger.getLogger(DBServiceImpl.class);
+  private final static Logger logger = LogManager.getLogger(DBServiceImpl.class);
 
   @Autowired
   @PersistenceContext(unitName = "base-tool")

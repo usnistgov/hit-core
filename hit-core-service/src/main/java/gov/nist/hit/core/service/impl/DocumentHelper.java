@@ -1,21 +1,14 @@
 package gov.nist.hit.core.service.impl;
 
-/*
- * Meaningful Use Core DocumentHelper.java October 14, 2011
- * 
- * This code was produced by the National Institute of Standards and Technology (NIST). See the
- * 'nist.disclaimer' file given in the distribution for information on the use and redistribution of
- * this software.
- */
-
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author Harold Affo (NIST)
  */
 public class DocumentHelper {
 
-  private static final Logger logger = Logger.getLogger(DocumentHelper.class);
+	private final static Logger logger = LogManager.getLogger(DocumentHelper.class);
 
   private final String RELEASENOTE_PATTERN = "Documentation/ReleaseNotes";
 

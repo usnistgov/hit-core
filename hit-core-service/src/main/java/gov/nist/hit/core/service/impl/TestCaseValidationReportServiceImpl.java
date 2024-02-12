@@ -21,13 +21,11 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.xhtmlrenderer.pdf.ITextRenderer;
-
 
 import gov.nist.hit.core.domain.TestCase;
 import gov.nist.hit.core.domain.TestCaseValidationResult;
@@ -48,7 +46,7 @@ import nu.xom.Attribute;
 @Service
 public class TestCaseValidationReportServiceImpl implements TestCaseValidationReportService {
 
-  private final static Logger logger = Logger.getLogger(TestCaseValidationReportServiceImpl.class);
+  private final static Logger logger = LogManager.getLogger(TestCaseValidationReportServiceImpl.class);
   private static final String HTML_XSL = "/report/testcase-validation-report-html.xsl";
   private static final String PDF_XSL = "/report/testcase-validation-report-pdf.xsl";
   protected static final String CSS = "/report/report.css";
