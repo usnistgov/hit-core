@@ -39,6 +39,8 @@ public class Domain extends TestResource implements Serializable {
 	@JsonView(Views.Short.class)
 	private String name;
 	private String homeTitle;
+	
+	@Column(columnDefinition = "BOOLEAN")
 	private boolean disabled = false;
 
 	@Column(columnDefinition = "TEXT")
@@ -77,7 +79,7 @@ public class Domain extends TestResource implements Serializable {
 	@Column(name = "OPTION_VALUE", length = 100)
 	private Map<String, String> options = new HashMap<String, String>();
 
-
+	private String domainurl;
 	
 	public Domain() {
 		this.owner = this.authorUsername;

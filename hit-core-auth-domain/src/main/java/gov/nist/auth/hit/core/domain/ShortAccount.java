@@ -13,6 +13,7 @@ package gov.nist.auth.hit.core.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -38,12 +39,14 @@ public class ShortAccount implements Serializable {
   private String employer;
   private String juridiction;
   private String username;
+  //not really used
   private String accountType;
   private String title;
   private boolean pending;
   private boolean entityDisabled;
   private Date lastLoggedInDate;
   private Date registrationDate;
+  private List<String> authorities;
 
   /**
    * @return the email
@@ -187,6 +190,14 @@ public class ShortAccount implements Serializable {
   public void setRegistrationDate(Date registrationDate) {
     this.registrationDate = registrationDate;
   }
+
+	public List<String> getAuthorities() {
+		return authorities;
+	}
+	
+	public void setAuthorities(List<String> authorities) {
+		this.authorities = authorities;
+	}
 
 
 

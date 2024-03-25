@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -82,6 +83,7 @@ public class TestPlan extends AbstractTestCase implements Serializable {
 
   @ApiModelProperty(required = true, value = "transport support of the test plan")
   @JsonView(Views.NoData.class)
+  @Column(columnDefinition = "BOOLEAN")
   private boolean transport;
 
 

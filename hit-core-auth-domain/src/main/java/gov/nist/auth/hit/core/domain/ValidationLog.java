@@ -53,6 +53,7 @@ public class ValidationLog extends LogEntry {
   @Column(name = "number_errors")
   protected Map<String, Integer> errorCountInSegment = new HashMap<String, Integer>();
 
+  @Column(columnDefinition = "BOOLEAN")
   protected boolean validationResult = true;
 
   protected String testingStage;

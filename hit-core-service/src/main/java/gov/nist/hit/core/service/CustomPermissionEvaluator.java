@@ -38,7 +38,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
   @Autowired
   AppInfoService appInfoService;
 
-
+  //check if authentication matches the id or is admin
 
   /*
    * (non-Javadoc)

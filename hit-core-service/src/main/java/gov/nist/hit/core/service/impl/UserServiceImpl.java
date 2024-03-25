@@ -180,21 +180,60 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void changeAccountTypeForUser(String newAccountType, String username) throws BadCredentialsException {
-		jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_DELETE_USER_AUTHORITIES_SQL,
+		//clear all user authorities? 
+		int del = jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_DELETE_USER_AUTHORITIES_SQL,
 				username);
-		jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,
+		int ins1 = jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,
 				TESTER_AUTHORITY);
-		jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,
+		int ins2 = jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,
 				DEFAULT_AUTHORITY);
 		if (!TESTER_AUTHORITY.equals(newAccountType)) {
 			jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,
 					newAccountType);
+			//if we are setting an admin then it is also a deployer
 			if (ADMIN_AUTHORITY.equals(newAccountType)) {
 				jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL,
 						username, DEPLOYER_AUTHORITY);
 			}
 		}
 	}
+	
+	@Override
+	public void changeAccountAuthoritiesForUser(List<String> authorities, String username)
+			throws BadCredentialsException {
+		//delete all
+		int del = jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_DELETE_USER_AUTHORITIES_SQL,
+				username);
+		
+		for (String auth : authorities) {
+			switch(auth) {
+			  case DEFAULT_AUTHORITY:
+				  jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,DEFAULT_AUTHORITY);
+			    break;
+			  case TESTER_AUTHORITY:
+				  jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,TESTER_AUTHORITY);
+			    break;
+			  case ADMIN_AUTHORITY:
+				  jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,ADMIN_AUTHORITY);
+			    break;
+			  case DEPLOYER_AUTHORITY:
+				  jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,DEPLOYER_AUTHORITY);
+			    break;
+			  case SUPERVISOR_AUTHORITY:
+				  jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,SUPERVISOR_AUTHORITY);
+			    break;
+			  case PUBLISHER_AUTHORITY:
+				  jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,PUBLISHER_AUTHORITY);
+			    break;			  
+			}
+
+							
+				
+		}
+		
+		
+	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -321,6 +360,24 @@ public class UserServiceImpl implements UserService {
 
 		return false;
 	}
+	
+	//list authorities
+	@Override
+	public List<String> getUserAuthorities(String username) throws NoUserFoundException {
+		User user = this.retrieveUserByUsername(username);
+		if (user == null) {
+			throw new NoUserFoundException("User could not be found");
+		}
+		List<String> res = new ArrayList<String>();
+		Collection<GrantedAuthority> authorit = user.getAuthorities();
+		for (GrantedAuthority auth : authorit) {
+			res.add(auth.getAuthority());
+		}
+		return res;
+	}
+	
+	
+	
 
 	@Override
 	public boolean isAdminByEmail(String email) throws NoUserFoundException {
@@ -399,4 +456,5 @@ public class UserServiceImpl implements UserService {
 		return false;
 	}
 
+	
 }

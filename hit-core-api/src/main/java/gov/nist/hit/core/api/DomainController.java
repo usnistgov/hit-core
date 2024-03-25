@@ -12,6 +12,7 @@
 
 package gov.nist.hit.core.api;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -479,7 +480,21 @@ public  class DomainController {
 		} catch (Exception e) {
 			throw new DomainException(e);
 		}
-
+	}
+	
+	@PreAuthorize("hasRole('admin')")
+	@PostMapping(value = "/updateCustumUrls", produces = "application/json")
+	public List<Domain>  updateCustumUrls(HttpServletRequest request,Authentication authentication) throws DomainException {
+		List<Domain> domainsChanged = new ArrayList<Domain>();
+		List<Domain> domains = domainService.findShortAll();
+		for (Domain d : domains) {
+			if (!d.getOptions().containsKey("DOMAIN_CUSTOM_URL") || d.getOptions().get("DOMAIN_CUSTOM_URL") == null || d.getOptions().get("DOMAIN_CUSTOM_URL").isEmpty()){
+				d.getOptions().put("DOMAIN_CUSTOM_URL", d.getDomain());
+				domainService.save(d);
+				domainsChanged.add(d);
+			}
+		}
+		return domainsChanged;
 	}
 
 }

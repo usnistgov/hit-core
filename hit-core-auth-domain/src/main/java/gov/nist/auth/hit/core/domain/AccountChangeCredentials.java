@@ -11,6 +11,8 @@
  */
 package gov.nist.auth.hit.core.domain;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
@@ -27,6 +29,7 @@ public class AccountChangeCredentials {
   private String newPassword;
   private String accountType;
   private Boolean signedConfidentialityAgreement;
+  private List<String> authorities;
 
   /**
    * @return the username
@@ -106,6 +109,15 @@ public class AccountChangeCredentials {
     this.accountType = accountType;
   }
 
+public List<String> getAuthorities() {
+	return authorities;
+}
+
+public void setAuthorities(List<String> authorities) {
+	this.authorities = authorities;
+}
+
+  
 
 
 }

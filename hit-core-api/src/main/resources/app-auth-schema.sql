@@ -8,8 +8,9 @@ create table IF NOT EXISTS users(
   credentialsNonExpired boolean NOT NULL);
 
   create table  IF NOT EXISTS authorities (
-      username varchar(50) not null,
-      authority varchar(50) not null,
+      username varchar(50) not null ,
+      authority varchar(60) not null,
+      PRIMARY KEY (`username`,`authority`),
       constraint fk_authorities_users foreign key(username) references users(username));
   
 --  create unique index IF NOT EXISTS ix_auth_username on authorities (username,authority);

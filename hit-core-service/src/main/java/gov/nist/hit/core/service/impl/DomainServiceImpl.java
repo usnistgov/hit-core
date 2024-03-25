@@ -150,9 +150,14 @@ public class DomainServiceImpl implements DomainService {
 	}
 
 	@Override
-	public void deletePreloaded() {
+	public void deletePreloaded() {		
+		List<Domain> domains = domainRepo.findAllPreloaded();	
+		for(Domain d : domains) {
+			d.getOptions().clear();
+			d.getParticipantEmails().clear();
+			this.save(d);
+		}
 		domainRepo.deletePreloaded();
-
 	}
 
 	@Override

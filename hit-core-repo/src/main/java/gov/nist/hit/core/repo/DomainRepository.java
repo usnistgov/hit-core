@@ -53,9 +53,19 @@ public interface DomainRepository extends JpaRepository<Domain, Long> {
 	@Query("select d from Domain d where d.scope= 'GLOBAL'")
 	public List<Domain> findAllShortWithGlobal();
 
+	
+	@Query("select dom from Domain dom where dom.preloaded = true")
+	public List<Domain> findAllPreloaded();
+	
+	
 	@Modifying
 	@Transactional(value = "transactionManager")
 	@Query("delete from Domain dom where dom.preloaded = true")
 	public void deletePreloaded();
+	
+//	@Modifying
+//	@Transactional(value = "transactionManager")
+//	@Query("delete from Domain_Options dop where dop.Domain_id = :id")
+//	public void deletePreloadedOptions(@Param("id") Long id);
 
 }
