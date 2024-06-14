@@ -469,6 +469,8 @@ public abstract class ResourcebundleLoader {
 		constraintsRepository.deletePreloaded();
 		integrationProfileRepository.deletePreloaded();
 		valueSetBindingsRepository.deletePreloaded();
+		coConstraintsRepository.deletePreloaded();
+		slicingsRepository.deletePreloaded();
 		
 		testCaseDocumentationRepository.deletePreloaded();
 		transportFormsRepository.deleteAll();
@@ -577,6 +579,8 @@ public abstract class ResourcebundleLoader {
 		this.loadVocabularyLibraries(directory, scope, preloaded, domain);
 		this.loadIntegrationProfiles(directory, scope, preloaded, domain);
 		this.loadValueSetBindinds(directory, scope, preloaded, domain);
+		this.loadCoConstraints(directory, scope, preloaded, domain);
+		this.loadSlicings(directory, scope, preloaded, domain);
 		this.loadContextFreeTestCases(directory, scope, preloaded, domain);
 		this.loadContextBasedTestCases(directory, scope, preloaded, domain);		
 		this.loadUserDocs(directory, scope, preloaded, domain);
@@ -1145,6 +1149,43 @@ public abstract class ResourcebundleLoader {
 			}
 		}
 	}
+	
+	public void loadCoConstraints(String rootPath, TestScope scope, boolean preloaded, String domain)
+			throws IOException {
+		logger.info("loading value set libraries of domain=" + domain);
+		List<Resource> resources = getResources(getDomainBasedPath(COCONSTRAINT_PATTERN, domain) + "*.xml", rootPath);
+		if (resources != null && !resources.isEmpty()) {
+			for (Resource resource : resources) {
+				String content = FileUtil.getContent(resource);
+				try {
+					CoConstraints coConstraints = coConstraints(content, domain, scope, getDomainAuthorname(domain),
+							preloaded);
+					this.coConstraintsRepository.save(coConstraints);					
+				} catch (UnsupportedOperationException e) {
+				}
+			}
+		}
+	}
+	
+	public void loadSlicings(String rootPath, TestScope scope, boolean preloaded, String domain)
+			throws IOException {
+		logger.info("loading value set libraries of domain=" + domain);
+		List<Resource> resources = getResources(getDomainBasedPath(SLICINGS_PATTERN, domain) + "*.xml", rootPath);
+		if (resources != null && !resources.isEmpty()) {
+			for (Resource resource : resources) {
+				String content = FileUtil.getContent(resource);
+				try {
+					Slicings slicings = slicings(content, domain, scope, getDomainAuthorname(domain),
+							preloaded);
+					this.slicingsRepository.save(slicings);					
+				} catch (UnsupportedOperationException e) {
+				}
+			}
+		}
+	}
+	
+	
+	
 	
 
 	protected Constraints additionalConstraints(String content, String domain, TestScope scope, String username,
