@@ -137,7 +137,7 @@ public abstract class ResourcebundleLoader {
 	final static public String VALUESET_PATTERN = "Global/Tables/";
 	final static public String CONSTRAINT_PATTERN = "Global/Constraints/";
 	final static public String COCONSTRAINT_PATTERN = "Global/CoConstraints/";
-	final static public String VALUESETBINDINGS_PATTERN = "Global/ValueSetBindings/";
+	final static public String VALUESETBINDINGS_PATTERN = "Global/Bindings/";
 	final static public String SLICINGS_PATTERN = "Global/Slicings/";
 	final static public String CONSTRAINTS_FILE_PATTERN = "Constraints.xml";
 	final static public String VALUESETS_FILE_PATTERN = "ValueSets.xml";
