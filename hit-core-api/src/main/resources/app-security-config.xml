@@ -130,7 +130,7 @@
 		p:testWhileIdle="${auth.jdbc.testWhileIdle}" p:testOnBorrow="${auth.jdbc.testOnBorrow}"
 		p:validationQuery="${auth.jdbc.validationQuery}" destroy-method="close" /> -->
 
-	<jee:jndi-lookup id="authDataSource" jndi-name="java:comp/env/jdbc/base_tool_account_jndi" />
+	<jee:jndi-lookup id="authDataSource" jndi-name="java:comp/env/jdbc/base_tool_account_jndi_dev" />
 
 
 

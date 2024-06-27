@@ -55,7 +55,7 @@ public class DbConfig {
 	public DataSource dataSource() {
 		final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
 		dsLookup.setResourceRef(true);
-		DataSource dataSource = dsLookup.getDataSource("jdbc/base_tool_jndi");
+		DataSource dataSource = dsLookup.getDataSource("jdbc/base_tool_jndi_dev");
 		return dataSource;
 	}
 
