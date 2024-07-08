@@ -51,13 +51,13 @@ public class DbConfig {
 	@Autowired
 	private Environment env;
 
-	@Bean
-	public DataSource dataSource() {
-		final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
-		dsLookup.setResourceRef(true);
-		DataSource dataSource = dsLookup.getDataSource("jdbc/base_tool_jndi");
-		return dataSource;
-	}
+//	@Bean
+//	public DataSource dataSource() {
+//		final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
+//		dsLookup.setResourceRef(true);
+//		DataSource dataSource = dsLookup.getDataSource("jdbc/base_tool_jndi");
+//		return dataSource;
+//	}
 
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource,
@@ -91,8 +91,19 @@ public class DbConfig {
 		 
 		properties.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
 		properties.put("hibernate.dialect", env.getProperty("jpa.databasePlatform"));
-		properties.put("hibernate.globally_quoted_identifiers",		env.getProperty("hibernate.globally_quoted_identifiers"));
-
+		properties.put("hibernate.globally_quoted_identifiers",	env.getProperty("hibernate.globally_quoted_identifiers"));
+		
+		
+		properties.put("hibernate.dialect","org.hibernate.dialect.MySQLDialect");
+		properties.put("hibernate.connection.driver_class","com.mysql.cj.jdbc.Driver");
+		
+		properties.put("hibernate.connection.datasource", "java:comp/env/jdbc/base_tool_jndi");
+//		properties.put("hibernate.connection.provider_class", env.getProperty("hibernate.connection.provider_class"));
+		properties.put("hibernate.c3p0.min_size",env.getProperty("hibernate.c3p0.min_size"));
+		properties.put("hibernate.c3p0.max_size",env.getProperty("hibernate.c3p0.max_size"));
+		properties.put("hibernate.c3p0.acquire_increment",env.getProperty("hibernate.c3p0.acquire_increment"));
+		properties.put("hibernate.c3p0.timeout",env.getProperty("hibernate.c3p0.timeout"));
+		
 		return properties;
 	}
 

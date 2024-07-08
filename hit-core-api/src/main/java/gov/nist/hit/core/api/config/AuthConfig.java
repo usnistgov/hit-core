@@ -75,12 +75,23 @@ public class AuthConfig {
 		jpaVendorAdapter.setDatabasePlatform(env.getProperty("auth.jpa.databasePlatform"));
 		return jpaVendorAdapter;
 	}
+			
 
 	private Properties jpaProperties() {
 		Properties properties = new Properties();
 		properties.put("hibernate.hbm2ddl.auto", env.getProperty("auth.hibernate.hbm2ddl.auto"));
-		properties.put("hibernate.globally_quoted_identifiers",
-				env.getProperty("auth.hibernate.globally_quoted_identifiers"));
+		properties.put("hibernate.globally_quoted_identifiers",env.getProperty("auth.hibernate.globally_quoted_identifiers"));
+		
+		
+		properties.put("hibernate.dialect","org.hibernate.dialect.MySQLDialect");
+		
+		properties.put("hibernate.connection.driver_class","com.mysql.cj.jdbc.Driver");
+		properties.put("hibernate.connection.datasource", "java:comp/env/jdbc/base_tool_account_jndi");
+//		properties.put("hibernate.connection.provider_class", env.getProperty("auth.hibernate.connection.provider_class"));
+		properties.put("hibernate.c3p0.min_size",env.getProperty("auth.hibernate.c3p0.min_size"));
+		properties.put("hibernate.c3p0.max_size",env.getProperty("auth.hibernate.c3p0.max_size"));
+		properties.put("hibernate.c3p0.acquire_increment",env.getProperty("auth.hibernate.c3p0.acquire_increment"));
+		properties.put("hibernate.c3p0.timeout",env.getProperty("auth.hibernate.c3p0.timeout"));
 		return properties;
 	}
 
