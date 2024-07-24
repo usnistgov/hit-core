@@ -312,6 +312,15 @@ public class CFTestPlanServiceImpl implements CFTestPlanService {
  		}
  		
  	}
+  
+  @Override
+	public void deleteAllByDomain(String domain) {
+		List<CFTestPlan> list = testPlanRepository.getAllByDomain(domain);
+		for(CFTestPlan tc : list) {
+			testPlanRepository.delete(tc);
+		}
+		
+	}
 
   
 

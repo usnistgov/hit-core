@@ -51,6 +51,8 @@ public interface TestPlanRepository extends JpaRepository<TestPlan, Long> {
   public List<TestPlan> findAllByStageAndScopeAndDomainAndAuthor(@Param("stage") TestingStage stage,
       @Param("scope") TestScope scope, @Param("domain") String domain,
       @Param("authorUsername") String authorUsername);
+  
+  
 
 
   @Transactional(value = "transactionManager")
@@ -119,6 +121,9 @@ public interface TestPlanRepository extends JpaRepository<TestPlan, Long> {
   @Transactional(value = "transactionManager")
   @Query("delete from TestPlan to where to.domain = :domain")
   public void deleteByDomain(@Param("domain") String domain);
+  
+  @Query("select tp from TestPlan tp where tp.domain = :domain")
+  public  List<TestPlan>  getAllByDomain(@Param("domain") String domain);
   
   @Query("select tp from TestPlan tp where tp.preloaded = true")
   public  List<TestPlan>  getAllPreloaded();

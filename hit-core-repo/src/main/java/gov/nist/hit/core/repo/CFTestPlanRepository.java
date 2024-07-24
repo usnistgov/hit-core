@@ -111,4 +111,7 @@ public interface CFTestPlanRepository extends JpaRepository<CFTestPlan, Long> {
   @Query("select tp from CFTestPlan tp where tp.preloaded = true")
   public  List<CFTestPlan>  getAllPreloaded();
 
+  @Query("select tp from CFTestPlan tp where tp.domain = :domain")
+  public List<CFTestPlan> getAllByDomain(@Param("domain") String domain);
+
 }

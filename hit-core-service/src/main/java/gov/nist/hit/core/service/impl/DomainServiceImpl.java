@@ -25,7 +25,9 @@ import gov.nist.hit.core.repo.TestStepRepository;
 import gov.nist.hit.core.repo.TransportFormsRepository;
 import gov.nist.hit.core.repo.VocabularyLibraryRepository;
 import gov.nist.hit.core.service.AccountService;
+import gov.nist.hit.core.service.CFTestPlanService;
 import gov.nist.hit.core.service.DomainService;
+import gov.nist.hit.core.service.TestPlanService;
 import gov.nist.hit.core.service.UserService;
 import gov.nist.hit.core.service.exception.DomainException;
 import gov.nist.hit.core.service.exception.NoUserFoundException;
@@ -77,9 +79,15 @@ public class DomainServiceImpl implements DomainService {
 
 	@Autowired
 	protected VocabularyLibraryRepository vocabularyLibraryRepository;
-
+		
 	@Autowired
 	private AccountService accountService;
+	
+	@Autowired
+	private TestPlanService testPlanService;
+	
+	@Autowired
+	private CFTestPlanService cfTestPlanService;
 
 	@Override
 	public Domain findOneByKey(String key) {
@@ -114,13 +122,22 @@ public class DomainServiceImpl implements DomainService {
 	@Override
 	public void delete(Domain domain) {
 		String d = domain.getDomain();
+		
+		//remove all cb test plan and their artifacts
+//		testPlanService.deleteAllByDomain(d);
 		testPlanRepository.deleteByDomain(d);
+		
+		//remove all cf test plan and their artifacts
+//		cfTestPlanService.deleteAllByDomain(d);
 		cfTestPlanRepository.deleteByDomain(d);
+		
+
 		vocabularyLibraryRepository.deleteByDomain(d);
 		constraintsRepository.deleteByDomain(d);
 		integrationProfileRepository.deleteByDomain(d);
 		transportFormsRepository.deleteByDomain(d);
 		documentRepository.deleteByDomain(d);
+				
 		domainRepo.delete(domain);
 	}
 

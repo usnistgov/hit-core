@@ -68,4 +68,6 @@ public interface CFTestPlanService {
 
   public void deleteAllPreloaded();
 
+  public void deleteAllByDomain(String d);
+
 }

@@ -328,7 +328,7 @@ public class DocumentationController {
 					fileName = path.substring(path.lastIndexOf("/") + 1);
 					response.setContentType(getContentType(path));
 					fileName = fileName.replaceAll(" ", "-");
-					response.setHeader("Content-disposition", "attachment;filename=" + fileName);
+					response.setHeader("Content-disposition", "attachment;filename=\"" + fileName+"\"");
 					streamer.stream(response.getOutputStream(), content);
 				}
 			}
@@ -426,7 +426,7 @@ public class DocumentationController {
 				response.setContentType(getContentType(path));
 				fileName = title + "-" + fileName;
 				fileName = fileName.replaceAll(" ", "-");
-				response.setHeader("Content-disposition", "attachment;filename=" + fileName);
+				response.setHeader("Content-disposition", "attachment;filename=\"" + fileName+"\"");
 				streamer.stream(response.getOutputStream(), content);
 			} else {
 				throw new DownloadDocumentException("Invalid Path Provided");

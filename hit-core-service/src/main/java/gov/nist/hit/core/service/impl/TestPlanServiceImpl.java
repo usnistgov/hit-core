@@ -76,6 +76,22 @@ public class TestPlanServiceImpl implements TestPlanService {
  		
  	}
 	
+	@Override
+ 	public void deleteAllByDomain(String domain) {
+ 		try {
+ 			List<TestPlan> list = testPlanRepository.getAllByDomain(domain);
+ 	 		System.out.println(list.size());
+ 	 		for(TestPlan tc : list) {
+ 	 			testPlanRepository.delete(tc);
+ 	 		}
+ 		}catch(Exception e){
+ 			System.out.println(e.getLocalizedMessage());
+ 		}
+		
+ 		
+ 		
+ 	}
+	
 	
 	private TestPlan findTestPlanContainingAbstractTestCase(AbstractTestCase node,AbstractTestCase lookingFor, TestPlan tp) {
 		

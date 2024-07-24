@@ -43,7 +43,6 @@ public class TestContext extends TestResource {
   @ApiModelProperty(required = false, value = "stage of the test context",
       example = "CB,CF, etc...")
   @JsonIgnore
-
   @Enumerated(EnumType.STRING)
   protected TestingStage stage;
 

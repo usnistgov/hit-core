@@ -48,5 +48,7 @@ public interface TestPlanService {
 
 	 public void deleteAllPreloaded();
 
+	public void deleteAllByDomain(String d);
+
 	
 }
