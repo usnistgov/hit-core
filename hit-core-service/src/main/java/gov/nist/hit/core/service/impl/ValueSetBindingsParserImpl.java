@@ -15,6 +15,8 @@ package gov.nist.hit.core.service.impl;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,13 +36,15 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import gov.nist.hit.core.domain.Usage;
+import gov.nist.hit.core.domain.valuesetbindings.Binding;
 import gov.nist.hit.core.domain.valuesetbindings.ByID;
 import gov.nist.hit.core.domain.valuesetbindings.ByName;
 import gov.nist.hit.core.domain.valuesetbindings.ByNameOrByID;
-import gov.nist.hit.core.domain.valuesetbindings.ValueSetBindings;
+import gov.nist.hit.core.domain.valuesetbindings.ComplexBindingLocation;
 import gov.nist.hit.core.domain.valuesetbindings.Context;
+import gov.nist.hit.core.domain.valuesetbindings.SimpleBindingLocation;
 import gov.nist.hit.core.domain.valuesetbindings.ValueSetBinding;
+import gov.nist.hit.core.domain.valuesetbindings.ValueSetBindings;
 import gov.nist.hit.core.service.ValueSetBindingsParser;
 
 public class ValueSetBindingsParserImpl implements ValueSetBindingsParser {
@@ -64,7 +68,7 @@ public class ValueSetBindingsParserImpl implements ValueSetBindingsParser {
 
 
 
-  private void context(Element elmContext, Context contextObj) {
+  private void context(Element elmContext, Context contextObj, List<String> externalVSIdentifiers) {
 	  
     if (elmContext != null) {
       NodeList nodes = elmContext.getChildNodes();
@@ -73,34 +77,76 @@ public class ValueSetBindingsParserImpl implements ValueSetBindingsParser {
           ByName byNameObj = new ByName();
           Element elmByName = (Element) nodes.item(i);
           byNameObj.setByName(elmByName.getAttribute("Name"));
-          valuesetbindings(elmByName, byNameObj);
+          valuesetbindings(elmByName, byNameObj,externalVSIdentifiers);
           contextObj.getByNameOrByIDs().add(byNameObj);
         } else if (nodes.item(i).getNodeName().equals("ByID")) {
           ByID byIDObj = new ByID();
           Element elmByID = (Element) nodes.item(i);
           byIDObj.setByID(elmByID.getAttribute("ID"));
-          valuesetbindings(elmByID, byIDObj);
+          valuesetbindings(elmByID, byIDObj,externalVSIdentifiers);
           contextObj.getByNameOrByIDs().add(byIDObj);
         }
       }
     }
   }
 
-  private void valuesetbindings(Element elmByNameOrByID, ByNameOrByID byNameOrByIDObj) {
+  private void valuesetbindings(Element elmByNameOrByID, ByNameOrByID byNameOrByIDObj, List<String> externalVSIdentifiers) {
 	//ValueSetBinding
-    NodeList constraintNodes = elmByNameOrByID.getElementsByTagName("ValueSetBinding");
-    for (int i = 0; i < constraintNodes.getLength(); i++) {
+    NodeList valueSetBindingNodes = elmByNameOrByID.getElementsByTagName("ValueSetBinding");
+    for (int i = 0; i < valueSetBindingNodes.getLength(); i++) {
       ValueSetBinding valueSetBindingObj = new ValueSetBinding();
-      Element elmConstraint = (Element) constraintNodes.item(i);
+      Element elmConstraint = (Element) valueSetBindingNodes.item(i);
       valueSetBindingObj.setValueSetBindingId(elmConstraint.getAttribute("ID"));      
       valueSetBindingObj.setValueSetBindingTarget(elmConstraint.getAttribute("Target"));
       valueSetBindingObj.setBindingStrength(elmConstraint.getAttribute("BindingStrength"));        
       valueSetBindingObj.setBindingLocations(this.convertElementToString(elmConstraint.getElementsByTagName("BindingLocations").item(0)));
       valueSetBindingObj.setBindings(this.convertElementToString(elmConstraint.getElementsByTagName("Bindings").item(0)));
       
+      NodeList bindingLocationsNodes = elmConstraint.getElementsByTagName("BindingLocations"); 
+      for (int bl = 0; bl < bindingLocationsNodes.getLength(); bl++) {
+    	  Element bindingLocationEle = (Element) bindingLocationsNodes.item(bl);
+    	  NodeList complexBindingLocationNodes = bindingLocationEle.getElementsByTagName("ComplexBindingLocation");
+    	  for (int cbl = 0; cbl < complexBindingLocationNodes.getLength(); cbl++) {
+    		  Element elmcomplexBindingLocation = (Element) complexBindingLocationNodes.item(cbl);
+    		  valueSetBindingObj.getBindingLocationList().add(
+    				  new ComplexBindingLocation(
+    						  elmcomplexBindingLocation.getAttribute("CodeLocation"),
+    						  elmcomplexBindingLocation.getAttribute("CodeSystemLocation"),
+    						  elmcomplexBindingLocation.getAttribute("CodeSystemOIDLocation")
+    						  ));
+    	  }
+    	  
+    	  NodeList simpleBindingLocationNodes = bindingLocationEle.getElementsByTagName("SimpleBindingLocation");
+    	  for (int sbl = 0; sbl < simpleBindingLocationNodes.getLength(); sbl++) {
+    		  Element elmSimpleBindingLocation = (Element) simpleBindingLocationNodes.item(sbl);
+    		  valueSetBindingObj.getBindingLocationList().add(
+    				  new SimpleBindingLocation(
+    						  elmSimpleBindingLocation.getAttribute("CodeLocation")
+    						  ));
+    	  }
+    	      	         
+      }   
+      NodeList bindingsNodes = elmConstraint.getElementsByTagName("Bindings"); 
+      for (int b = 0; b < bindingsNodes.getLength(); b++) {
+    	  Element bindingEle = (Element) bindingsNodes.item(b);
+    	  NodeList bindingNodes = bindingEle.getElementsByTagName("Binding");
+    	  for (int bn = 0; bn < bindingNodes.getLength(); bn++) {
+    		  Element binding = (Element) bindingNodes.item(bn);    	
+    		  //check if binding identifier refers to an external vs.
+    		  if(externalVSIdentifiers.contains(binding.getAttribute("BindingIdentifier"))) {
+    			  valueSetBindingObj.getBindingList().add(new Binding(binding.getAttribute("BindingIdentifier"),true));
+    		  }else {
+    			  valueSetBindingObj.getBindingList().add(new Binding(binding.getAttribute("BindingIdentifier"),false));
+    		  }
+    	  }
+    	  
+      } 
+         
       
-      byNameOrByIDObj.getConformanceStatements().add(valueSetBindingObj);
+      byNameOrByIDObj.getValueSetBindings().add(valueSetBindingObj);
     }
+    
+    
 // SingleCodeBinding
 //    NodeList predicateNodes = elmByNameOrByID.getElementsByTagName("SingleCodeBinding");
 //
@@ -158,10 +204,26 @@ public class ValueSetBindingsParserImpl implements ValueSetBindingsParser {
   }
 
 @Override
-public ValueSetBindings datatypes(String xmlvsb) {
+public ValueSetBindings valueSetBindings(String xmlvsb, String vsXML) {
 	ValueSetBindings valueSetBindings = new ValueSetBindings();
     if (xmlvsb != null) {
       Document valueSetBindingsContextDoc = this.stringToDom(xmlvsb);
+      List<String> externalVSIdentifiers = new ArrayList<String>();
+      if (vsXML != null) {
+    	  Document valueSetDoc = this.stringToDom(vsXML);
+    	  //list all external vs to identify them in vs bindings
+    	  if (valueSetDoc.getElementsByTagName("ExternalValueSetDefinitions") != null && valueSetDoc.getElementsByTagName("ExternalValueSetDefinitions").getLength() > 0) {
+    		  Element extVSDefs =  (Element) valueSetDoc.getElementsByTagName("ExternalValueSetDefinitions").item(0);
+    		  NodeList valueSetDefNodes = extVSDefs.getElementsByTagName("ValueSetDefinition");
+    		    for (int i = 0; i < valueSetDefNodes.getLength(); i++) {
+    		    	Element vsdef = (Element) valueSetDefNodes.item(i);
+    		    	externalVSIdentifiers.add(vsdef.getAttribute("BindingIdentifier"));
+    		    }
+    	  }
+    		    
+    	  
+    	  
+      }
       if (valueSetBindingsContextDoc.getElementsByTagName("ValueSetBindings") != null) {
         Element elmValueSetBindings =  (Element) valueSetBindingsContextDoc.getElementsByTagName("ValueSetBindings").item(0);
         if (elmValueSetBindings != null) {
@@ -172,18 +234,18 @@ public ValueSetBindings datatypes(String xmlvsb) {
           Context messageContextObj = new Context();     
 
           if (elmValueSetBindings.getElementsByTagName("Datatype") != null) {
-            this.context((Element) elmValueSetBindings.getElementsByTagName("Datatype").item(0), datatypeContextObj);
+            this.context((Element) elmValueSetBindings.getElementsByTagName("Datatype").item(0), datatypeContextObj,externalVSIdentifiers);
           }
 
           if (elmValueSetBindings.getElementsByTagName("Segment") != null) {
-            this.context((Element) elmValueSetBindings.getElementsByTagName("Segment").item(0), segmentContextObj);
+            this.context((Element) elmValueSetBindings.getElementsByTagName("Segment").item(0), segmentContextObj,externalVSIdentifiers);
           }
           
           if (elmValueSetBindings.getElementsByTagName("Group") != null) {
-              this.context((Element) elmValueSetBindings.getElementsByTagName("Group").item(0), groupContextObj);
+              this.context((Element) elmValueSetBindings.getElementsByTagName("Group").item(0), groupContextObj,externalVSIdentifiers);
           }
           if (elmValueSetBindings.getElementsByTagName("Message") != null) {
-              this.context((Element) elmValueSetBindings.getElementsByTagName("Message").item(0), messageContextObj);
+              this.context((Element) elmValueSetBindings.getElementsByTagName("Message").item(0), messageContextObj,externalVSIdentifiers);
           }        
           
           valueSetBindings.setDatatypes(datatypeContextObj);

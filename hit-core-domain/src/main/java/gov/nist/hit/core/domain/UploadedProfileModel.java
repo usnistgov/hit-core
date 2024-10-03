@@ -12,6 +12,10 @@
 
 package gov.nist.hit.core.domain;
 
+import java.util.List;
+
+import gov.nist.hit.core.domain.valuesetbindings.Binding;
+
 /**
  * @author Nicolas Crouzier (NIST)
  * 
@@ -19,126 +23,134 @@ package gov.nist.hit.core.domain;
 
 public class UploadedProfileModel {
 
-  private String name;
-  private String id;
-  private String type;
-  private String description;
-  private String identifier;
-  private String event;
-  private String structID;
-  private boolean used;
-  private String exampleMessage;
-  private int position;
-  private boolean activated;
-  private String domain;
+	private String name;
+	private String id;
+	private String type;
+	private String description;
+	private String identifier;
+	private String event;
+	private String structID;
+	private boolean used;
+	private String exampleMessage;
+	private int position;
+	private boolean activated;
+	private String domain;
+	private List<ValueSetDefinition> externalVS;
 
-  public UploadedProfileModel() {
+	public UploadedProfileModel() {
 
-  }
+	}
 
-  public UploadedProfileModel(String name, String id, boolean activated) {
-    super();
-    this.name = name;
-    this.id = id;
-    this.activated = activated;
-  }
+	public UploadedProfileModel(String name, String id, boolean activated) {
+		super();
+		this.name = name;
+		this.id = id;
+		this.activated = activated;
+	}
 
-  public String getName() {
-    return name;
-  }
+	public String getName() {
+		return name;
+	}
 
-  public void setName(String name) {
-    this.name = name;
-  }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-  public String getId() {
-    return id;
-  }
+	public String getId() {
+		return id;
+	}
 
-  public void setId(String id) {
-    this.id = id;
-  }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-  public boolean isActivated() {
-    return activated;
-  }
+	public boolean isActivated() {
+		return activated;
+	}
 
-  public void setActivated(boolean activated) {
-    this.activated = activated;
-  }
+	public void setActivated(boolean activated) {
+		this.activated = activated;
+	}
 
-  public String getType() {
-    return type;
-  }
+	public String getType() {
+		return type;
+	}
 
-  public void setType(String type) {
-    this.type = type;
-  }
+	public void setType(String type) {
+		this.type = type;
+	}
 
-  public String getDescription() {
-    return description;
-  }
+	public String getDescription() {
+		return description;
+	}
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-  public String getIdentifier() {
-    return identifier;
-  }
+	public String getIdentifier() {
+		return identifier;
+	}
 
-  public void setIdentifier(String identifier) {
-    this.identifier = identifier;
-  }
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
 
-  public String getEvent() {
-    return event;
-  }
+	public String getEvent() {
+		return event;
+	}
 
-  public void setEvent(String event) {
-    this.event = event;
-  }
+	public void setEvent(String event) {
+		this.event = event;
+	}
 
-  public String getStructID() {
-    return structID;
-  }
+	public String getStructID() {
+		return structID;
+	}
 
-  public void setStructID(String structID) {
-    this.structID = structID;
-  }
+	public void setStructID(String structID) {
+		this.structID = structID;
+	}
 
-  public boolean isUsed() {
-    return used;
-  }
+	public boolean isUsed() {
+		return used;
+	}
 
-  public void setUsed(boolean used) {
-    this.used = used;
-  }
+	public void setUsed(boolean used) {
+		this.used = used;
+	}
 
-  public String getExampleMessage() {
-    return exampleMessage;
-  }
+	public String getExampleMessage() {
+		return exampleMessage;
+	}
 
-  public void setExampleMessage(String exampleMessage) {
-    this.exampleMessage = exampleMessage;
-  }
+	public void setExampleMessage(String exampleMessage) {
+		this.exampleMessage = exampleMessage;
+	}
 
-  public int getPosition() {
-    return position;
-  }
+	public int getPosition() {
+		return position;
+	}
 
-  public void setPosition(int position) {
-    this.position = position;
-  }
+	public void setPosition(int position) {
+		this.position = position;
+	}
 
-  public String getDomain() {
-    return domain;
-  }
+	public String getDomain() {
+		return domain;
+	}
 
-  public void setDomain(String domain) {
-    this.domain = domain;
-  }
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
 
+	public void setExternalValueSets(List<ValueSetDefinition> externalVS) {
+		this.externalVS = externalVS;
 
+	}
+
+	public List<ValueSetDefinition> getExternalVS() {
+		return externalVS;
+	}
 
 }

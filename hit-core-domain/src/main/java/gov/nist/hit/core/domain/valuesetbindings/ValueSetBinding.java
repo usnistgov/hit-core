@@ -1,7 +1,10 @@
 package gov.nist.hit.core.domain.valuesetbindings;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
   
 
@@ -26,6 +29,11 @@ public class ValueSetBinding implements Serializable, Cloneable {
 	protected String bindingLocations;
 
 	protected String bindings;
+	
+	protected List<BindingLocation> bindingLocationList = new ArrayList<BindingLocation>();
+	
+	protected List<Binding> bindingList = new ArrayList<Binding>();
+	
 
 	public String getId() {
 		return id;
@@ -65,9 +73,7 @@ public class ValueSetBinding implements Serializable, Cloneable {
 
 	public void setBindings(String bindings) {
 		this.bindings = bindings;
-	}
-	
-	
+	}	
 
 	public String getBindingStrength() {
 		return bindingStrength;
@@ -75,7 +81,31 @@ public class ValueSetBinding implements Serializable, Cloneable {
 
 	public void setBindingStrength(String bindingStrength) {
 		this.bindingStrength = bindingStrength;
+	}		
+			
+	public List<BindingLocation> getBindingLocationList() {
+		return bindingLocationList;
 	}
+
+	public void setBindingLocationList(List<BindingLocation> bindingLocationList) {
+		this.bindingLocationList = bindingLocationList;
+	}
+
+	public List<Binding> getBindingList() {
+		return bindingList;
+	}
+
+	public void setBindingList(List<Binding> bindingList) {
+		this.bindingList = bindingList;
+	}
+	
+	public List<Binding> getExternalBindingList() {
+		List<Binding> filteredList = bindingList.stream()
+		        .filter(obj -> obj.getIsExternal())
+		        .collect(Collectors.toList());
+		return filteredList;
+	}
+	
 
 	@Override
 	public String toString() {

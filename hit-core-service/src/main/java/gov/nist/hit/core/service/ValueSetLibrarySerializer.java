@@ -1,7 +1,22 @@
 package gov.nist.hit.core.service;
 
+import java.io.IOException;
+import java.io.StringReader;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.commons.lang3.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import gov.nist.hit.core.domain.ContentDefinitionType;
 import gov.nist.hit.core.domain.ExtensibilityType;
+import gov.nist.hit.core.domain.ExternalValueSetDefinitions;
 import gov.nist.hit.core.domain.NoValidation;
 import gov.nist.hit.core.domain.StabilityType;
 import gov.nist.hit.core.domain.StatusType;
@@ -10,22 +25,7 @@ import gov.nist.hit.core.domain.ValueSetDefinition;
 import gov.nist.hit.core.domain.ValueSetDefinitions;
 import gov.nist.hit.core.domain.ValueSetElement;
 import gov.nist.hit.core.domain.ValueSetLibrary;
-
-import java.io.IOException;
-import java.io.StringReader;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import nu.xom.Attribute;
-
-import org.apache.commons.lang3.StringUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 public abstract class ValueSetLibrarySerializer {
 
@@ -101,7 +101,30 @@ public abstract class ValueSetLibrarySerializer {
 
       }
     }
+    
+    //External ValueSets
+    for (ExternalValueSetDefinitions vDefs : valueSetLibrary.getExternalValueSetDefinitions()) {
+        nu.xom.Element elmValueSetDefinitions = new nu.xom.Element("ExternalValueSetDefinitions");     
+        elmTableLibrary.appendChild(elmValueSetDefinitions);
 
+        for (ValueSetDefinition t : vDefs.getValueSetDefinitions()) {
+          nu.xom.Element elmTableDefinition = new nu.xom.Element("ValueSetDefinition");
+          elmValueSetDefinitions.appendChild(elmTableDefinition);
+          elmTableDefinition.addAttribute(new Attribute("BindingIdentifier", (t
+              .getBindingIdentifier() == null) ? "" : t.getBindingIdentifier()));
+          elmTableDefinition.addAttribute(new Attribute("Name", (t.getName() == null) ? "" : t
+              .getName()));     
+          elmTableDefinition
+          .addAttribute(new Attribute("URL", (t.getUrl() == null) ? "" : t.getUrl()));
+          elmTableDefinition.addAttribute(new Attribute("Description",
+              (t.getDescription() == null) ? "" : t.getDescription()));          
+          elmTableDefinition.addAttribute(new Attribute("Stability", (t.getStability() == null) ? ""
+                  : t.getStability().value()));
+          elmTableDefinition.addAttribute(new Attribute("Extensibility",
+              (t.getExtensibility() == null) ? "" : t.getExtensibility().value()));        
+        }
+      }
+    
     nu.xom.Document doc = new nu.xom.Document(elmTableLibrary);
 
     return doc.toXML();
@@ -132,6 +155,8 @@ public abstract class ValueSetLibrarySerializer {
       }
       valueSetLibrary.setNoValidation(noVal);
     }
+    
+    
     NodeList valueSetDefinitionsElements =
         elmTableLibrary.getElementsByTagName("ValueSetDefinitions");
 
@@ -204,15 +229,58 @@ public abstract class ValueSetLibrarySerializer {
           }
 
           valueSetDefinitions.addValueSet(tableObj);
-
-
         }
-
       }
-
-
-
     }
+    
+    //External ValueSets
+    NodeList externalValueSetDefinitionsElements =
+            elmTableLibrary.getElementsByTagName("ExternalValueSetDefinitions");
+
+        if (externalValueSetDefinitionsElements != null && externalValueSetDefinitionsElements.getLength() > 0) {
+          for (int k = 0; k < externalValueSetDefinitionsElements.getLength(); k++) {
+            Element externalValueSetDefinitionsElement = (Element) externalValueSetDefinitionsElements.item(k);
+            ExternalValueSetDefinitions externalValueSetDefinitions = new ExternalValueSetDefinitions();            
+            valueSetLibrary.getExternalValueSetDefinitions().add(externalValueSetDefinitions);
+            NodeList nodes = externalValueSetDefinitionsElement.getElementsByTagName("ValueSetDefinition");
+            for (int i = 0; i < nodes.getLength(); i++) {
+              Element elmTable = (Element) nodes.item(i);
+              ValueSetDefinition tableObj = new ValueSetDefinition();
+              tableObj.setBindingIdentifier(elmTable.getAttribute("BindingIdentifier"));
+              tableObj.setName(elmTable.getAttribute("Name"));
+
+              if (StringUtils.isNotEmpty(elmTable.getAttribute("NoCodeDisplayText"))) {
+                tableObj.setNoCodeDisplayText(elmTable.getAttribute("NoCodeDisplayText"));
+              }
+
+              if (StringUtils.isNotEmpty(elmTable.getAttribute("Description"))) {
+                tableObj.setDescription(elmTable.getAttribute("Description"));
+              }
+
+              if (StringUtils.isNotEmpty(elmTable.getAttribute("URL"))) {
+                tableObj.setUrl(elmTable.getAttribute("URL"));
+              }
+//
+//              if (StringUtils.isNotEmpty(elmTable.getAttribute("Version"))) {
+//                tableObj.setVersion(elmTable.getAttribute("Version"));
+//              }
+              if (StringUtils.isNotEmpty(elmTable.getAttribute("Extensibility"))) {
+                tableObj.setExtensibility(ExtensibilityType.fromValue(elmTable
+                    .getAttribute("Extensibility")));
+              }
+
+              if (StringUtils.isNotEmpty(elmTable.getAttribute("Stability"))) {
+                tableObj.setStability(StabilityType.fromValue(elmTable.getAttribute("Stability")));
+              }
+
+             
+
+              externalValueSetDefinitions.addValueSet(tableObj);
+            }
+          }
+        }
+    
+    
 
     return valueSetLibrary;
   }

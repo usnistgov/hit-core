@@ -16,7 +16,7 @@ import gov.nist.hit.core.domain.valuesetbindings.ValueSetBindings;
 
 
 public interface ValueSetBindingsParser {
-	ValueSetBindings datatypes(String xmlvsb);
+	ValueSetBindings valueSetBindings(String xmlvsb, String vsXML);
 
 	ValueSetBindings segments(String xmlvsb);
 

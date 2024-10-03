@@ -52,12 +52,12 @@ public abstract class ProfileParser {
       String... constraints);
   
   public abstract ProfileModel parseEnhanced(String integrationProfileXml, String conformanceProfileId,
-	  String constraintsXml,String additionalConstraintsXml, String valueSetBindings, String coConstraints,
+	  String constraintsXml,String additionalConstraintsXml, String valueSetsXML, String valueSetBindings, String coConstraints,
 	  String slicings) throws ProfileParserException;
 
   public abstract ProfileModel parse(Object conformanceProfile, String... constraints)
       throws ProfileParserException;
 
 public abstract ProfileModel parseEnhanced(Object conformanceProfile, String constraintsXml, String additionalConstraintsXml,
-		String valueSetBindings, String coConstraints, String slicings) throws ProfileParserException;
+		String valueSetsXML, String valueSetBindings, String coConstraints, String slicings) throws ProfileParserException;
 }

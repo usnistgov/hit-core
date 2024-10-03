@@ -16,11 +16,11 @@ public abstract class ByNameOrByID implements java.io.Serializable {
 	protected List<ValueSetBinding> valuesetbindings = new ArrayList<ValueSetBinding>();
 	
 
-	public List<ValueSetBinding> getConformanceStatements() {
+	public List<ValueSetBinding> getValueSetBindings() {
 		return valuesetbindings;
 	}
 
-	public void setConformanceStatements(
+	public void setValueSetBindings(
 			List<ValueSetBinding> valuesetbindings) {
 		this.valuesetbindings = valuesetbindings;
 	}

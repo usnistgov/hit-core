@@ -15,40 +15,60 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import gov.nist.hit.core.domain.valuesetbindings.ValueSetBinding;
+
 /**
  * Tree representation of a integrationProfile
  * 
  * @author Harold Affo (NIST)
  */
 public class ProfileModel {
-  private ProfileElement message; 
-  private Map<String, ProfileElement> datatypes;
-  private Map<String, ProfileElement> segments;     //segments and groups
+	private ProfileElement message;
+	private Map<String, ProfileElement> datatypes;
+	private Map<String, ProfileElement> segments; // segments and groups
+	private ArrayList<ValueSetBinding> valueSetBinding;
 
-  public ProfileElement getMessage() {
-    return message;
-  }
+	public ProfileModel() {
+	    super();
+	    valueSetBinding = new ArrayList<ValueSetBinding>();
+	  }
+	
+	public ProfileElement getMessage() {
+		return message;
+	}
 
-  public void setMessage(ProfileElement message) {
-    this.message = message;
-  }
+	public void setMessage(ProfileElement message) {
+		this.message = message;
+	}
 
-  public Map<String, ProfileElement> getDatatypes() {
-    return datatypes;
-  }
+	public Map<String, ProfileElement> getDatatypes() {
+		return datatypes;
+	}
 
-  public void setDatatypes(Map<String, ProfileElement> datatypes) {
-    this.datatypes = datatypes;
-  }
+	public void setDatatypes(Map<String, ProfileElement> datatypes) {
+		this.datatypes = datatypes;
+	}
 
-  public Map<String, ProfileElement> getSegments() {
-    return segments;
-  }
+	public Map<String, ProfileElement> getSegments() {
+		return segments;
+	}
 
-  public void setSegments(Map<String, ProfileElement> segments) {
-    this.segments = segments;
-  }
+	public void setSegments(Map<String, ProfileElement> segments) {
+		this.segments = segments;
+	}
 
-  
+	public void addValueSetBindings(List<ValueSetBinding> valuesetbindings) {
+		this.valueSetBinding.addAll(valuesetbindings);
+	}
+
+	public ArrayList<ValueSetBinding> getValueSetBinding() {
+		return valueSetBinding;
+	}
+
+	public void setValueSetBinding(ArrayList<ValueSetBinding> valueSetBinding) {
+		this.valueSetBinding = valueSetBinding;
+	}
+	
+	
 
 }
