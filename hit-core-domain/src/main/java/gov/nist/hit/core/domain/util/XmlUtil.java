@@ -37,6 +37,7 @@ public class XmlUtil {
     SAXBuilder builder = new SAXBuilder();
     builder.setJDOMFactory(new LocatedJDOMFactory());
     builder.setExpandEntities(false);
+    builder.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
     builder.setFeature("http://xml.org/sax/features/external-general-entities", false);
     builder.setFeature("http://xml.org/sax/features/external-parameter-entities", false); 
     
