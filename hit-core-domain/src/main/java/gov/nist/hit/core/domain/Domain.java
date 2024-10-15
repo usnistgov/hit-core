@@ -68,6 +68,8 @@ public class Domain extends TestResource implements Serializable {
 	private String rsbVersion;
 
 	private String igVersion;
+	
+	private String version;
 
 	@JsonView(Views.Short.class)
 	private String owner;
@@ -193,6 +195,15 @@ public class Domain extends TestResource implements Serializable {
 	public void setIgVersion(String igVersion) {
 		this.igVersion = igVersion;
 	}
+	
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
 
 	public String getOwner() {
 		owner = authorUsername;
@@ -243,6 +254,7 @@ public class Domain extends TestResource implements Serializable {
 		this.valueSetCopyright = source.valueSetCopyright;
 		this.rsbVersion = source.rsbVersion;
 		this.igVersion = source.igVersion;
+		this.version = source.version;
 		this.owner = this.authorUsername;
 		this.validationConfiguration = source.validationConfiguration;
 		this.options = source.options;

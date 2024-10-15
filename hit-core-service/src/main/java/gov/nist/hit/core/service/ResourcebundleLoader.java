@@ -608,12 +608,18 @@ public abstract class ResourcebundleLoader {
 		entry.setHomeTitle(node.get("homeTitle").textValue());
 		entry.setAuthorUsername(node.get("authorUsername").textValue());
 		entry.setDisabled(disabled);
+		
+		if (node.get("version") != null) {
+			entry.setVersion(node.get("version").asText());
+		}
 		if (node.get("rsbVersion") != null) {
 			entry.setRsbVersion(node.get("rsbVersion").asText());
 		}
 		if (node.get("igVersion") != null) {
-			entry.setRsbVersion(node.get("igVersion").asText());
+			entry.setIgVersion(node.get("igVersion").asText());
 		}
+		
+		
 		if (node.get("participantEmails") != null && node.get("participantEmails").isArray()) {
 			Iterator<JsonNode> ownerEmailNodes = node.get("participantEmails").iterator();
 			while (ownerEmailNodes.hasNext()) {
