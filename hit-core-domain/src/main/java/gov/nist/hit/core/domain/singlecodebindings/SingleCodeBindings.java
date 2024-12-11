@@ -1,10 +1,10 @@
-package gov.nist.hit.core.domain.valuesetbindings;
+package gov.nist.hit.core.domain.singlecodebindings;
 
 import java.io.Serializable;
 
 //@Entity
 //@Table(name = "CONSTRAINTS")
-public class ValueSetBindings implements Serializable {
+public class SingleCodeBindings implements Serializable {
 	/**
 	 * 
 	 */

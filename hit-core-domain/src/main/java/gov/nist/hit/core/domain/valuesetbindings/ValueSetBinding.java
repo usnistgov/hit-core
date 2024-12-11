@@ -26,8 +26,10 @@ public class ValueSetBinding implements Serializable, Cloneable {
 
 	protected String valueSetBindingTarget;
  
+	//xml code
 	protected String bindingLocations;
 
+	//xml code
 	protected String bindings;
 	
 	protected List<BindingLocation> bindingLocationList = new ArrayList<BindingLocation>();

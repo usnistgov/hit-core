@@ -1,4 +1,4 @@
-package gov.nist.hit.core.domain.valuesetbindings;
+package gov.nist.hit.core.domain.singlecodebindings;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,6 +26,17 @@ public class BindingLocation   {
 	public void setCodeLocation(String codeLocation) {
 		this.codeLocation = codeLocation;
 	}
+
+
+	public String getType() {
+		return type;
+	}
+
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
 
 
 

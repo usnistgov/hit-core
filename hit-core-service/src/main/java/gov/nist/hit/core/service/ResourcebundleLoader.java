@@ -2084,7 +2084,7 @@ public abstract class ResourcebundleLoader {
 	}
 
 	protected String fileName(Resource resource) throws IOException {
-		String location = URLDecoder.decode(resource.getURL().toString(), "UTF-8");		
+		String location = URLDecoder.decode(resource.getURL().toString().replaceAll("\\+", "%2b"), "UTF-8");		
 		return location;
 		//		return location.replaceAll("%20", " ");
 	}

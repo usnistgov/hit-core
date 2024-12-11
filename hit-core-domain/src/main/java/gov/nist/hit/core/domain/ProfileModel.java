@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import gov.nist.hit.core.domain.singlecodebindings.SingleCodeBinding;
 import gov.nist.hit.core.domain.valuesetbindings.ValueSetBinding;
 
 /**
@@ -27,10 +28,12 @@ public class ProfileModel {
 	private Map<String, ProfileElement> datatypes;
 	private Map<String, ProfileElement> segments; // segments and groups
 	private ArrayList<ValueSetBinding> valueSetBinding;
+	private ArrayList<SingleCodeBinding> singleCodeBinding;
 
 	public ProfileModel() {
 	    super();
 	    valueSetBinding = new ArrayList<ValueSetBinding>();
+	    singleCodeBinding = new ArrayList<SingleCodeBinding>();
 	  }
 	
 	public ProfileElement getMessage() {
@@ -68,6 +71,20 @@ public class ProfileModel {
 	public void setValueSetBinding(ArrayList<ValueSetBinding> valueSetBinding) {
 		this.valueSetBinding = valueSetBinding;
 	}
+
+	public void addSingleCodeBindings(List<SingleCodeBinding> singleCodeBindings) {
+		this.singleCodeBinding.addAll(singleCodeBindings);
+	}
+	
+	public ArrayList<SingleCodeBinding> getSingleCodeBinding() {
+		return singleCodeBinding;
+	}
+
+	public void setSingleCodeBinding(ArrayList<SingleCodeBinding> singleCodeBinding) {
+		this.singleCodeBinding = singleCodeBinding;
+	}
+	
+	
 	
 	
 

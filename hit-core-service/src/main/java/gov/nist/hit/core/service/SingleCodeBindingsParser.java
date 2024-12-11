@@ -12,14 +12,14 @@
 
 package gov.nist.hit.core.service;
 
+import gov.nist.hit.core.domain.singlecodebindings.SingleCodeBindings;
 import gov.nist.hit.core.domain.valuesetbindings.ValueSetBindings;
 
 
-public interface ValueSetBindingsParser {
-	ValueSetBindings valueSetBindings(String xmlvsb, String vsXML);
+public interface SingleCodeBindingsParser {
 
 
-
+	SingleCodeBindings singleCodeBindings(String xmlvsb);
 
 
 }

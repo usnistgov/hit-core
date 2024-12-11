@@ -1,4 +1,4 @@
-package gov.nist.hit.core.domain.valuesetbindings;
+package gov.nist.hit.core.domain.singlecodebindings;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.UUID;
 public class ComplexBindingLocation extends BindingLocation{
 
 
-	public ComplexBindingLocation() {
+	public ComplexBindingLocation() {		
 		super();
 		this.type = "ComplexBindingLocation";
 	}
