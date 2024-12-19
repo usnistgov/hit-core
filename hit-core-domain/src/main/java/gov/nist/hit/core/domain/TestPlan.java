@@ -1,8 +1,10 @@
 package gov.nist.hit.core.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -16,9 +18,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -155,6 +154,23 @@ public class TestPlan extends AbstractTestCase implements Serializable {
     this.testPackage = testPackage;
   }
  
+  public List<TestStep> getAllTestSteps() {
+      List<TestStep> testSteps = new ArrayList<>();
+
+      if (testCases != null) {
+          for (TestCase testCase : testCases) {
+              testSteps.addAll(testCase.getTestSteps());
+          }
+      }
+
+      if (testCaseGroups != null) {
+          for (TestCaseGroup testCaseGroup : testCaseGroups) {
+              testSteps.addAll(testCaseGroup.getAllTestSteps());
+          }
+      }
+
+      return testSteps;
+  }
 
 
 }
