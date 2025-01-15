@@ -161,6 +161,7 @@ public class SingleCodeBindingsParserImpl implements SingleCodeBindingsParser {
 	@Override
 	public SingleCodeBindings singleCodeBindings(String xmlvsb) {
 		SingleCodeBindings singleCodeBindings = new SingleCodeBindings();
+		if (xmlvsb != null) {
 		Document valueSetBindingsContextDoc = this.stringToDom(xmlvsb);
 
 		if (valueSetBindingsContextDoc.getElementsByTagName("SingleCodeBindings") != null) {
@@ -195,6 +196,7 @@ public class SingleCodeBindingsParserImpl implements SingleCodeBindingsParser {
 				singleCodeBindings.setMessages(messageContextObj);
 			}
 
+		}
 		}
 
 		return singleCodeBindings;
