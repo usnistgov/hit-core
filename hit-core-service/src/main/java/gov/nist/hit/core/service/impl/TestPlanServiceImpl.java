@@ -265,22 +265,22 @@ private String findFullPathContainingAbstractTestCase(AbstractTestCase node,Abst
 	
 	@Override
 	public TestPlan findOne(Long testPlanId) {
-		if (cache.get(testPlanId) != null && testPlanRepository.getUpdateDate(testPlanId) != null && cache.get(testPlanId).getUpdateDate() != null) {
-			//Rounded to the nearest second to avoid (most) date format conversion issues.
-			Date d = DateUtils.round(testPlanRepository.getUpdateDate(testPlanId), Calendar.SECOND);
-			Date d2 = DateUtils.round(cache.get(testPlanId).getUpdateDate(), Calendar.SECOND);
-			if (d2.compareTo(d)== 0) {
-				return cache.get(testPlanId);		
-			}else {
-				TestPlan tp = testPlanRepository.findOne(testPlanId);
-				cache.put(testPlanId, tp);
-				return tp;
-			}			
-		}else {
+//		if (cache.get(testPlanId) != null && testPlanRepository.getUpdateDate(testPlanId) != null && cache.get(testPlanId).getUpdateDate() != null) {
+//			//Rounded to the nearest second to avoid (most) date format conversion issues.
+//			Date d = DateUtils.round(testPlanRepository.getUpdateDate(testPlanId), Calendar.SECOND);
+//			Date d2 = DateUtils.round(cache.get(testPlanId).getUpdateDate(), Calendar.SECOND);
+//			if (d2.compareTo(d)== 0) {
+//				return cache.get(testPlanId);		
+//			}else {
+//				TestPlan tp = testPlanRepository.findOne(testPlanId);
+//				cache.put(testPlanId, tp);
+//				return tp;
+//			}			
+//		}else {
 			TestPlan tp = testPlanRepository.findOne(testPlanId);
-			cache.put(testPlanId, tp);
+//			cache.put(testPlanId, tp);
 			return tp;
-		}
+//		}
 		
 	}
 	
