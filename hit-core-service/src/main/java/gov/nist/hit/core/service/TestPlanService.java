@@ -50,6 +50,24 @@ public interface TestPlanService {
 
 	public void deleteAllByDomain(String d);
 
+	public List<TestPlan> findAllByDomain(String domain);
+
+	public List<TestPlan> findAllByScopeAndDomain(TestScope scope, String domain);
+
+	public List<TestPlan> findAllByUsernameAndDomain(String username, String domain);
+
+	public List<TestPlan> findAllByScopeAndUsernameAndDomain(TestScope scope, String username, String domain);
+
+	public List<TestPlan> findAllTestPlanIdsByDomain(String domain);
+
+	public List<TestPlan> findAllTestPlanIdsByScopeAndDomain(TestScope scope, String domain);
+
+	public List<TestPlan> findAllTestPlanIdsByUsernameAndDomain(String username, String domain);
+
+	public List<TestPlan> findAllTestPlanIdsByScopeAndUsernameAndDomain(TestScope scope, String username, String domain);
+
+	public List<TestPlan> findAllShortByStageAndUsernameAndDomain(TestingStage cb, String username, String domain);
+
 	
 	
 }

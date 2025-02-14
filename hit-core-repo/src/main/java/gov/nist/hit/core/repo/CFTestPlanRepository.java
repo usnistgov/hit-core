@@ -44,11 +44,23 @@ public interface CFTestPlanRepository extends JpaRepository<CFTestPlan, Long> {
   public List<CFTestPlan> findAllByScopeAndUsernameAndDomain(@Param("scope") TestScope scope,
       @Param("authorUsername") String authorUsername, @Param("domain") String domain);
 
+  @Query("select new gov.nist.hit.core.domain.CFTestPlan(id, name, description, position,persistentId,domain) from CFTestPlan tp where tp.authorUsername = :authorUsername and tp.domain=:domain")
+  public List<CFTestPlan> findShortAllByUsernameAndDomain(@Param("authorUsername") String authorUsername, @Param("domain") String domain);
+
+  @Query("select tp from CFTestPlan tp where tp.authorUsername = :authorUsername and tp.domain=:domain")
+  public List<CFTestPlan> findAllByUsernameAndDomain(@Param("authorUsername") String authorUsername, @Param("domain") String domain);
+
+
   @Query("select new gov.nist.hit.core.domain.CFTestPlan(id, name, description, position,persistentId,domain) from CFTestPlan tp where tp.scope = :scope and tp.domain = :domain")
   public List<CFTestPlan> findShortAllByScopeAndDomain(@Param("scope") TestScope scope,
       @Param("domain") String domain);
-
-
+  
+  @Query("select new gov.nist.hit.core.domain.CFTestPlan(id, name, description, position,persistentId,domain) from CFTestPlan tp where tp.domain = :domain")
+  public List<CFTestPlan> findShortAllByDomain( @Param("domain") String domain);
+  
+  @Query("select tp from CFTestPlan tp where tp.domain = :domain")
+  public List<CFTestPlan> findAllByDomain(@Param("domain") String domain);
+  
   @Query("select tp from CFTestPlan tp where tp.stage = :stage and tp.scope = :scope and tp.domain = :domain")
   public List<CFTestPlan> findAllByStageAndScopeAndDomain(@Param("stage") TestingStage stage,
       @Param("scope") TestScope scope, @Param("domain") String domain);
@@ -113,5 +125,8 @@ public interface CFTestPlanRepository extends JpaRepository<CFTestPlan, Long> {
 
   @Query("select tp from CFTestPlan tp where tp.domain = :domain")
   public List<CFTestPlan> getAllByDomain(@Param("domain") String domain);
+
+
+
 
 }

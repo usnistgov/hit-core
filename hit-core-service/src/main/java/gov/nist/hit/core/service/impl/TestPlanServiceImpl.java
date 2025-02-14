@@ -51,6 +51,12 @@ public class TestPlanServiceImpl implements TestPlanService {
 			TestScope scope, String domain) {
 		return testPlanRepository.findAllShortByStageAndUsernameAndScopeAndDomain(stage, authorUsername, scope, domain);
 	}
+	
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllShortByStageAndUsernameAndDomain(TestingStage stage, String authorUsername, String domain) {
+		return testPlanRepository.findAllShortByStageAndUsernameAndDomain(stage, authorUsername, domain);
+	}
 
 	@Override
 	@Transactional(value = "transactionManager")
@@ -360,6 +366,63 @@ private String findFullPathContainingAbstractTestCase(AbstractTestCase node,Abst
 		}
 	}
 	
+
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllByDomain(String domain) {
+		return testPlanRepository.findAllByDomain(domain);
+
+	}
+
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllByScopeAndDomain(TestScope scope, String domain) {
+		return testPlanRepository.findAllByScopeAndDomain( scope,  domain);
+
+	}
+
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllByScopeAndUsernameAndDomain(TestScope scope, String username, String domain) {
+		return testPlanRepository.findAllByScopeAndUsernameAndDomain( scope,  username,  domain);
+
+	}
+
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllByUsernameAndDomain(String username, String domain) {
+		return testPlanRepository.findAllByUsernameAndDomain( username,  domain);
+
+	}
+	
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllTestPlanIdsByDomain(String domain) {
+		return testPlanRepository.findAllTestPlanIdsByDomain(domain);
+
+	}
+
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllTestPlanIdsByScopeAndDomain(TestScope scope, String domain) {
+		return testPlanRepository.findAllTestPlanIdsByScopeAndDomain( scope,  domain);
+
+	}
+
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllTestPlanIdsByScopeAndUsernameAndDomain(TestScope scope, String username, String domain) {
+		return testPlanRepository.findAllTestPlanIdsByScopeAndUsernameAndDomain( scope,  username,  domain);
+
+	}
+
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllTestPlanIdsByUsernameAndDomain(String username, String domain) {
+		return testPlanRepository.findAllTestPlanIdsByUsernameAndDomain( username,  domain);
+
+	}
+
 	
 	
 	

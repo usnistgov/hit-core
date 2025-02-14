@@ -66,22 +66,22 @@ public class CFTestPlanServiceImpl implements CFTestPlanService {
     
   @Override
 	public CFTestPlan findOne(Long testPlanId) {
-		if (cache.get(testPlanId) != null && testPlanRepository.getUpdateDate(testPlanId) != null && cache.get(testPlanId).getUpdateDate() != null) {
-			//Rounded to the nearest second to avoid (most) date format conversion issues.			
-			Date d = DateUtils.round(testPlanRepository.getUpdateDate(testPlanId), Calendar.SECOND);
-			Date d2 = DateUtils.round(cache.get(testPlanId).getUpdateDate(), Calendar.SECOND);
-			if (d2.compareTo(d)== 0) {
-				return cache.get(testPlanId);		
-			}else {
-				CFTestPlan tp = testPlanRepository.findOne(testPlanId);
-				cache.put(testPlanId, tp);
-				return tp;
-			}			
-		}else {
+//		if (cache.get(testPlanId) != null && testPlanRepository.getUpdateDate(testPlanId) != null && cache.get(testPlanId).getUpdateDate() != null) {
+//			//Rounded to the nearest second to avoid (most) date format conversion issues.			
+//			Date d = DateUtils.round(testPlanRepository.getUpdateDate(testPlanId), Calendar.SECOND);
+//			Date d2 = DateUtils.round(cache.get(testPlanId).getUpdateDate(), Calendar.SECOND);
+//			if (d2.compareTo(d)== 0) {
+//				return cache.get(testPlanId);		
+//			}else {
+//				CFTestPlan tp = testPlanRepository.findOne(testPlanId);
+//				cache.put(testPlanId, tp);
+//				return tp;
+//			}			
+//		}else {
 			CFTestPlan tp = testPlanRepository.findOne(testPlanId);
 			cache.put(testPlanId, tp);
 			return tp;
-		}		
+//		}		
 	}
   
 
@@ -278,6 +278,11 @@ public class CFTestPlanServiceImpl implements CFTestPlanService {
       String domain) {
     return testPlanRepository.findAllByScopeAndUsernameAndDomain(scope, authorUsername, domain);
   }
+  
+  @Override
+  public List<CFTestPlan> findShortAllByUsernameAndDomain(String authorUsername,String domain) {
+    return testPlanRepository.findShortAllByUsernameAndDomain(authorUsername, domain);
+  }
 
 
   @Override
@@ -294,6 +299,11 @@ public class CFTestPlanServiceImpl implements CFTestPlanService {
     return testPlanRepository.findShortAllByScopeAndDomain(scope, domain);
   }
 
+  @Override
+  public List<CFTestPlan> findShortAllByDomain( String domain) {
+    return testPlanRepository.findShortAllByDomain(domain);
+  }
+  
   @Override
   public void delete(CFTestPlan testPlan) {
     testPlanRepository.delete(testPlan);
@@ -321,6 +331,18 @@ public class CFTestPlanServiceImpl implements CFTestPlanService {
 		}
 		
 	}
+
+@Override
+public List<CFTestPlan> findAllByUsernameAndDomain(String authorUsername, String domain) {
+    return testPlanRepository.findAllByUsernameAndDomain(authorUsername, domain);
+
+}
+
+@Override
+public List<CFTestPlan> findAllByDomain(String domain) {
+    return testPlanRepository.findAllByDomain(domain);
+
+}
 
   
 
