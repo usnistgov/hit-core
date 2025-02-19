@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -128,7 +129,10 @@ import gov.nist.hit.core.service.util.FileUtil;
 import gov.nist.hit.core.service.util.GCUtil;
 import gov.nist.hit.core.service.util.ResourcebundleHelper;
 
-@PropertySource(value = { "classpath:app-config.properties" })
+@PropertySources({
+@PropertySource(value = { "classpath:app-config.properties" }),
+@PropertySource(value = { "file:${propfile}"}, ignoreResourceNotFound= true)
+})
 @Transactional(value = "transactionManager")
 public abstract class ResourcebundleLoader {
 

@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -45,7 +46,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration(value = "AuthConfig")
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableJpaRepositories(value = "gov.nist.auth.hit.core.repo", entityManagerFactoryRef = "authEMF", transactionManagerRef = "authTransactionManager")
-@PropertySource(value = { "classpath:app-config.properties" })
+@PropertySources({
+@PropertySource(value = { "classpath:app-config.properties" }),
+@PropertySource(value = { "file:${propfile}" }, ignoreResourceNotFound= true)
+})
 @ImportResource({ "classpath:app-security-config.xml" })
 public class AuthConfig {
 

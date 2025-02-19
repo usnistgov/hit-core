@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -43,7 +44,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration(value = "DBConfig")
 @EnableJpaRepositories(value = "gov.nist.hit")
-@PropertySource(value = "classpath:app-config.properties")
+@PropertySources({
+@PropertySource(value = { "classpath:app-config.properties" }),
+@PropertySource(value = { "file:${propfile}" }, ignoreResourceNotFound= true)
+})
 @EnableTransactionManagement(proxyTargetClass = true)
 @ComponentScan("gov.nist.hit") 
 public class DbConfig {
