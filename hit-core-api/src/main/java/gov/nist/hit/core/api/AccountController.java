@@ -1018,7 +1018,7 @@ public class AccountController {
 	 * User wants to log in
 	 */
 	// @PreAuthorize("hasRole('tester') or hasRole('admin')")
-	@RequestMapping(value = "/accounts/login", method = RequestMethod.GET)
+	@RequestMapping(value = "/accounts/login", method = RequestMethod.POST)
 	public ResponseMessage doNothing(HttpSession session) {
 		User u = userService.getCurrentUser();
 		if (u != null) {
