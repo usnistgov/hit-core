@@ -283,12 +283,13 @@ private String findFullPathContainingAbstractTestCase(AbstractTestCase node,Abst
 //				return tp;
 //			}			
 //		}else {
-			TestPlan tp = testPlanRepository.findOne(testPlanId);
+			TestPlan tp = testPlanRepository.findByID(testPlanId);
 //			cache.put(testPlanId, tp);
 			return tp;
 //		}
 		
 	}
+	
 	
 	@Override
 	public Date getUpdateDate(Long testPlanId) {		
@@ -422,8 +423,8 @@ private String findFullPathContainingAbstractTestCase(AbstractTestCase node,Abst
 		return testPlanRepository.findAllTestPlanIdsByUsernameAndDomain( username,  domain);
 
 	}
-
 	
+
 	
 	
 	

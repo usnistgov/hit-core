@@ -19,10 +19,10 @@ import gov.nist.auth.hit.core.domain.Account;
 import gov.nist.auth.hit.core.domain.ValidationLog;
 import gov.nist.hit.core.domain.ResponseMessage;
 import gov.nist.hit.core.domain.ResponseMessage.Type;
+import gov.nist.hit.core.service.ValidationLogService;
 import gov.nist.hit.core.service.AccountService;
 import gov.nist.hit.core.service.TestStepService;
 import gov.nist.hit.core.service.UserService;
-import gov.nist.hit.core.service.ValidationLogService;
 import gov.nist.hit.core.service.exception.NoUserFoundException;
 import io.swagger.annotations.ApiOperation;
 

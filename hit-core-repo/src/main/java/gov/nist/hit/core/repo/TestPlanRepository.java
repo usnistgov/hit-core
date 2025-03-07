@@ -152,8 +152,14 @@ public interface TestPlanRepository extends JpaRepository<TestPlan, Long> {
 	@Query("select new gov.nist.hit.core.domain.TestPlan(id) from TestPlan tp where tp.scope=:scope and tp.domain=:domain and tp.authorUsername = :authorUsername")
 	public List<TestPlan> findAllTestPlanIdsByScopeAndUsernameAndDomain(@Param("scope") TestScope scope, @Param("authorUsername") String authorUsername,
 			@Param("domain") String domain);
-
-
 	
+	
+	
+	//optimizing tests
+	@Transactional(value = "transactionManager")
+	@Query("select tp from TestPlan tp   WHERE tp.id = :id")
+	public TestPlan findByID(@Param("id") Long id);
+
+
 
 }
