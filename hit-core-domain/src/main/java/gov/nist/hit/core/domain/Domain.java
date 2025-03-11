@@ -82,6 +82,7 @@ public class Domain extends TestResource implements Serializable {
 	private Map<String, String> options = new HashMap<String, String>();
 
 	private String domainurl;
+
 	
 	public Domain() {
 		this.owner = this.authorUsername;
@@ -259,6 +260,18 @@ public class Domain extends TestResource implements Serializable {
 		this.validationConfiguration = source.validationConfiguration;
 		this.options = source.options;
 	}
+	
+	@Transient
+	public void setHl7v2ValidationVersion(String hl7v2version) {
+		this.getOptions().put(Constant.DEFAULT_HL7V2_VALIDATION_VERSION, hl7v2version);
+		
+	}
+	@Transient
+	public String getHl7v2ValidationVersion() {
+		return this.getOptions().get(Constant.DEFAULT_HL7V2_VALIDATION_VERSION);
+	}
+
+
 
 
 

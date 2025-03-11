@@ -624,6 +624,7 @@ public abstract class ResourcebundleLoader {
 		}
 		
 		
+		
 		if (node.get("participantEmails") != null && node.get("participantEmails").isArray()) {
 			Iterator<JsonNode> ownerEmailNodes = node.get("participantEmails").iterator();
 			while (ownerEmailNodes.hasNext()) {
@@ -637,6 +638,10 @@ public abstract class ResourcebundleLoader {
 				entry.setReportSavingSupported(optionsJn.get(Constant.REPORT_SAVING_SUPPORTED).asBoolean());
 			}else {
 				entry.setReportSavingSupported(true);// default value
+			}
+			
+			if (optionsJn.get(Constant.DEFAULT_HL7V2_VALIDATION_VERSION) != null) {
+				entry.setHl7v2ValidationVersion(optionsJn.get(Constant.DEFAULT_HL7V2_VALIDATION_VERSION).asText());
 			}
 			
 		}

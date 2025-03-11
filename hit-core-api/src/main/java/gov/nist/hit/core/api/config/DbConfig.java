@@ -49,7 +49,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource(value = { "file:${propfile}" }, ignoreResourceNotFound= true)
 })
 @EnableTransactionManagement(proxyTargetClass = true)
-@ComponentScan("gov.nist.hit") 
+@ComponentScan({"gov.nist.hit", "gov.nist.healthcare"}) 
 public class DbConfig {
 
 	@Autowired
