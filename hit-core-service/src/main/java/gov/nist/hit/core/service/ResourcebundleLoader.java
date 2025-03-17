@@ -412,6 +412,8 @@ public abstract class ResourcebundleLoader {
 	@Value("${app.url}")
 	private String url;
 	
+	@Value("${app.loadOnlyDefaultDomain:#{false}}")
+	private boolean loadOnlyDefaultDomain;
 
 	// conformance profile source Id - integration profile id
 	protected static HashMap<String, String> profilesMap;
@@ -569,8 +571,11 @@ public abstract class ResourcebundleLoader {
 		while (it.hasNext()) {
 			JsonNode node = it.next();
 			Domain domain = getDomain(node, rootPath);
-			domainService.save(domain);
-			loadDomainsArtifacts(rootPath, domain.getScope(), domain.isPreloaded(), domain.getDomain());
+			if(!loadOnlyDefaultDomain || domain.getDomain().equalsIgnoreCase("default")) {
+				domainService.save(domain);
+				loadDomainsArtifacts(rootPath, domain.getScope(), domain.isPreloaded(), domain.getDomain());
+			}
+			
 		}
 		loadDomainsArtifacts(rootPath, TestScope.GLOBAL, true, TOOL_DOCUMENT_DOMAIN);
 
