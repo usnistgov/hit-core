@@ -15,6 +15,8 @@ package gov.nist.hit.core.service.impl;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -169,6 +171,22 @@ public class ConstraintsParserImpl implements ConstraintsParser {
       }
     }
   }
+  
+  private List<Element> listElementsWithPath(Element rootElement) {
+      List<Element> list = new ArrayList<Element>();
+      NodeList nodeList = rootElement.getElementsByTagName("*"); // Get all descendant elements
+
+      for (int i = 0; i < nodeList.getLength(); i++) {
+          Node node = nodeList.item(i);
+          if (node.getNodeType() == Node.ELEMENT_NODE) {
+              Element element = (Element) node;
+              if (element.hasAttribute("Path")) {
+            	  list.add(element);
+              }
+          }
+      }
+      return list;
+  }
 
   private void constraints(Element elmByNameOrByID, ByNameOrByID byNameOrByIDObj) {
     NodeList constraintNodes = elmByNameOrByID.getElementsByTagName("Constraint");
@@ -177,7 +195,18 @@ public class ConstraintsParserImpl implements ConstraintsParser {
       Element elmConstraint = (Element) constraintNodes.item(i);
       constraintObj.setConstraintId(elmConstraint.getAttribute("ID"));
       
-      constraintObj.setConstraintTarget(elmConstraint.getAttribute("Target"));
+      if (elmConstraint.hasAttribute("Target")) {
+          constraintObj.setConstraintTarget(elmConstraint.getAttribute("Target"));
+      }else {
+    	  List<Element> pathElementList = listElementsWithPath((Element)elmConstraint.getElementsByTagName("Assertion").item(0));
+    	  //if simple expression use path for target, else path is context "."	
+			if (pathElementList.size() > 1) {
+				constraintObj.setConstraintTarget(".");
+			} else if (pathElementList.size() == 1) {
+				constraintObj.setConstraintTarget(pathElementList.get(0).getAttribute("Path"));
+			}
+    	  
+      }
       
       NodeList descriptionNodes = elmConstraint.getElementsByTagName("Description");
       if (descriptionNodes != null && descriptionNodes.getLength() == 1) {
