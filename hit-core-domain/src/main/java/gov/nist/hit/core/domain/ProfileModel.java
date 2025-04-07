@@ -15,7 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import gov.nist.hit.core.domain.coconstraints.CellsType;
+import gov.nist.hit.core.domain.coconstraints.CoConstraint;
+import gov.nist.hit.core.domain.coconstraints.CoConstraintGroup;
+import gov.nist.hit.core.domain.coconstraints.ConditionalTable;
+import gov.nist.hit.core.domain.coconstraints.Context;
+import gov.nist.hit.core.domain.coconstraints.Segment;
+import gov.nist.hit.core.domain.coconstraints.SimpleTable;
+import gov.nist.hit.core.domain.coconstraints.ValueSet;
 import gov.nist.hit.core.domain.singlecodebindings.SingleCodeBinding;
+import gov.nist.hit.core.domain.slicings.ProfileSlicing;
 import gov.nist.hit.core.domain.valuesetbindings.ValueSetBinding;
 
 /**
@@ -29,11 +38,14 @@ public class ProfileModel {
 	private Map<String, ProfileElement> segments; // segments and groups
 	private ArrayList<ValueSetBinding> valueSetBinding;
 	private ArrayList<SingleCodeBinding> singleCodeBinding;
-
+	private ArrayList<Context> coConstraints;
+	private ProfileSlicing profileSlicing;
+	
 	public ProfileModel() {
 	    super();
 	    valueSetBinding = new ArrayList<ValueSetBinding>();
 	    singleCodeBinding = new ArrayList<SingleCodeBinding>();
+	    coConstraints = new ArrayList<Context>();
 	  }
 	
 	public ProfileElement getMessage() {
@@ -83,7 +95,91 @@ public class ProfileModel {
 	public void setSingleCodeBinding(ArrayList<SingleCodeBinding> singleCodeBinding) {
 		this.singleCodeBinding = singleCodeBinding;
 	}
+
+	public ArrayList<Context> getCoConstraints() {
+		return coConstraints;
+	}
+
+	public void setCoConstraints(ArrayList<Context> coConstraints) {
+		this.coConstraints = coConstraints;
+	}
 	
+	
+	
+	public ProfileSlicing getProfileSlicing() {
+		return profileSlicing;
+	}
+
+	public void setProfileSlicing(ProfileSlicing profileSlicing) {
+		this.profileSlicing = profileSlicing;
+	}
+
+	public List<ValueSetBinding> findValueSetBindingsFromCoConstraints() {
+		List<ValueSetBinding> list = new ArrayList<ValueSetBinding>();
+
+		for (Context c: this.coConstraints) {
+			for(Segment s: c.getSegments()) {
+				for(ConditionalTable ctable : s.getConditionalTables()) {
+					for(CoConstraint cc : ctable.getCoConstraints()) {
+						for(CellsType sel : cc.getSelectors()) {
+							if (sel instanceof ValueSet) {
+								list.addAll((((ValueSet) sel).getValueSetBindings()));								
+							}
+						}
+						for(CellsType con : cc.getConstraints()) {
+							if (con instanceof ValueSet) {
+								list.addAll((((ValueSet) con).getValueSetBindings()));								
+							}
+						}
+					}
+					for(CoConstraintGroup ccg : ctable.getCoConstraintGroups()) {
+						for(CoConstraint cc : ccg.getCoConstraints()) {
+							for(CellsType sel : cc.getSelectors()) {
+								if (sel instanceof ValueSet) {
+									list.addAll((((ValueSet) sel).getValueSetBindings()));								
+								}
+							}
+							for(CellsType con : cc.getConstraints()) {
+								if (con instanceof ValueSet) {
+									list.addAll((((ValueSet) con).getValueSetBindings()));								
+								}
+							}
+						}
+					}
+				}
+				for(SimpleTable stable : s.getSimpleTables()) {
+					for(CoConstraint cc : stable.getCoConstraints()) {
+						for(CellsType sel : cc.getSelectors()) {
+							if (sel instanceof ValueSet) {
+								list.addAll((((ValueSet) sel).getValueSetBindings()));								
+							}
+						}
+						for(CellsType con : cc.getConstraints()) {
+							if (con instanceof ValueSet) {
+								list.addAll((((ValueSet) con).getValueSetBindings()));								
+							}
+						}
+					}
+					for(CoConstraintGroup ccg : stable.getCoConstraintGroups()) {
+						for(CoConstraint cc : ccg.getCoConstraints()) {
+							for(CellsType sel : cc.getSelectors()) {
+								if (sel instanceof ValueSet) {
+									list.addAll((((ValueSet) sel).getValueSetBindings()));								
+								}
+							}
+							for(CellsType con : cc.getConstraints()) {
+								if (con instanceof ValueSet) {
+									list.addAll((((ValueSet) con).getValueSetBindings()));								
+								}
+							}
+						}
+					}
+				}
+				
+			}
+		}
+		return list;
+	}
 	
 	
 	

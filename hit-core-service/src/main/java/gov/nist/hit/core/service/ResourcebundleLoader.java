@@ -53,6 +53,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ResourceUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -2355,7 +2356,7 @@ public abstract class ResourcebundleLoader {
 	}
 
 	public Resource getResource(String pattern, String rootPath) throws IOException {
-		if (rootPath.isEmpty())
+		if (rootPath.isEmpty())			
 			return ResourcebundleHelper.getResource(pattern);
 		else
 			return ResourcebundleHelper.getResourceFile(rootPath + pattern);
