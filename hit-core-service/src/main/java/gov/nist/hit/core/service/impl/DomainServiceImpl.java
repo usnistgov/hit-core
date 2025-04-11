@@ -278,5 +278,22 @@ public class DomainServiceImpl implements DomainService {
 	public List<Domain> findShortAll() {
 		return domainRepo.findAll();
 	}
+	
+	
+	//update all custom url to the default (domain id)
+	public List<Domain> updateAllCustumUrlstoDefault(){
+		List<Domain> domainsChanged = new ArrayList<Domain>();
+		List<Domain> domains = this.findShortAll();
+		for (Domain d : domains) {
+			if (!d.getOptions().containsKey("DOMAIN_CUSTOM_URL") || d.getOptions().get("DOMAIN_CUSTOM_URL") == null || d.getOptions().get("DOMAIN_CUSTOM_URL").isEmpty()){
+				d.getOptions().put("DOMAIN_CUSTOM_URL", d.getDomain());
+				this.save(d);
+				domainsChanged.add(d);
+			}
+		}
+		return domainsChanged;
+	}
+	
+	
 
 }

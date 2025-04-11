@@ -368,7 +368,6 @@ public  class DomainController {
 			i++;
 			newKey = key+"_"+i;			
 			found = domainService.findOneByKey(newKey);
-//			throw new DomainException("A Tool scope with key=" + key + " already exists");
 		}
 
 		Domain result = new Domain();
@@ -378,6 +377,8 @@ public  class DomainController {
 		result.setName(name);
 		result.setHomeTitle(domain.getHomeTitle());
 		result.setDisabled(false);
+		//set default custom url
+		result.getOptions().put("DOMAIN_CUSTOM_URL", result.getDomain());
 		hasScopeAccess(result.getScope(), authentication);
 		domainService.save(result);
 		return result;
@@ -489,15 +490,7 @@ public  class DomainController {
 	@PreAuthorize("hasRole('admin')")
 	@PostMapping(value = "/updateCustumUrls", produces = "application/json")
 	public List<Domain>  updateCustumUrls(HttpServletRequest request,Authentication authentication) throws DomainException {
-		List<Domain> domainsChanged = new ArrayList<Domain>();
-		List<Domain> domains = domainService.findShortAll();
-		for (Domain d : domains) {
-			if (!d.getOptions().containsKey("DOMAIN_CUSTOM_URL") || d.getOptions().get("DOMAIN_CUSTOM_URL") == null || d.getOptions().get("DOMAIN_CUSTOM_URL").isEmpty()){
-				d.getOptions().put("DOMAIN_CUSTOM_URL", d.getDomain());
-				domainService.save(d);
-				domainsChanged.add(d);
-			}
-		}
+		List<Domain> domainsChanged = domainService.updateAllCustumUrlstoDefault();
 		return domainsChanged;
 	}
 

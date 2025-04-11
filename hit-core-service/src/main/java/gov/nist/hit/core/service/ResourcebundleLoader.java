@@ -680,7 +680,8 @@ public abstract class ResourcebundleLoader {
 		if (resource != null) {
 			entry.setMessageContentInfo(FileUtil.getContent(resource));
 		}
-
+		//set domain custom url to the default of the domain id
+		entry.getOptions().put("DOMAIN_CUSTOM_URL", entry.getDomain());
 		return entry;
 
 	}
@@ -1028,12 +1029,19 @@ public abstract class ResourcebundleLoader {
 					while (it.hasNext()) {
 						JsonNode node = it.next();
 						gov.nist.hit.core.domain.Document document = new gov.nist.hit.core.domain.Document(domain);
-						if (node.findValue("title") == null || node.findValue("link") == null
+						if (node.findValue("title") == null || (node.findValue("name")== null && node.findValue("link")== null) 
 								|| node.findValue("date") == null) {
-							throw new IllegalArgumentException("Download is missing one of those: title, link, date");
+							throw new IllegalArgumentException("Download is missing one of those: title, link or name, date");
 						}
 						document.setTitle(node.findValue("title").textValue());
-						document.setPath(node.findValue("link").textValue());
+						if (node.findValue("name") != null) {
+							String name = node.findValue("name").textValue();		
+							document.setName(name); 
+							document.setPath(getDomainBasedPath(TOOL_DOWNLOADS_PATTERN, TOOL_DOCUMENT_DOMAIN) + name);
+						} else if (node.findValue("link") != null) {
+							document.setPath(node.findValue("link").textValue());
+						}
+						
 						document.setDate(node.findValue("date").textValue());
 						document.setType(DocumentType.DELIVERABLE);
 						document.setScope(scope);

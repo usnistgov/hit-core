@@ -81,7 +81,6 @@ public class Domain extends TestResource implements Serializable {
 	@Column(name = "OPTION_VALUE", length = 100)
 	private Map<String, String> options = new HashMap<String, String>();
 
-	private String domainurl;
 
 	
 	public Domain() {
