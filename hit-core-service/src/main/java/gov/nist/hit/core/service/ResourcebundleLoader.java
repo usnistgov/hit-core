@@ -1030,20 +1030,34 @@ public abstract class ResourcebundleLoader {
 						JsonNode node = it.next();
 						gov.nist.hit.core.domain.Document document = new gov.nist.hit.core.domain.Document(domain);
 						if (node.findValue("title") == null || (node.findValue("name")== null && node.findValue("link")== null) 
-								|| node.findValue("date") == null) {
-							throw new IllegalArgumentException("Download is missing one of those: title, link or name, date");
+								) {
+							throw new IllegalArgumentException("Download is missing one of those: title, link or name");
 						}
 						document.setTitle(node.findValue("title").textValue());
 						if (node.findValue("name") != null) {
 							String name = node.findValue("name").textValue();		
-							document.setName(name); 
-							document.setPath(getDomainBasedPath(TOOL_DOWNLOADS_PATTERN, TOOL_DOCUMENT_DOMAIN) + name);
+							if (node.findValue("path") != null) {
+								String path = node.findValue("path").textValue();
+								document.setName(name); 
+								document.setPath(getDomainBasedPath(TOOL_DOWNLOADS_PATTERN, TOOL_DOCUMENT_DOMAIN) + path);
+							}else {
+								document.setName(name); 
+								document.setPath(getDomainBasedPath(TOOL_DOWNLOADS_PATTERN, TOOL_DOCUMENT_DOMAIN) + name);
+							}
+							
 						} else if (node.findValue("link") != null) {
 							document.setPath(node.findValue("link").textValue());
 						}
-						
-						document.setDate(node.findValue("date").textValue());
-						document.setType(DocumentType.DELIVERABLE);
+						if (node.findValue("date") != null) {
+							document.setDate(node.findValue("date").textValue());
+						}
+						if (node.findValue("type") != null && node.findValue("type").textValue().equalsIgnoreCase("docker")) {
+							document.setType(DocumentType.DOCKER);
+
+						}else {
+							document.setType(DocumentType.DELIVERABLE);
+
+						}
 						document.setScope(scope);
 						document.setPreloaded(preloaded);
 						document.setDomain(domain);

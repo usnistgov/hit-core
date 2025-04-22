@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,10 +32,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,15 +50,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 import gov.nist.auth.hit.core.domain.Account;
 import gov.nist.hit.core.domain.Document;
 import gov.nist.hit.core.domain.DocumentType;
 import gov.nist.hit.core.domain.TestCaseDocumentation;
 import gov.nist.hit.core.domain.TestScope;
 import gov.nist.hit.core.domain.TestingStage;
-import gov.nist.hit.core.domain.util.Views;
 import gov.nist.hit.core.repo.DocumentRepository;
 import gov.nist.hit.core.service.AccountService;
 import gov.nist.hit.core.service.AppInfoService;
@@ -294,6 +295,24 @@ public class DocumentationController {
 		logger.info("Publishing user document with id=" + id);
 		return publishDocument(id, auth);
 	}
+		
+	@RequestMapping(value = "/documents/{id}/content", method = RequestMethod.GET, produces = "application/json")
+	public String getDocumentContent(HttpServletResponse response, @PathVariable Long id, HttpServletRequest request,
+			Authentication auth) throws Exception {
+		Document doc = documentRepository.findOne(id);
+		if (doc != null) {
+			if (doc.getPath() != null) {
+				InputStream input = this.getContent(doc.getPath());
+				Parser parser = Parser.builder().build();
+				Node document = parser.parseReader(new InputStreamReader(input, StandardCharsets.UTF_8));
+				HtmlRenderer renderer = HtmlRenderer.builder().build();
+				return renderer.render(document).toString();
+			}
+		}
+		
+		
+		return "";
+	}
 
 	@RequestMapping(value = "/downloadDocument", method = RequestMethod.POST)
 	public void downloadDocumentByPath(
@@ -523,7 +542,7 @@ public class DocumentationController {
 	}
 
 	private String getContentType(String fileName) {
-		String contentType = "application/octet-stream";
+		String contentType  = "application/octet-stream";
 		String fileExtension = getExtension(fileName);
 		if (fileExtension != null) {
 			fileExtension = fileExtension.toLowerCase();
@@ -548,7 +567,10 @@ public class DocumentationController {
 			contentType = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
 		} else if (fileExtension.equals("ppt")) {
 			contentType = "application/vnd.ms-powerpoint";
-		}
+		} else if (fileExtension.equals("md")) {
+			contentType = "text/markdown";
+		}		
+		
 		return contentType;
 	}
 
