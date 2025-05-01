@@ -16,7 +16,7 @@
 			<groupId>gov.nist.hit.core</groupId>
 			<artifactId>hit-core-auth-repo</artifactId>
 			<version>${parent.version}</version>
-		</dependency>
+		</dependency> 
 
 		<dependency>
 			<groupId>gov.nist.hit.core</groupId>

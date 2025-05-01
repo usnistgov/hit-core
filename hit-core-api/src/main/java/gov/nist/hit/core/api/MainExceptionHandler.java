@@ -12,8 +12,8 @@
 
 package gov.nist.hit.core.api;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.expression.spel.SpelEvaluationException;
@@ -49,7 +49,7 @@ import io.swagger.annotations.Api;
 @Api(hidden = true)
 @ControllerAdvice
 public class MainExceptionHandler {
-	static final Logger logger = LoggerFactory.getLogger(MainExceptionHandler.class);
+	static final public Logger logger = LogManager.getLogger(MainExceptionHandler.class);
 
 	public MainExceptionHandler() {
 		super();

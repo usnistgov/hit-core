@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,13 +29,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -78,7 +78,7 @@ import io.swagger.annotations.ApiParam;
 @RestController
 public class DocumentationController {
 
-	static final Logger logger = LoggerFactory.getLogger(DocumentationController.class);
+	static final  Logger logger = LogManager.getLogger(DocumentationController.class);
 
 	@Autowired
 	private TestCaseDocumentationService testCaseDocumentationService;
@@ -298,20 +298,20 @@ public class DocumentationController {
 		
 	@RequestMapping(value = "/documents/{id}/content", method = RequestMethod.GET, produces = "application/json")
 	public String getDocumentContent(HttpServletResponse response, @PathVariable Long id, HttpServletRequest request,
-			Authentication auth) throws Exception {
+			Authentication auth)  {
 		Document doc = documentRepository.findOne(id);
 		if (doc != null) {
 			if (doc.getPath() != null) {
-				InputStream input = this.getContent(doc.getPath());
+				String docString = getContentAsString(doc.getPath());
 				Parser parser = Parser.builder().build();
-				Node document = parser.parseReader(new InputStreamReader(input, StandardCharsets.UTF_8));
+				Node document = parser.parse(docString);
 				HtmlRenderer renderer = HtmlRenderer.builder().build();
 				return renderer.render(document).toString();
 			}
 		}
 		
 		
-		return "";
+		return "d";
 	}
 
 	@RequestMapping(value = "/downloadDocument", method = RequestMethod.POST)
@@ -351,8 +351,8 @@ public class DocumentationController {
 					streamer.stream(response.getOutputStream(), content);
 				}
 			}
-		} catch (IOException e) {
-			logger.debug("Failed to download the test packages ");
+		} catch (IOException e) {			
+			logger.debug("Failed to download the test packages", e);
 			throw new DownloadDocumentException("Cannot download the document");
 		}
 	}
@@ -369,10 +369,10 @@ public class DocumentationController {
 			response.setHeader("Content-disposition", "attachment;filename=" + name + ".zip");
 			streamer.stream(response.getOutputStream(), stream);
 		} catch (IOException e) {
-			logger.debug("Failed to download resource documentation of  " + type);
+			logger.debug("Failed to download resource documentation of  " + type,e);
 			throw new DownloadDocumentException("Failed to download resource documentation of  " + type);
 		} catch (Exception e) {
-			logger.debug("Failed to download the test packages ");
+			logger.debug("Failed to download the test packages ",e);
 			throw new DownloadDocumentException("Failed to download resource documentation of  " + type);
 		}
 	}
@@ -385,7 +385,7 @@ public class DocumentationController {
 			Document d = documentRepository.findOneByName(name);
 			if (d != null) {
 				downloadDocumentByPath(d.getPath(), request, response);
-			} else {
+			} else { 
 				throw new DownloadDocumentException("Unknown document");
 			}
 		}
@@ -401,10 +401,10 @@ public class DocumentationController {
 			response.setHeader("Content-disposition", "attachment;filename=TestPackages.zip");
 			streamer.stream(response.getOutputStream(), stream);
 		} catch (IOException e) {
-			logger.debug("Failed to download the test packages ");
+			logger.debug("Failed to download the test packages",e);
 			throw new DownloadDocumentException("Cannot download the test packages");
 		} catch (Exception e) {
-			logger.debug("Failed to download the test packages ");
+			logger.debug("Failed to download the test packages",e);
 			throw new DownloadDocumentException("Cannot download the test packages");
 		}
 	}
@@ -425,10 +425,10 @@ public class DocumentationController {
 			response.setHeader("Content-disposition", "attachment;filename=" + "ExampleMessages.zip");
 			streamer.stream(response.getOutputStream(), stream);
 		} catch (IOException e) {
-			logger.debug("Failed to download the example messages ");
+			logger.debug("Failed to download the example messages ",e);
 			throw new DownloadDocumentException("Cannot download the example messages");
 		} catch (Exception e) {
-			logger.debug("Failed to download the example messages ");
+			logger.debug("Failed to download the example messages ",e);
 			throw new DownloadDocumentException("Cannot download the example messages");
 		}
 	}
@@ -539,6 +539,19 @@ public class DocumentationController {
 			content = DocumentationController.class.getResourceAsStream(path);
 		}
 		return content;
+	}
+	
+	private String getContentAsString(String path) {
+		try (InputStream content = getContent(path)) {
+	        if (content == null) {
+	            System.err.println("Resource not found: " + path);
+	            return null;
+	        }
+	        return new String(IOUtils.toByteArray(content), StandardCharsets.UTF_8);
+	    } catch (IOException e) {
+	        System.err.println("Error reading document: " + e.getMessage());
+	        return null;
+	    }
 	}
 
 	private String getContentType(String fileName) {

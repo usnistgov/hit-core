@@ -21,6 +21,18 @@ public class ValueSetDefinition implements java.io.Serializable {
 	protected String noCodeDisplayText;
 	protected String url;
 	protected String apiKey;
+	protected boolean isExternal;
+
+	
+	public ValueSetDefinition() {
+	}
+
+	
+	
+	
+	public ValueSetDefinition(boolean isExternal) {
+		this.isExternal = isExternal;
+	}
 
 	public Set<ValueSetElement> getValueSetElements() {
 		return this.valueSetElements;
@@ -180,6 +192,12 @@ public class ValueSetDefinition implements java.io.Serializable {
 
 	public void setApiKey(String apiKey) {
 		this.apiKey = apiKey;
+	}
+	public boolean isExternal() {
+		return isExternal;
+	}
+	public void setExternal(boolean isExternal) {
+		this.isExternal = isExternal;
 	}
 
 	

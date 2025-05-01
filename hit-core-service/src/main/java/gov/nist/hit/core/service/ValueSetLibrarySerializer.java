@@ -29,6 +29,7 @@ import nu.xom.Attribute;
 
 public abstract class ValueSetLibrarySerializer {
 
+	//not called?
   public String toXml(ValueSetLibrary valueSetLibrary) {
     nu.xom.Element elmTableLibrary = new nu.xom.Element("ValueSetLibrary");
     elmTableLibrary.setNamespaceURI("http://www.nist.gov/healthcare/data");
@@ -58,7 +59,8 @@ public abstract class ValueSetLibrarySerializer {
       elmValueSetDefinitions.addAttribute(new Attribute("Order", vDefs.getPosition() + ""));
       elmTableLibrary.appendChild(elmValueSetDefinitions);
 
-      for (ValueSetDefinition t : vDefs.getValueSetDefinitions()) {
+      //local
+      for (ValueSetDefinition t : vDefs.getValueSetDefinitions(false)) {
         nu.xom.Element elmTableDefinition = new nu.xom.Element("ValueSetDefinition");
         elmValueSetDefinitions.appendChild(elmTableDefinition);
         elmTableDefinition.addAttribute(new Attribute("BindingIdentifier", (t
@@ -98,17 +100,10 @@ public abstract class ValueSetLibrarySerializer {
             elmTableDefinition.appendChild(elmTableElement);
           }
         }
-
       }
-    }
-    
-    //External ValueSets
-    for (ExternalValueSetDefinitions vDefs : valueSetLibrary.getExternalValueSetDefinitions()) {
-        nu.xom.Element elmValueSetDefinitions = new nu.xom.Element("ExternalValueSetDefinitions");     
-        elmTableLibrary.appendChild(elmValueSetDefinitions);
-
-        for (ValueSetDefinition t : vDefs.getValueSetDefinitions()) {
-          nu.xom.Element elmTableDefinition = new nu.xom.Element("ValueSetDefinition");
+      //external 
+      for (ValueSetDefinition t : vDefs.getValueSetDefinitions(true)) {
+    	  nu.xom.Element elmTableDefinition = new nu.xom.Element("ValueSetDefinition");
           elmValueSetDefinitions.appendChild(elmTableDefinition);
           elmTableDefinition.addAttribute(new Attribute("BindingIdentifier", (t
               .getBindingIdentifier() == null) ? "" : t.getBindingIdentifier()));
@@ -121,9 +116,44 @@ public abstract class ValueSetLibrarySerializer {
           elmTableDefinition.addAttribute(new Attribute("Stability", (t.getStability() == null) ? ""
                   : t.getStability().value()));
           elmTableDefinition.addAttribute(new Attribute("Extensibility",
-              (t.getExtensibility() == null) ? "" : t.getExtensibility().value()));        
+              (t.getExtensibility() == null) ? "" : t.getExtensibility().value()));    
+          elmTableDefinition.addAttribute(new Attribute("ContentDefinition", (t
+                  .getContentDefinition() == null) ? "" : t.getContentDefinition().value()));
+          elmTableDefinition
+          .addAttribute(new Attribute("Oid", (t.getOid() == null) ? "" : t.getOid()));
+          elmTableDefinition.addAttribute(new Attribute("Version", (t.getVersion() == null) ? "" : ""
+                  + t.getVersion()));                
         }
-      }
+    }
+    
+    //External ValueSets deprecated
+//    for (ExternalValueSetDefinitions vDefs : valueSetLibrary.getExternalValueSetDefinitions()) {
+//        nu.xom.Element elmValueSetDefinitions = new nu.xom.Element("ExternalValueSetDefinitions");     
+//        elmTableLibrary.appendChild(elmValueSetDefinitions);
+//
+//        for (ValueSetDefinition t : vDefs.getValueSetDefinitions()) {
+//          nu.xom.Element elmTableDefinition = new nu.xom.Element("ValueSetDefinition");
+//          elmValueSetDefinitions.appendChild(elmTableDefinition);
+//          elmTableDefinition.addAttribute(new Attribute("BindingIdentifier", (t
+//              .getBindingIdentifier() == null) ? "" : t.getBindingIdentifier()));
+//          elmTableDefinition.addAttribute(new Attribute("Name", (t.getName() == null) ? "" : t
+//              .getName()));     
+//          elmTableDefinition
+//          .addAttribute(new Attribute("URL", (t.getUrl() == null) ? "" : t.getUrl()));
+//          elmTableDefinition.addAttribute(new Attribute("Description",
+//              (t.getDescription() == null) ? "" : t.getDescription()));          
+//          elmTableDefinition.addAttribute(new Attribute("Stability", (t.getStability() == null) ? ""
+//                  : t.getStability().value()));
+//          elmTableDefinition.addAttribute(new Attribute("Extensibility",
+//              (t.getExtensibility() == null) ? "" : t.getExtensibility().value()));    
+//          elmTableDefinition.addAttribute(new Attribute("ContentDefinition", (t
+//                  .getContentDefinition() == null) ? "" : t.getContentDefinition().value()));
+//          elmTableDefinition
+//          .addAttribute(new Attribute("Oid", (t.getOid() == null) ? "" : t.getOid()));
+//          elmTableDefinition.addAttribute(new Attribute("Version", (t.getVersion() == null) ? "" : ""
+//                  + t.getVersion()));
+//        }
+//      }
     
     nu.xom.Document doc = new nu.xom.Document(elmTableLibrary);
 
@@ -171,10 +201,11 @@ public abstract class ValueSetLibrarySerializer {
             && !"".equals(valueSetDefinitionsElement.getAttribute("Order")) ? Integer
             .parseInt(valueSetDefinitionsElement.getAttribute("Order")) : 1);
         valueSetLibrary.getValueSetDefinitions().add(valueSetDefinitions);
+        
         NodeList nodes = valueSetDefinitionsElement.getElementsByTagName("ValueSetDefinition");
         for (int i = 0; i < nodes.getLength(); i++) {
           Element elmTable = (Element) nodes.item(i);
-          ValueSetDefinition tableObj = new ValueSetDefinition();
+          ValueSetDefinition tableObj = new ValueSetDefinition(false);
           tableObj.setBindingIdentifier(elmTable.getAttribute("BindingIdentifier"));
           tableObj.setName(elmTable.getAttribute("Name"));
 
@@ -230,10 +261,53 @@ public abstract class ValueSetLibrarySerializer {
 
           valueSetDefinitions.addValueSet(tableObj);
         }
+        
+        //ExternalValueSetDefinition 
+        NodeList externalValueSetDefinitionNodes = valueSetDefinitionsElement.getElementsByTagName("ExternalValueSetDefinition");
+        for (int i = 0; i < externalValueSetDefinitionNodes.getLength(); i++) {
+          Element elmTable = (Element) externalValueSetDefinitionNodes.item(i);
+          ValueSetDefinition externalVSD = new ValueSetDefinition(true);
+          externalVSD.setBindingIdentifier(elmTable.getAttribute("BindingIdentifier"));
+          externalVSD.setName(elmTable.getAttribute("Name"));
+
+          if (StringUtils.isNotEmpty(elmTable.getAttribute("NoCodeDisplayText"))) {
+        	  externalVSD.setNoCodeDisplayText(elmTable.getAttribute("NoCodeDisplayText"));
+          }
+
+          if (StringUtils.isNotEmpty(elmTable.getAttribute("Description"))) {
+        	  externalVSD.setDescription(elmTable.getAttribute("Description"));
+          }
+
+          if (StringUtils.isNotEmpty(elmTable.getAttribute("URL"))) {
+        	  externalVSD.setUrl(elmTable.getAttribute("URL"));
+          }
+          if (StringUtils.isNotEmpty(elmTable.getAttribute("Extensibility"))) {
+        	  externalVSD.setExtensibility(ExtensibilityType.fromValue(elmTable
+                .getAttribute("Extensibility")));
+          }
+          if (StringUtils.isNotEmpty(elmTable.getAttribute("Version"))) {
+        	  externalVSD.setVersion(elmTable.getAttribute("Version"));
+          }
+
+          if (StringUtils.isNotEmpty(elmTable.getAttribute("Stability"))) {
+        	  externalVSD.setStability(StabilityType.fromValue(elmTable.getAttribute("Stability")));
+          }
+          if (StringUtils.isNotEmpty(elmTable.getAttribute("Oid"))) {
+        	  externalVSD.setOid(elmTable.getAttribute("Oid"));
+            }
+          if (StringUtils.isNotEmpty(elmTable.getAttribute("ContentDefinition"))) {
+        	  externalVSD.setContentDefinition(ContentDefinitionType.fromValue(elmTable
+                  .getAttribute("ContentDefinition")));
+            }
+
+          valueSetDefinitions.addValueSet(externalVSD);
+        }
+        
+        
       }
     }
     
-    //External ValueSets
+    //External ValueSets, old model, kept for backward compatibility (used until v1.7.0 validation)
     NodeList externalValueSetDefinitionsElements =
             elmTableLibrary.getElementsByTagName("ExternalValueSetDefinitions");
 
@@ -242,10 +316,11 @@ public abstract class ValueSetLibrarySerializer {
             Element externalValueSetDefinitionsElement = (Element) externalValueSetDefinitionsElements.item(k);
             ExternalValueSetDefinitions externalValueSetDefinitions = new ExternalValueSetDefinitions();            
             valueSetLibrary.getExternalValueSetDefinitions().add(externalValueSetDefinitions);
+            
             NodeList nodes = externalValueSetDefinitionsElement.getElementsByTagName("ValueSetDefinition");
             for (int i = 0; i < nodes.getLength(); i++) {
               Element elmTable = (Element) nodes.item(i);
-              ValueSetDefinition tableObj = new ValueSetDefinition();
+              ValueSetDefinition tableObj = new ValueSetDefinition(true);
               tableObj.setBindingIdentifier(elmTable.getAttribute("BindingIdentifier"));
               tableObj.setName(elmTable.getAttribute("Name"));
 
@@ -260,10 +335,9 @@ public abstract class ValueSetLibrarySerializer {
               if (StringUtils.isNotEmpty(elmTable.getAttribute("URL"))) {
                 tableObj.setUrl(elmTable.getAttribute("URL"));
               }
-//
-//              if (StringUtils.isNotEmpty(elmTable.getAttribute("Version"))) {
-//                tableObj.setVersion(elmTable.getAttribute("Version"));
-//              }
+              if (StringUtils.isNotEmpty(elmTable.getAttribute("Version"))) {
+                tableObj.setVersion(elmTable.getAttribute("Version"));
+              }
               if (StringUtils.isNotEmpty(elmTable.getAttribute("Extensibility"))) {
                 tableObj.setExtensibility(ExtensibilityType.fromValue(elmTable
                     .getAttribute("Extensibility")));
@@ -272,7 +346,13 @@ public abstract class ValueSetLibrarySerializer {
               if (StringUtils.isNotEmpty(elmTable.getAttribute("Stability"))) {
                 tableObj.setStability(StabilityType.fromValue(elmTable.getAttribute("Stability")));
               }
-
+              if (StringUtils.isNotEmpty(elmTable.getAttribute("Oid"))) {
+            	  tableObj.setOid(elmTable.getAttribute("Oid"));
+                }
+              if (StringUtils.isNotEmpty(elmTable.getAttribute("ContentDefinition"))) {
+            	  tableObj.setContentDefinition(ContentDefinitionType.fromValue(elmTable
+                      .getAttribute("ContentDefinition")));
+                }
              
 
               externalValueSetDefinitions.addValueSet(tableObj);

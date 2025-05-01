@@ -23,10 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -80,8 +78,9 @@ import gov.nist.hit.core.service.exception.NoUserFoundException;
 })
 public class AccountController {
 
-	static final Logger logger = LoggerFactory.getLogger(AccountController.class);
-	private static Log statLog = LogFactory.getLog("StatLog");
+//	static final Logger logger = LoggerFactory.getLogger(AccountController.class);
+	static final  Logger logger = LogManager.getLogger(AccountController.class);
+//	private static Log statLog = LogFactory.getLog("StatLog");
 
 	public final String DEFAULT_PAGE_SIZE = "0";
 	public final String REGISTRATION_LOG_TEMPLATE = "[Registration] fullname=%s, company=%s, date=%tD";
@@ -500,7 +499,7 @@ public class AccountController {
 		fmt.format(REGISTRATION_LOG_TEMPLATE, registeredAccount.getFullName(), registeredAccount.getEmployer(),
 				registeredAccount.getRegistrationDate());
 		String lo = sbuf.toString();
-		statLog.info(lo);
+//		statLog.info(lo);
 	}
 
 	@PreAuthorize("hasPermission(#id, 'accessAccountBasedResource')")

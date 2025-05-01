@@ -13,8 +13,8 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.PreparedStatementSetter;
@@ -87,7 +87,8 @@ public class CustomJdbcUserDetailsManager extends JdbcDaoImpl implements
 	// ~ Instance fields
 	// ================================================================================================
 
-	Logger logger = LoggerFactory.getLogger(CustomJdbcUserDetailsManager.class);
+	Logger logger = LogManager.getLogger(CustomJdbcUserDetailsManager.class);
+
 
 	private String createUserSql = DEF_CREATE_USER_SQL;
 	private String deleteUserSql = DEF_DELETE_USER_SQL;
@@ -216,17 +217,17 @@ public class CustomJdbcUserDetailsManager extends JdbcDaoImpl implements
 		// If an authentication manager has been set, re-authenticate the user
 		// with the supplied password.
 		if (authenticationManager != null) {
-			logger.debug("Reauthenticating user '" + username
+			logger.info("Reauthenticating user '" + username
 					+ "' for password change request.");
 
 			authenticationManager
 					.authenticate(new UsernamePasswordAuthenticationToken(
 							username, oldPassword));
 		} else {
-			logger.debug("No authentication manager set. Password won't be re-checked.");
+			logger.info("No authentication manager set. Password won't be re-checked.");
 		}
 
-		logger.debug("Changing password for user '" + username + "'");
+		logger.info("Changing password for user '" + username + "'");
 
 		getJdbcTemplate().update(changePasswordSql, newPassword, username);
 
@@ -283,7 +284,7 @@ public class CustomJdbcUserDetailsManager extends JdbcDaoImpl implements
 		Assert.hasText(groupName);
 		Assert.notNull(authorities);
 
-		logger.debug("Creating new group '" + groupName + "' with authorities "
+		logger.info("Creating new group '" + groupName + "' with authorities "
 				+ AuthorityUtils.authorityListToSet(authorities));
 
 		getJdbcTemplate().update(insertGroupSql, groupName);
@@ -306,7 +307,7 @@ public class CustomJdbcUserDetailsManager extends JdbcDaoImpl implements
 
 	@Override
 	public void deleteGroup(String groupName) {
-		logger.debug("Deleting group '" + groupName + "'");
+		logger.info("Deleting group '" + groupName + "'");
 		Assert.hasText(groupName);
 
 		final int id = findGroupId(groupName);
@@ -323,7 +324,7 @@ public class CustomJdbcUserDetailsManager extends JdbcDaoImpl implements
 
 	@Override
 	public void renameGroup(String oldName, String newName) {
-		logger.debug("Changing group name from '" + oldName + "' to '"
+		logger.info("Changing group name from '" + oldName + "' to '"
 				+ newName + "'");
 		Assert.hasText(oldName);
 		Assert.hasText(newName);
@@ -333,7 +334,7 @@ public class CustomJdbcUserDetailsManager extends JdbcDaoImpl implements
 
 	@Override
 	public void addUserToGroup(final String username, final String groupName) {
-		logger.debug("Adding user '" + username + "' to group '" + groupName
+		logger.info("Adding user '" + username + "' to group '" + groupName
 				+ "'");
 		Assert.hasText(username);
 		Assert.hasText(groupName);
@@ -355,7 +356,7 @@ public class CustomJdbcUserDetailsManager extends JdbcDaoImpl implements
 	@Override
 	public void removeUserFromGroup(final String username,
 			final String groupName) {
-		logger.debug("Removing user '" + username + "' to group '" + groupName
+		logger.info("Removing user '" + username + "' to group '" + groupName
 				+ "'");
 		Assert.hasText(username);
 		Assert.hasText(groupName);
@@ -377,7 +378,7 @@ public class CustomJdbcUserDetailsManager extends JdbcDaoImpl implements
 
 	@Override
 	public List<GrantedAuthority> findGroupAuthorities(String groupName) {
-		logger.debug("Loading authorities for group '" + groupName + "'");
+		logger.info("Loading authorities for group '" + groupName + "'");
 		Assert.hasText(groupName);
 
 		return getJdbcTemplate().query(groupAuthoritiesSql,
@@ -395,7 +396,7 @@ public class CustomJdbcUserDetailsManager extends JdbcDaoImpl implements
 	@Override
 	public void removeGroupAuthority(String groupName,
 			final GrantedAuthority authority) {
-		logger.debug("Removing authority '" + authority + "' from group '"
+		logger.info("Removing authority '" + authority + "' from group '"
 				+ groupName + "'");
 		Assert.hasText(groupName);
 		Assert.notNull(authority);
@@ -417,7 +418,7 @@ public class CustomJdbcUserDetailsManager extends JdbcDaoImpl implements
 	@Override
 	public void addGroupAuthority(final String groupName,
 			final GrantedAuthority authority) {
-		logger.debug("Adding authority '" + authority + "' to group '"
+		logger.info("Adding authority '" + authority + "' to group '"
 				+ groupName + "'");
 		Assert.hasText(groupName);
 		Assert.notNull(authority);
@@ -605,7 +606,7 @@ public class CustomJdbcUserDetailsManager extends JdbcDaoImpl implements
 		if (!isUsernameBasedPrimaryKey()) {
 			returnUsername = username;
 		}
-		logger.debug("[SEC] creating user details");
+		logger.info("[SEC] creating user details");
 		return new User(returnUsername, userFromUserQuery.getPassword(),
 				userFromUserQuery.isEnabled(),
 				userFromUserQuery.isAccountNonExpired(),

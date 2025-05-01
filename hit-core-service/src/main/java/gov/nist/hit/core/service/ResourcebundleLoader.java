@@ -43,8 +43,8 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -53,7 +53,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ResourceUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -137,7 +136,8 @@ import gov.nist.hit.core.service.util.ResourcebundleHelper;
 @Transactional(value = "transactionManager")
 public abstract class ResourcebundleLoader {
 
-	static final public Logger logger = LoggerFactory.getLogger(ResourcebundleLoader.class);
+	static final public Logger logger = LogManager.getLogger(ResourcebundleLoader.class);
+	
 	final static public String PROFILE_PATTERN = "Global/Profiles/";
 	final static public String VALUESET_PATTERN = "Global/Tables/";
 	final static public String CONSTRAINT_PATTERN = "Global/Constraints/";
@@ -437,7 +437,7 @@ public abstract class ResourcebundleLoader {
 			prettyPrintTf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 			prettyPrintTf.setOutputProperty(OutputKeys.INDENT, "yes");
 		} catch (TransformerConfigurationException | TransformerFactoryConfigurationError e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 	}
@@ -507,14 +507,14 @@ public abstract class ResourcebundleLoader {
 		envurl = envurl == null ? System.getenv("TOOL_URL") : envurl;
 		if (envurl != null && !envurl.isEmpty()) {
 			logger.info("TOOL_URL is set to " + envurl);
-			System.out.println("TOOL_URL is set to " + envurl);
+//			System.out.println("TOOL_URL is set to " + envurl);
 			this.appInfoService.get().setUrl(envurl);
 		}
 		
 		String isDevTool = System.getProperty("IS_DEV_TOOL");
 		isDevTool = isDevTool == null ? System.getenv("IS_DEV_TOOL") : isDevTool;
-		System.out.println("IS_DEV_TOOL is set to " + isDevTool);
-		logger.info("IS_DEV_TOOL is set to " + isDevTool);
+//		System.out.println("IS_DEV_TOOL is set to " + isDevTool);
+		logger.info("IS_DEV_TOOL is set to :" + isDevTool);
 		if (Boolean.valueOf(isDevTool) == true) {
 			 this.appInfoService.get().setDevTool(true);
 		}else{
@@ -524,11 +524,11 @@ public abstract class ResourcebundleLoader {
 		
 		if(cacheAtStartUp()) {
 			//preload TestPlans at startup
-			System.out.println("Caching CB test plans..");
+			logger.info("Caching CB test plans..");
 			cbTestPlanService.loadAll();
-			System.out.println("Done.\nCaching CF test plans...");
+			logger.info("Caching CF test plans...");
 			cfTestPlanService.loadAll();
-			System.out.println("Done.");
+			logger.info("Caching done.");
 		}
 		
 		
@@ -856,11 +856,10 @@ public abstract class ResourcebundleLoader {
 	private List<gov.nist.hit.core.domain.Document> getValueSetsDocs(String rootPath, TestScope scope,
 			boolean preloaded, String domain) throws IOException {
 		List<gov.nist.hit.core.domain.Document> resourceDocs = new ArrayList<gov.nist.hit.core.domain.Document>();
-		logger.info("loading constraints documents for domain=" + domain);
+		logger.info("loading value set documents for domain=" + domain);
 		JsonNode conf = toJsonObj(getDomainBasedPath(VALUESET_PATTERN, domain) + TABLES_CONF_FILE_PATTERN, rootPath);
 		Set<String> skipped = null;
 		JsonNode ordersObj = null;
-		logger.info("loading value sets...");
 		// value sets
 		skipped = null;
 		if (conf != null) {
@@ -891,7 +890,7 @@ public abstract class ResourcebundleLoader {
 
 	public void loadProfilesDocs(String rootPath, TestScope scope, boolean preloaded, String domain)
 			throws IOException {
-		logger.info("loading profiles documents...");
+		logger.info("loading profiles documents for domain=" + domain);
 		List<gov.nist.hit.core.domain.Document> resourceDocs = getProfilesDocs(rootPath, scope, preloaded, domain);
 		if (!resourceDocs.isEmpty()) {
 			documentRepository.save(resourceDocs);
@@ -900,7 +899,7 @@ public abstract class ResourcebundleLoader {
 
 	public void loadConstraintsDocs(String rootPath, TestScope scope, boolean preloaded, String domain)
 			throws IOException {
-		logger.info("loading constraints documents...");
+		logger.info("loading constraints documents for domain=" + domain);
 		List<gov.nist.hit.core.domain.Document> resourceDocs = getConstraintsDocs(rootPath, scope, preloaded, domain);
 		if (!resourceDocs.isEmpty()) {
 			documentRepository.save(resourceDocs);
@@ -909,7 +908,7 @@ public abstract class ResourcebundleLoader {
 
 	public void loadValuesetsDocs(String rootPath, TestScope scope, boolean preloaded, String domain)
 			throws IOException {
-		logger.info("loading valuesets documents...");
+		logger.info("loading valuesets documents for domain=" + domain);
 		List<gov.nist.hit.core.domain.Document> resourceDocs = getValueSetsDocs(rootPath, scope, preloaded, domain);
 		if (!resourceDocs.isEmpty()) {
 			documentRepository.save(resourceDocs);
@@ -917,9 +916,8 @@ public abstract class ResourcebundleLoader {
 	}
 
 	public void loadKownIssues(String rootPath, TestScope scope, boolean preloaded, String domain) throws IOException {
-		logger.info("loading known issues...");
-		List<gov.nist.hit.core.domain.Document> knownIssues = new ArrayList<gov.nist.hit.core.domain.Document>();
 		logger.info("loading known issues documents for domain=" + domain);
+		List<gov.nist.hit.core.domain.Document> knownIssues = new ArrayList<gov.nist.hit.core.domain.Document>();
 		JsonNode knownIssueObj = toJsonObj(getDomainBasedPath(KNOWNISSUE_PATTERN, domain) + KNOWNISSUE_FILE_PATTERN,
 				rootPath);
 		if (knownIssueObj != null && knownIssueObj.isArray()) {
@@ -1146,7 +1144,7 @@ public abstract class ResourcebundleLoader {
 
 	public void loadIntegrationProfiles(String rootPath, TestScope scope, boolean preloaded, String domain)
 			throws IOException {
-		logger.info("loading integration profiles... of domain=" + domain);
+		logger.info("loading integration profiles of domain=" + domain);
 		List<Resource> resources = getResources(getDomainBasedPath(PROFILE_PATTERN, domain) + "*.xml", rootPath);
 		if (resources != null && !resources.isEmpty()) {
 			for (Resource resource : resources) {
@@ -1171,6 +1169,7 @@ public abstract class ResourcebundleLoader {
 					// cachedRepository.getCachedVocabLibraries().put(vocabLibrary.getSourceId(),
 					// vocabLibrary);
 				} catch (UnsupportedOperationException e) {
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -1178,7 +1177,7 @@ public abstract class ResourcebundleLoader {
 	
 	public void loadValueSetBindinds(String rootPath, TestScope scope, boolean preloaded, String domain)
 			throws IOException {
-		logger.info("loading value set libraries of domain=" + domain);
+		logger.info("loading value set bindinngs of domain=" + domain);
 		List<Resource> resources = getResources(getDomainBasedPath(VALUESETBINDINGS_PATTERN, domain) + "*.xml", rootPath);
 		if (resources != null && !resources.isEmpty()) {
 			for (Resource resource : resources) {
@@ -1188,6 +1187,7 @@ public abstract class ResourcebundleLoader {
 							preloaded);
 					this.valueSetBindingsRepository.save(valuesetbindings);					
 				} catch (UnsupportedOperationException e) {
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -1195,7 +1195,7 @@ public abstract class ResourcebundleLoader {
 	
 	public void loadCoConstraints(String rootPath, TestScope scope, boolean preloaded, String domain)
 			throws IOException {
-		logger.info("loading value set libraries of domain=" + domain);
+		logger.info("loading coconstraints of domain=" + domain);
 		List<Resource> resources = getResources(getDomainBasedPath(COCONSTRAINT_PATTERN, domain) + "*.xml", rootPath);
 		if (resources != null && !resources.isEmpty()) {
 			for (Resource resource : resources) {
@@ -1205,6 +1205,7 @@ public abstract class ResourcebundleLoader {
 							preloaded);
 					this.coConstraintsRepository.save(coConstraints);					
 				} catch (UnsupportedOperationException e) {
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -1212,7 +1213,7 @@ public abstract class ResourcebundleLoader {
 	
 	public void loadSlicings(String rootPath, TestScope scope, boolean preloaded, String domain)
 			throws IOException {
-		logger.info("loading value set libraries of domain=" + domain);
+		logger.info("loading slicings of domain=" + domain);
 		List<Resource> resources = getResources(getDomainBasedPath(SLICINGS_PATTERN, domain) + "*.xml", rootPath);
 		if (resources != null && !resources.isEmpty()) {
 			for (Resource resource : resources) {
@@ -1222,6 +1223,7 @@ public abstract class ResourcebundleLoader {
 							preloaded);
 					this.slicingsRepository.save(slicings);					
 				} catch (UnsupportedOperationException e) {
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -1366,11 +1368,11 @@ public abstract class ResourcebundleLoader {
 			builder = factory.newDocumentBuilder();
 			return builder.parse(new InputSource(new StringReader(xmlSource)));
 		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} catch (SAXException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -1381,7 +1383,7 @@ public abstract class ResourcebundleLoader {
 			prettyPrintTf.transform(new DOMSource(xml), new StreamResult(out));
 			return out.toString();
 		} catch (Exception e) {
-
+			logger.error(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -1395,7 +1397,7 @@ public abstract class ResourcebundleLoader {
 			String json = obm.writeValueAsString(profileModel);
 			return json;
 		} catch (UnsupportedOperationException e) {
-			System.out.println("ohoh");
+			logger.error(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -1409,7 +1411,7 @@ public abstract class ResourcebundleLoader {
 			String json = obm.writeValueAsString(profileModel);
 			return json;
 		} catch (UnsupportedOperationException e) {
-
+			logger.error(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -2227,7 +2229,7 @@ public abstract class ResourcebundleLoader {
 		String uploadsFolderPathFromSystemEnv = System.getProperty("UPLOAD_PATH");
 		uploadsFolderPathFromSystemEnv = uploadsFolderPathFromSystemEnv == null ? System.getenv("UPLOAD_PATH") : uploadsFolderPathFromSystemEnv;	
 		logger.info("UPLOAD_PATH is set to " + uploadsFolderPathFromSystemEnv);
-		System.out.println("UPLOAD_PATH is set to " + uploadsFolderPathFromSystemEnv);
+//		System.out.println("UPLOAD_PATH is set to " + uploadsFolderPathFromSystemEnv);
 		if (uploadsFolderPathFromSystemEnv != null) {
 			appInfo.setUploadsFolderPath(uploadsFolderPathFromSystemEnv);
 		}else {
