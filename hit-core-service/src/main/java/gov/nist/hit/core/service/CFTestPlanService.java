@@ -43,16 +43,21 @@ public interface CFTestPlanService {
 
   List<CFTestPlan> findShortAllByScopeAndDomain(TestScope scope, String domain);
 
-  List<CFTestPlan> findAllByScopeAndUsernameAndDomain(TestScope scope, String authorUsername,
-      String domain);
+  List<CFTestPlan> findAllByScopeAndUsernameAndDomain(TestScope scope, String authorUsername, String domain);
 
   List<CFTestPlan> findAllByScopeAndDomain(TestScope scope, String domain);
+  
+  
 
   List<CFTestPlan> findByIds(Set<Long> ids);
 
   void delete(CFTestPlan testPlan);
   
   public Date getUpdateDate(Long testPlanId);
+  
+  public TestScope getScope(Long testPlanId);
+  
+  public String getDomain(Long testPlanId);
   
   void loadAll();
   
@@ -63,5 +68,16 @@ public interface CFTestPlanService {
   public String findCFFullPathContainingAbstractTestCase(AbstractTestCase node);
 
   public void deleteAllPreloaded();
+
+  public void deleteAllByDomain(String d);
+  
+
+List<CFTestPlan> findShortAllByUsernameAndDomain(String authorUsername, String domain);
+
+List<CFTestPlan> findShortAllByDomain(String domain);
+
+List<CFTestPlan> findAllByUsernameAndDomain(String authorUsername, String domain);
+
+List<CFTestPlan> findAllByDomain(String domain);
 
 }

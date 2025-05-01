@@ -51,21 +51,20 @@ public class TransactionServiceImpl implements TransactionService {
   public List<Transaction> findAllByUser(Long userId) {
     return transactionRepository.findAllByUser(userId);
   }
-  
-  
 
-//  @Override
-//  public Transaction findOneByTestStepIdAndProperties(Map<String, String> criteria,
-//      Long testStepId) {
-//    String sql = toQuery(criteria);
-//    sql = sql + " AND tr.testStepId = " + testStepId;
-//    Query q = entityManager.createNativeQuery(sql, Transaction.class);
-//    Transaction tr = getSingleResult(q);
-//    return tr;
-//  }
+  // @Override
+  // public Transaction findOneByTestStepIdAndProperties(Map<String, String> criteria,
+  //     Long testStepId) {
+  //   String sql = toQuery(criteria);
+  //   sql = sql + " AND tr.testStepId = " + testStepId;
+  //   Query q = entityManager.createNativeQuery(sql, Transaction.class);
+  //   Transaction tr = getSingleResult(q);
+  //   return tr;
+  // }
 
   @Override
   public Transaction findOneByProperties(Map<String, String> criteria) {
+    
 
 			List<Transaction> list = transactionRepository.findAll();
 			if (list != null && list.size()>0) {
@@ -175,7 +174,7 @@ public class TransactionServiceImpl implements TransactionService {
 
   @Override
   public List<Transaction> findAllByProperties(Map<String, String> criteria) {
-	  List<Transaction> result = new ArrayList<Transaction>();
+    List<Transaction> result = new ArrayList<Transaction>();
 	  List<Transaction> list = transactionRepository.findAll();
 		if (list != null && list.size()>0) {
 			for (Transaction t : list) {
@@ -214,6 +213,8 @@ public class TransactionServiceImpl implements TransactionService {
 //    String sql = toQuery(criteria);
 //    Query q = entityManager.createNativeQuery(sql, Transaction.class);
 //    return q.getResultList();
+
+
   }
 
   @Override

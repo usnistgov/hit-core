@@ -167,26 +167,29 @@ public class TransportConfigServiceImpl implements TransportConfigService {
     Query q = entityManagerFactory.createEntityManager().createNativeQuery(sql, TransportConfig.class);
     int j;
     for (j=0;j<params.size();j++) {
-      q.setParameter(j+1, params.get(j));
+        q.setParameter(j+1, params.get(j));
     }
     TransportConfig tr = getSingleResult(q);
     return tr;
-      
+        
+
   }
 
 
 @Override
 public TransportConfig findOneByPropertiesAndProtocol(Map<String, String> criteria,
-    TestingType type, String protocol) {
+  TestingType type, String protocol) {
 
-	System.out.println("prep statetement");
+
 TransportConfig tr2 = toInitiatorTransportConfigWithPreparedStatement(criteria, type, protocol);
  
 //    String sql = toInitiatorQuery(criteria, type, protocol);
 //    Query q =
 //        entityManagerFactory.createEntityManager().createNativeQuery(sql, TransportConfig.class);
 //    TransportConfig tr = getSingleResult(q);
-  return tr2;
+
+return tr2;
+
 }
 
 

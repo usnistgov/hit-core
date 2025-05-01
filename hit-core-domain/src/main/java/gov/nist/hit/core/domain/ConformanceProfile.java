@@ -49,7 +49,7 @@ public class ConformanceProfile extends ValidationArtifact {
 
 	 @NotNull
 	 @JsonIgnore
-	 @Column(nullable = false)
+	 @Column(nullable = false, length = 100)
 	 protected String sourceId;
 
 	@NotNull

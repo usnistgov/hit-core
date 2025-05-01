@@ -48,14 +48,16 @@ public class Account implements Serializable {
   private String registrationPassword;
 
   @JsonIgnore
-
+  @Column(columnDefinition = "BOOLEAN")
   private boolean entityDisabled = false;
 
   @JsonIgnore
 
   // TODO remove it and check it doesn't affect REST API security
+  @Column(columnDefinition = "BOOLEAN")
   private boolean pending = false;
 
+  //not really used
   @Length(max = 100)
   private String accountType;
 
@@ -77,7 +79,7 @@ public class Account implements Serializable {
 
 
   @JsonIgnore
-
+  @Column(columnDefinition = "BOOLEAN")
   private boolean guestAccount = true;
 
 
@@ -88,6 +90,7 @@ public class Account implements Serializable {
   // @OneToMany(mappedBy = "user")
   // private Set<TransportConfig> configs = new HashSet<TransportConfig>();
 
+  @Column(columnDefinition = "BOOLEAN")
   private Boolean signedConfidentialityAgreement = false;
 
   private Long lastTestPlanPersistenceId;

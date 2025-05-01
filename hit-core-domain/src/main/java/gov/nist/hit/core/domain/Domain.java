@@ -39,6 +39,8 @@ public class Domain extends TestResource implements Serializable {
 	@JsonView(Views.Short.class)
 	private String name;
 	private String homeTitle;
+	
+	@Column(columnDefinition = "BOOLEAN")
 	private boolean disabled = false;
 
 	@Column(columnDefinition = "TEXT")
@@ -66,6 +68,8 @@ public class Domain extends TestResource implements Serializable {
 	private String rsbVersion;
 
 	private String igVersion;
+	
+	private String version;
 
 	@JsonView(Views.Short.class)
 	private String owner;
@@ -73,8 +77,8 @@ public class Domain extends TestResource implements Serializable {
 	@JsonView(Views.Short.class)
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "Domain_Options", joinColumns = @JoinColumn(name = "Domain_id"))
-	@MapKeyColumn(name = "OPTION_TYPE")
-	@Column(name = "OPTION_VALUE")
+	@MapKeyColumn(name = "OPTION_TYPE", length = 100)
+	@Column(name = "OPTION_VALUE", length = 100)
 	private Map<String, String> options = new HashMap<String, String>();
 
 
@@ -191,6 +195,15 @@ public class Domain extends TestResource implements Serializable {
 	public void setIgVersion(String igVersion) {
 		this.igVersion = igVersion;
 	}
+	
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
 
 	public String getOwner() {
 		owner = authorUsername;
@@ -241,10 +254,23 @@ public class Domain extends TestResource implements Serializable {
 		this.valueSetCopyright = source.valueSetCopyright;
 		this.rsbVersion = source.rsbVersion;
 		this.igVersion = source.igVersion;
+		this.version = source.version;
 		this.owner = this.authorUsername;
 		this.validationConfiguration = source.validationConfiguration;
 		this.options = source.options;
 	}
+	
+	@Transient
+	public void setHl7v2ValidationVersion(String hl7v2version) {
+		this.getOptions().put(Constant.DEFAULT_HL7V2_VALIDATION_VERSION, hl7v2version);
+		
+	}
+	@Transient
+	public String getHl7v2ValidationVersion() {
+		return this.getOptions().get(Constant.DEFAULT_HL7V2_VALIDATION_VERSION);
+	}
+
+
 
 
 

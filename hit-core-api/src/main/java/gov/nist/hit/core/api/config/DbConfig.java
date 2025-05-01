@@ -19,8 +19,10 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -42,8 +44,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration(value = "DBConfig")
 @EnableJpaRepositories(value = "gov.nist.hit")
-@PropertySource(value = "classpath:app-config.properties")
+@PropertySources({
+@PropertySource(value = { "classpath:app-config.properties" }),
+@PropertySource(value = { "file:${propfile}" }, ignoreResourceNotFound= true)
+})
 @EnableTransactionManagement(proxyTargetClass = true)
+@ComponentScan({"gov.nist.hit", "gov.nist.healthcare"}) 
 public class DbConfig {
 
 	@Autowired
@@ -89,8 +95,19 @@ public class DbConfig {
 		 
 		properties.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
 		properties.put("hibernate.dialect", env.getProperty("jpa.databasePlatform"));
-		properties.put("hibernate.globally_quoted_identifiers",		env.getProperty("hibernate.globally_quoted_identifiers"));
+		properties.put("hibernate.globally_quoted_identifiers",	env.getProperty("hibernate.globally_quoted_identifiers"));
 
+		/*
+		properties.put("hibernate.dialect","org.hibernate.dialect.MySQLDialect");
+		properties.put("hibernate.connection.driver_class","com.mysql.cj.jdbc.Driver");
+		
+		properties.put("hibernate.connection.datasource", "java:comp/env/jdbc/base_tool_jndi");
+//		properties.put("hibernate.connection.provider_class", env.getProperty("hibernate.connection.provider_class"));
+		properties.put("hibernate.c3p0.min_size",env.getProperty("hibernate.c3p0.min_size"));
+		properties.put("hibernate.c3p0.max_size",env.getProperty("hibernate.c3p0.max_size"));
+		properties.put("hibernate.c3p0.acquire_increment",env.getProperty("hibernate.c3p0.acquire_increment"));
+		properties.put("hibernate.c3p0.timeout",env.getProperty("hibernate.c3p0.timeout"));
+		*/
 		return properties;
 	}
 

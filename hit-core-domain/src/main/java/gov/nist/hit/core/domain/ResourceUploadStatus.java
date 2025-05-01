@@ -1,5 +1,8 @@
 package gov.nist.hit.core.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ResourceUploadStatus {
 	private ResourceUploadAction action;
 	private ResourceUploadResult status;
@@ -7,6 +10,7 @@ public class ResourceUploadStatus {
 	private String id;
 	private String message;
 	private String token;
+	private List<String> reports = new ArrayList<String>();
 	
 	
 	public ResourceUploadStatus() {
@@ -65,6 +69,12 @@ public class ResourceUploadStatus {
 	}
 	public void setToken(String token) {
 		this.token = token;
+	}
+	public List<String> getReports() {
+		return reports;
+	}
+	public void setReports(List<String> reports) {
+		this.reports = reports;
 	}
 	
 	

@@ -25,7 +25,9 @@ import gov.nist.hit.core.repo.TestStepRepository;
 import gov.nist.hit.core.repo.TransportFormsRepository;
 import gov.nist.hit.core.repo.VocabularyLibraryRepository;
 import gov.nist.hit.core.service.AccountService;
+import gov.nist.hit.core.service.CFTestPlanService;
 import gov.nist.hit.core.service.DomainService;
+import gov.nist.hit.core.service.TestPlanService;
 import gov.nist.hit.core.service.UserService;
 import gov.nist.hit.core.service.exception.DomainException;
 import gov.nist.hit.core.service.exception.NoUserFoundException;
@@ -77,9 +79,15 @@ public class DomainServiceImpl implements DomainService {
 
 	@Autowired
 	protected VocabularyLibraryRepository vocabularyLibraryRepository;
-
+		
 	@Autowired
 	private AccountService accountService;
+	
+	@Autowired
+	private TestPlanService testPlanService;
+	
+	@Autowired
+	private CFTestPlanService cfTestPlanService;
 
 	@Override
 	public Domain findOneByKey(String key) {
@@ -114,13 +122,22 @@ public class DomainServiceImpl implements DomainService {
 	@Override
 	public void delete(Domain domain) {
 		String d = domain.getDomain();
+		
+		//remove all cb test plan and their artifacts
+//		testPlanService.deleteAllByDomain(d);
 		testPlanRepository.deleteByDomain(d);
+		
+		//remove all cf test plan and their artifacts
+//		cfTestPlanService.deleteAllByDomain(d);
 		cfTestPlanRepository.deleteByDomain(d);
+		
+
 		vocabularyLibraryRepository.deleteByDomain(d);
 		constraintsRepository.deleteByDomain(d);
 		integrationProfileRepository.deleteByDomain(d);
 		transportFormsRepository.deleteByDomain(d);
 		documentRepository.deleteByDomain(d);
+				
 		domainRepo.delete(domain);
 	}
 
@@ -150,9 +167,14 @@ public class DomainServiceImpl implements DomainService {
 	}
 
 	@Override
-	public void deletePreloaded() {
+	public void deletePreloaded() {		
+		List<Domain> domains = domainRepo.findAllPreloaded();	
+		for(Domain d : domains) {
+			d.getOptions().clear();
+			d.getParticipantEmails().clear();
+			this.save(d);
+		}
 		domainRepo.deletePreloaded();
-
 	}
 
 	@Override
@@ -256,5 +278,22 @@ public class DomainServiceImpl implements DomainService {
 	public List<Domain> findShortAll() {
 		return domainRepo.findAll();
 	}
+	
+	
+	//update all custom url to the default (domain id)
+	public List<Domain> updateAllCustumUrlstoDefault(){
+		List<Domain> domainsChanged = new ArrayList<Domain>();
+		List<Domain> domains = this.findShortAll();
+		for (Domain d : domains) {
+			if (!d.getOptions().containsKey("DOMAIN_CUSTOM_URL") || d.getOptions().get("DOMAIN_CUSTOM_URL") == null || d.getOptions().get("DOMAIN_CUSTOM_URL").isEmpty()){
+				d.getOptions().put("DOMAIN_CUSTOM_URL", d.getDomain());
+				this.save(d);
+				domainsChanged.add(d);
+			}
+		}
+		return domainsChanged;
+	}
+	
+	
 
 }

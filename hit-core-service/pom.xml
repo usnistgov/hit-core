@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>hit-core-service</artifactId>
 	<packaging>jar</packaging>
@@ -7,9 +9,8 @@
 	<parent>
 		<groupId>gov.nist.hit.core</groupId>
 		<artifactId>hit-core</artifactId>
-		<version>1.0.29-SNAPSHOT</version>
+		<version>1.1.0</version>
 	</parent>
-
 
 
 	<dependencies>
@@ -28,7 +29,7 @@
 		<dependency>
 			<groupId>xom</groupId>
 			<artifactId>xom</artifactId>
-			<version>1.2.5</version>
+			<version>1.3.7</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.ibm.icu</groupId>
@@ -53,12 +54,12 @@
 			<artifactId>xmlworker</artifactId>
 			<version>5.5.13.1</version>
 		</dependency>
-		
+
 		<dependency>
-    <groupId>com.itextpdf</groupId>
-    <artifactId>html2pdf</artifactId>
-    <version>2.1.5</version>
-</dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>html2pdf</artifactId>
+			<version>2.1.5</version>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -81,21 +82,27 @@
 		</dependency>
 
 
-		<!-- <dependency> <groupId>net.sf.saxon</groupId> <artifactId>saxon-HE</artifactId> 
+		<!-- <dependency> <groupId>net.sf.saxon</groupId>
+		<artifactId>saxon-HE</artifactId> 
 			<version>9.7.0-4</version> </dependency> -->
 
+<!--		<dependency>-->
+<!--			<groupId>net.sf.saxon</groupId>-->
+<!--			<artifactId>saxon</artifactId>-->
+<!--			<version>8.7</version>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>net.sf.saxon</groupId>
-			<artifactId>saxon</artifactId>
-			<version>8.7</version>
+			<artifactId>Saxon-HE</artifactId>
+			<version>9.6.0-7</version>
 		</dependency>
 
 
-		<dependency>
-			<groupId>net.sf.saxon</groupId>
-			<artifactId>saxon-dom</artifactId>
-			<version>8.7</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>net.sf.saxon</groupId>-->
+<!--			<artifactId>saxon-dom</artifactId>-->
+<!--			<version>8.7</version>-->
+<!--		</dependency>-->
 
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -107,11 +114,16 @@
 		<dependency>
 			<groupId>gov.nist.healthcare.hl7.v2.unifiedreport</groupId>
 			<artifactId>report</artifactId>
-			<version>1.0.10-SNAPSHOT</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 		
-	</dependencies>
+		<dependency>
+			<groupId>gov.nist.healthcare.hl7.v2.unifiedreport</groupId>
+			<artifactId>report-filter</artifactId>
+			<version>1.1.0-SNAPSHOT</version>
+		</dependency>
 
+	</dependencies>
 
 
 </project>

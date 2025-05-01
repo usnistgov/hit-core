@@ -26,7 +26,7 @@ public class VocabularyLibrary extends ValidationArtifact implements Serializabl
   @JsonIgnore
 
   @NotNull
-  @Column(unique = true)
+  @Column(unique = true, length = 100)
   protected String sourceId;
 
   @JsonIgnore

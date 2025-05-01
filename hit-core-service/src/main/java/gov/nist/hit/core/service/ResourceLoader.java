@@ -2,28 +2,37 @@ package gov.nist.hit.core.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import gov.nist.hit.core.domain.CFTestStep;
 import gov.nist.hit.core.domain.CFTestStepGroup;
+import gov.nist.hit.core.domain.ExtensibilityType;
 import gov.nist.hit.core.domain.ResourceType;
 import gov.nist.hit.core.domain.ResourceUploadAction;
 import gov.nist.hit.core.domain.ResourceUploadResult;
 import gov.nist.hit.core.domain.ResourceUploadStatus;
+import gov.nist.hit.core.domain.StabilityType;
 import gov.nist.hit.core.domain.TestCase;
 import gov.nist.hit.core.domain.TestCaseGroup;
 import gov.nist.hit.core.domain.TestPlan;
 import gov.nist.hit.core.domain.TestScope;
 import gov.nist.hit.core.domain.TestStep;
 import gov.nist.hit.core.domain.TestingStage;
+import gov.nist.hit.core.domain.ValueSetDefinition;
+import gov.nist.hit.core.domain.VocabularyLibrary;
 import gov.nist.hit.core.repo.TestCaseGroupRepository;
 import gov.nist.hit.core.repo.TestCaseRepository;
 import gov.nist.hit.core.repo.TestStepRepository;
+import gov.nist.hit.core.service.util.FileUtil;
 import gov.nist.hit.core.service.util.ResourcebundleHelper;
 
 public abstract class ResourceLoader extends ResourcebundleLoader {
@@ -627,6 +636,8 @@ public abstract class ResourceLoader extends ResourcebundleLoader {
     this.testCaseGroupRepository.flush();
     this.testPlanRepository.flush();
   }
+  
+  
 
   public abstract List<ResourceUploadStatus> addOrReplaceValueSet(String rootPath, String domain,
       TestScope scope, String username, boolean preloaded) throws IOException;
@@ -636,5 +647,15 @@ public abstract class ResourceLoader extends ResourcebundleLoader {
 
   public abstract List<ResourceUploadStatus> addOrReplaceIntegrationProfile(String rootPath,
       String domain, TestScope scope, String username, boolean preloaded) throws IOException;
+
+  public abstract List<ResourceUploadStatus> addOrReplaceValueSetBindings(String rootPath, String domain, TestScope scope,
+		String authorUsername, boolean preloaded)throws IOException;
+  
+  public abstract List<ResourceUploadStatus> addOrReplaceCoConstraints(String rootPath, String domain, TestScope scope,
+			String authorUsername, boolean preloaded)throws IOException;
+  
+  public abstract List<ResourceUploadStatus> addOrReplaceSlicings(String rootPath, String domain, TestScope scope,
+			String authorUsername, boolean preloaded)throws IOException;
+
 
 }

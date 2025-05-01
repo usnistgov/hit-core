@@ -21,12 +21,13 @@ import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.core.Authentication;
@@ -49,11 +50,15 @@ import gov.nist.hit.core.service.exception.NoUserFoundException;
  * @author fdevaulx
  * 
  */
-@PropertySource(value = { "classpath:app-config.properties" })
+@PropertySources({
+@PropertySource(value = { "classpath:app-config.properties" }),
+@PropertySource(value = { "file:${propfile}" }, ignoreResourceNotFound= true)
+})
 @Service(value = "userService")
 public class UserServiceImpl implements UserService {
 
-	static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+	static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
+
 
 	private final String DEFAULT_AUTHORITY = "user";
 	private final String TESTER_AUTHORITY = "tester";
@@ -180,21 +185,60 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void changeAccountTypeForUser(String newAccountType, String username) throws BadCredentialsException {
-		jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_DELETE_USER_AUTHORITIES_SQL,
+		//clear all user authorities? 
+		int del = jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_DELETE_USER_AUTHORITIES_SQL,
 				username);
-		jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,
+		int ins1 = jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,
 				TESTER_AUTHORITY);
-		jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,
+		int ins2 = jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,
 				DEFAULT_AUTHORITY);
 		if (!TESTER_AUTHORITY.equals(newAccountType)) {
 			jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,
 					newAccountType);
+			//if we are setting an admin then it is also a deployer
 			if (ADMIN_AUTHORITY.equals(newAccountType)) {
 				jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL,
 						username, DEPLOYER_AUTHORITY);
 			}
 		}
 	}
+	
+	@Override
+	public void changeAccountAuthoritiesForUser(List<String> authorities, String username)
+			throws BadCredentialsException {
+		//delete all
+		int del = jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_DELETE_USER_AUTHORITIES_SQL,
+				username);
+		
+		for (String auth : authorities) {
+			switch(auth) {
+			  case DEFAULT_AUTHORITY:
+				  jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,DEFAULT_AUTHORITY);
+			    break;
+			  case TESTER_AUTHORITY:
+				  jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,TESTER_AUTHORITY);
+			    break;
+			  case ADMIN_AUTHORITY:
+				  jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,ADMIN_AUTHORITY);
+			    break;
+			  case DEPLOYER_AUTHORITY:
+				  jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,DEPLOYER_AUTHORITY);
+			    break;
+			  case SUPERVISOR_AUTHORITY:
+				  jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,SUPERVISOR_AUTHORITY);
+			    break;
+			  case PUBLISHER_AUTHORITY:
+				  jdbcUserDetailsManager.getJdbcTemplate().update(jdbcUserDetailsManager.DEF_INSERT_AUTHORITY_SQL, username,PUBLISHER_AUTHORITY);
+			    break;			  
+			}
+
+							
+				
+		}
+		
+		
+	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -265,7 +309,8 @@ public class UserServiceImpl implements UserService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public User retrieveUserByUsername(String username) {
-		return (User) jdbcUserDetailsManager.loadUserByUsername(username);
+			return (User) jdbcUserDetailsManager.loadUserByUsername(username);
+
 	}
 
 	/*
@@ -320,6 +365,24 @@ public class UserServiceImpl implements UserService {
 
 		return false;
 	}
+	
+	//list authorities
+	@Override
+	public List<String> getUserAuthorities(String username) throws NoUserFoundException {
+		User user = this.retrieveUserByUsername(username);
+		if (user == null) {
+			throw new NoUserFoundException("User could not be found");
+		}
+		List<String> res = new ArrayList<String>();
+		Collection<GrantedAuthority> authorit = user.getAuthorities();
+		for (GrantedAuthority auth : authorit) {
+			res.add(auth.getAuthority());
+		}
+		return res;
+	}
+	
+	
+	
 
 	@Override
 	public boolean isAdminByEmail(String email) throws NoUserFoundException {
@@ -328,10 +391,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean isAdmin(String username) throws NoUserFoundException {
+		if (username == null) {
+			return false;
+		}		
 		User user = this.retrieveUserByUsername(username);
-		if (user == null) {
-			throw new NoUserFoundException("User could not be found");
+		if (user == null) {			
+			return false;
+//			throw new NoUserFoundException("User could not be found");
 		}
+		
 		Account account = accountService.findByTheAccountsUsername(username);
 		if (account != null ) {
 			if (account.getEmail() != null && this.adminEmails.contains(account.getEmail())) {
@@ -393,4 +461,5 @@ public class UserServiceImpl implements UserService {
 		return false;
 	}
 
+	
 }

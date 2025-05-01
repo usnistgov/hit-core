@@ -49,10 +49,11 @@ public class ValidationLog extends LogEntry {
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "ErrorCountInSegment",
       joinColumns = @JoinColumn(name = "validation_log_id"))
-  @MapKeyColumn(name = "segment_name")
+  @MapKeyColumn(name = "segment_name", length = 100)
   @Column(name = "number_errors")
   protected Map<String, Integer> errorCountInSegment = new HashMap<String, Integer>();
 
+  @Column(columnDefinition = "BOOLEAN")
   protected boolean validationResult = true;
 
   protected String testingStage;

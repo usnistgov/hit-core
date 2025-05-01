@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,8 +48,8 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping("/message")
 @RestController
 public class MessageController {
-	static final Logger logger = LoggerFactory.getLogger(MessageController.class);
-
+	static final Logger logger = LogManager.getLogger(MessageController.class);
+	
 	@Autowired
 	private AppInfoService appInfoService;
 
@@ -75,10 +75,10 @@ public class MessageController {
 			response.setHeader("Content-disposition", "attachment;filename=" + fileName);
 			FileCopyUtils.copy(io, response.getOutputStream());
 		} catch (RuntimeException e) {
-			logger.debug("Failed to download the message ");
+			logger.debug("Failed to download the message ",e);
 			throw new MessageDownloadException(e);
 		} catch (Exception e) {
-			logger.debug("Failed to download the message ");
+			logger.debug("Failed to download the message ",e);
 			throw new MessageDownloadException(e);
 		}
 		return null;

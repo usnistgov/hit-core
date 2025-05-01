@@ -13,8 +13,8 @@ package gov.nist.hit.core.service;
 
 import java.io.Serializable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
@@ -30,7 +30,7 @@ import gov.nist.auth.hit.core.domain.Account;
 @Component(value = "customPermissionEvaluator")
 public class CustomPermissionEvaluator implements PermissionEvaluator {
 
-  static final Logger logger = LoggerFactory.getLogger(CustomPermissionEvaluator.class);
+	static final Logger logger = LogManager.getLogger(CustomPermissionEvaluator.class);
 
   @Autowired
   AccountService accountService;
@@ -38,7 +38,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
   @Autowired
   AppInfoService appInfoService;
 
-
+  //check if authentication matches the id or is admin
 
   /*
    * (non-Javadoc)

@@ -23,14 +23,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -66,6 +64,7 @@ import gov.nist.hit.core.service.CustomSortHandler;
 import gov.nist.hit.core.service.RandomPasswordGenerator;
 import gov.nist.hit.core.service.TestCaseValidationReportService;
 import gov.nist.hit.core.service.UserService;
+import gov.nist.hit.core.service.exception.NoUserFoundException;
 
 /**
  * @author fdevaulx
@@ -73,11 +72,15 @@ import gov.nist.hit.core.service.UserService;
  * 
  */
 @RestController
-@PropertySource(value = { "classpath:app-config.properties" })
+@PropertySources({
+@PropertySource(value = { "classpath:app-config.properties" }),
+@PropertySource(value = { "file:${propfile}" }, ignoreResourceNotFound= true)
+})
 public class AccountController {
 
-	static final Logger logger = LoggerFactory.getLogger(AccountController.class);
-	private static Log statLog = LogFactory.getLog("StatLog");
+//	static final Logger logger = LoggerFactory.getLogger(AccountController.class);
+	static final  Logger logger = LogManager.getLogger(AccountController.class);
+//	private static Log statLog = LogFactory.getLog("StatLog");
 
 	public final String DEFAULT_PAGE_SIZE = "0";
 	public final String REGISTRATION_LOG_TEMPLATE = "[Registration] fullname=%s, company=%s, date=%tD";
@@ -210,51 +213,54 @@ public class AccountController {
 	// return sap;
 	// }
 
-	@PreAuthorize("hasPermission(#id, 'accessAccountBasedResource')")
-	@RequestMapping(value = "/shortaccounts/page", method = RequestMethod.GET)
-	public Page<ShortAccount> getShortAccountsPage(@RequestParam(required = false, defaultValue = "0") int value,
-			@RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) int size,
-			@RequestParam(required = false) List<String> sort, @RequestParam(required = false) List<String> filter) {
-
-		List<ShortAccount> saccs = new LinkedList<ShortAccount>();
-
-		// adding default sort if necessary
-		sort = sort != null ? sort : new LinkedList<String>();
-		if (sort.isEmpty()) {
-			sort.add("accountType::ASC");
-		}
-
-		Page<Account> pa = accountService.findAll((new AccountSpecsHelper()).getSpecification(filter),
-				new PageRequest(value, size, (new CustomSortHandler(sort)).getSort()));
-
-		if (pa.getContent() != null && !pa.getContent().isEmpty()) {
-			for (Account acc : pa.getContent()) {
-				if (!acc.isEntityDisabled()) {
-
-					ShortAccount sacc = new ShortAccount();
-					sacc.setId(acc.getId());
-					sacc.setEmail(acc.getEmail());
-					sacc.setFullName(acc.getFullName());
-					sacc.setAccountType(acc.getAccountType());
-					sacc.setUsername(acc.getUsername());
-					sacc.setLastLoggedInDate(acc.getLastLoggedInDate());
-					sacc.setRegistrationDate(acc.getRegistrationDate());
-					sacc.setAccountType(acc.getAccountType());
-					sacc.setEmployer(acc.getEmployer());
-					saccs.add(sacc);
-				}
-			}
-		}
-
-		Pageable p = new PageRequest(pa.getNumber(), pa.getSize(), pa.getSort());
-		Page<ShortAccount> sap = new PageImpl<ShortAccount>(saccs, p, pa.getTotalElements());
-
-		return sap;
-	}
+	
+	//not used
+	//nico @ 03/2024
+//	@PreAuthorize("hasPermission(#id, 'accessAccountBasedResource')")
+//	@RequestMapping(value = "/shortaccounts/page", method = RequestMethod.GET)
+//	public Page<ShortAccount> getShortAccountsPage(@RequestParam(required = false, defaultValue = "0") int value,
+//			@RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) int size,
+//			@RequestParam(required = false) List<String> sort, @RequestParam(required = false) List<String> filter) {
+//
+//		List<ShortAccount> saccs = new LinkedList<ShortAccount>();
+//
+//		// adding default sort if necessary
+//		sort = sort != null ? sort : new LinkedList<String>();
+//		if (sort.isEmpty()) {
+//			sort.add("accountType::ASC");
+//		}
+//
+//		Page<Account> pa = accountService.findAll((new AccountSpecsHelper()).getSpecification(filter),
+//				new PageRequest(value, size, (new CustomSortHandler(sort)).getSort()));
+//
+//		if (pa.getContent() != null && !pa.getContent().isEmpty()) {
+//			for (Account acc : pa.getContent()) {
+//				if (!acc.isEntityDisabled()) {
+//
+//					ShortAccount sacc = new ShortAccount();
+//					sacc.setId(acc.getId());
+//					sacc.setEmail(acc.getEmail());
+//					sacc.setFullName(acc.getFullName());
+//					sacc.setAccountType(acc.getAccountType());
+//					sacc.setUsername(acc.getUsername());
+//					sacc.setLastLoggedInDate(acc.getLastLoggedInDate());
+//					sacc.setRegistrationDate(acc.getRegistrationDate());
+//					sacc.setAccountType(acc.getAccountType());
+//					sacc.setEmployer(acc.getEmployer());
+//					saccs.add(sacc);
+//				}
+//			}
+//		}
+//
+//		Pageable p = new PageRequest(pa.getNumber(), pa.getSize(), pa.getSort());
+//		Page<ShortAccount> sap = new PageImpl<ShortAccount>(saccs, p, pa.getTotalElements());
+//
+//		return sap;
+//	}
 
 	@PreAuthorize("hasPermission(#id, 'accessAccountBasedResource')")
 	@RequestMapping(value = "/shortaccounts", method = RequestMethod.GET)
-	public List<ShortAccount> getShortAccounts(@RequestParam(required = false) List<String> filter) {
+	public List<ShortAccount> getShortAccounts(@RequestParam(required = false) List<String> filter) throws NoUserFoundException {
 
 		List<ShortAccount> saccs = new LinkedList<ShortAccount>();
 		filter = new LinkedList<String>();
@@ -292,7 +298,9 @@ public class AccountController {
 					sacc.setPending(acc.isPending());
 					sacc.setEntityDisabled(acc.isEntityDisabled());
 					sacc.setUsername(acc.getUsername());
+					//not really useful as authorities are better indication of a user's capabilities
 					sacc.setAccountType(acc.getAccountType());
+					sacc.setAuthorities(userService.getUserAuthorities(acc.getUsername()));
 					sacc.setLastLoggedInDate(acc.getLastLoggedInDate());
 					sacc.setRegistrationDate(acc.getRegistrationDate());
 					sacc.setEmployer(acc.getEmployer());
@@ -305,6 +313,7 @@ public class AccountController {
 
 	}
 
+	@PreAuthorize("hasPermission(#id, 'accessAccountBasedResource')")
 	@RequestMapping(value = "/accounts/{id}", method = RequestMethod.GET)
 	public Account getAccountById(@PathVariable Long id) {
 
@@ -490,7 +499,7 @@ public class AccountController {
 		fmt.format(REGISTRATION_LOG_TEMPLATE, registeredAccount.getFullName(), registeredAccount.getEmployer(),
 				registeredAccount.getRegistrationDate());
 		String lo = sbuf.toString();
-		statLog.info(lo);
+//		statLog.info(lo);
 	}
 
 	@PreAuthorize("hasPermission(#id, 'accessAccountBasedResource')")
@@ -596,21 +605,16 @@ public class AccountController {
 			return new ResponseMessage(ResponseMessage.Type.danger, "duplicateInformation", null);
 		}
 
+		//set of valid authorities
 		Set<String> authAccT = StringUtils.commaDelimitedListToSet(AUTHORIZED_ACCOUNT_TYPE_UNAUTH_REG);
 
 		if (account.getAccountType() == null || !authAccT.contains(account.getAccountType())) {
 			return new ResponseMessage(ResponseMessage.Type.danger, "accountTypeNotValid", null);
 		}
-
-		if ((account.getEmployer() == null || account.getEmployer().isEmpty())
-				&& appInfoService.get().isEmployerRequired()) {
-			return new ResponseMessage(ResponseMessage.Type.danger, "emptyEmployer", account.getEmployer());
-		}
-
-		// create new user with provider role
+		
+		// create new user with tester role
 		try {
-			userService.createUserWithAuthorities(account.getUsername(), account.getPassword(),
-					"user," + account.getAccountType());
+			userService.createUserWithAuthorities(account.getUsername(), account.getPassword(),"user," + account.getAccountType());
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return new ResponseMessage(ResponseMessage.Type.danger, "errorWithUser", null);
@@ -782,13 +786,15 @@ public class AccountController {
 		if (!onRecordAccount.getUsername().equals(acc.getUsername())) {
 			return new ResponseMessage(ResponseMessage.Type.danger, "invalidUsername", null);
 		}
-
-		userService.changeAccountTypeForUser(acc.getAccountType(), acc.getUsername());
+		
+//		userService.changeAccountTypeForUser(acc.getAccountType(), acc.getUsername());
+		userService.changeAccountAuthoritiesForUser(acc.getAuthorities(), acc.getUsername());
+		//not really used
 		onRecordAccount.setAccountType(accountType);
 		accountService.save(onRecordAccount);
 		// send email notification
-		this.sendChangeAccountTypeNotification(onRecordAccount, acc.getAccountType());
-
+//		this.sendChangeAccountTypeNotification(onRecordAccount, acc.getAccountType());
+		this.sendChangeAuthoritiesNotification(onRecordAccount, acc.getAuthorities());
 		return new ResponseMessage(ResponseMessage.Type.success, "accountTypeChange",
 				onRecordAccount.getId().toString(), true);
 	}
@@ -968,9 +974,7 @@ public class AccountController {
 	@PreAuthorize("hasPermission(#id, 'accessAccountBasedResource')")
 	@RequestMapping(value = "/accounts/{id}", method = RequestMethod.DELETE)
 	public ResponseMessage deleteAccountById(@PathVariable Long id) {
-
 		Account acc = accountService.findOne(id);
-
 		if (acc == null || acc.isEntityDisabled()) {
 			return new ResponseMessage(ResponseMessage.Type.danger, "badAccount", id.toString());
 		} else {
@@ -994,12 +998,26 @@ public class AccountController {
 			}
 		}
 	}
+	
+	@PreAuthorize("hasPermission(#id, 'accessAccountBasedResource')")
+	@RequestMapping(value = "/accounts/{id}/disable", method = RequestMethod.POST)
+	public ResponseMessage disableAccountById(@PathVariable Long id) {
+		Account acc = accountService.findOne(id);
+		if (acc == null || acc.isEntityDisabled()) {
+			return new ResponseMessage(ResponseMessage.Type.danger, "badAccount", id.toString());
+		} else {
+			acc.setEntityDisabled(true);
+			accountService.save(acc);
+			userService.disableUser(acc.getUsername());		
+			return new ResponseMessage(ResponseMessage.Type.success, "disabledAccount", id.toString(), true);
+		}
+	}
 
 	/**
 	 * User wants to log in
 	 */
 	// @PreAuthorize("hasRole('tester') or hasRole('admin')")
-	@RequestMapping(value = "/accounts/login", method = RequestMethod.GET)
+	@RequestMapping(value = "/accounts/login", method = RequestMethod.POST)
 	public ResponseMessage doNothing(HttpSession session) {
 		User u = userService.getCurrentUser();
 		if (u != null) {
@@ -1050,7 +1068,7 @@ public class AccountController {
 			msg.setText("Dear " + acc.getUsername() + ", \n\n"
 					+ "Thank you for submitting an application for use of the " + TOOL_NAME + ".\n\n"
 					+ "Please refer to the to the documents in the Documentation tab, for additional information." + "\n\n" + "Sincerely, " + "\n\n"
-					+ "The " + TOOL_NAME + " Team" + "\n\n" + "P.S: If you need help, contact us at '"
+					+ "The " + TOOL_NAME + " Team" + "\n\n" + "For support, contact us at '"
 					+ appInfoService.get().getAdminEmails().get(0) + "'");
 
 			this.mailSender.send(msg);
@@ -1070,7 +1088,7 @@ public class AccountController {
 			msg.setText("Dear " + acc.getUsername() + ", \n\n" + "You've successfully registered on the " + TOOL_NAME
 					+ " Site." + " \n" + "Your username is: " + acc.getUsername() + " \n\n"
 					+ "Please refer to the to the documents in the Documentation tab, for additional information." + "\n\n" + "Sincerely, " + "\n\n"
-					+ "The " + TOOL_NAME + " Team" + "\n\n" + "P.S: If you need help, contact us at '"
+					+ "The " + TOOL_NAME + " Team" + "\n\n" + "For support, contact us at '"
 					+ appInfoService.get().getAdminEmails().get(0) + "'");
 
 			this.mailSender.send(msg);
@@ -1109,7 +1127,7 @@ public class AccountController {
 			msg.setText("Dear " + acc.getUsername() + ", \n\n"
 					+ "**** If you have not requested a new account, please disregard this email **** \n\n\n"
 					+ "Your account has been approved and you can proceed " + "to login .\n" + "\n\n" + "Sincerely, "
-					+ "\n\n" + "The " + TOOL_NAME + " Team" + "\n\n" + "P.S: If you need help, contact us at '"
+					+ "\n\n" + "The " + TOOL_NAME + " Team" + "\n\n" + "For support, contact us at '"
 					+ appInfoService.get().getAdminEmails().get(0) + "'");
 
 			this.mailSender.send(msg);
@@ -1132,7 +1150,7 @@ public class AccountController {
 					+ "You need to change your password in order to login.\n"
 					+ "Copy and paste the following url to your browser to initiate the password change:\n" + url
 					+ " \n\n" + "Please refer to the user guide for the detailed steps. " + "\n\n" + "Sincerely, "
-					+ "\n\n" + "The " + TOOL_NAME + " Team" + "\n\n" + "P.S: If you need help, contact us at '"
+					+ "\n\n" + "The " + TOOL_NAME + " Team" + "\n\n" + "For support, contact us at '"
 					+ appInfoService.get().getAdminEmails().get(0) + "'");
 
 			this.mailSender.send(msg);
@@ -1153,8 +1171,9 @@ public class AccountController {
 					+ "**** If you have not requested a password reset, please disregard this email **** \n\n\n"
 					+ "You password reset request has been processed.\n"
 					+ "Copy and paste the following url to your browser to initiate the password change:\n" + url
+					+ " \n\n" + "This link is valid for 20 min,"
 					+ " \n\n" + "Sincerely, " + "\n\n" + "The " + TOOL_NAME + " Team" + "\n\n"
-					+ "P.S: If you need help, contact us at '" + appInfoService.get().getAdminEmails().get(0) + "'");
+					+ "For support, contact us at '" + appInfoService.get().getAdminEmails().get(0) + "'");
 
 			this.mailSender.send(msg);
 		} catch (MailException ex) {
@@ -1207,6 +1226,37 @@ public class AccountController {
 			msg.setText("Dear " + acc.getUsername() + ", \n\n" + "Your account type has been successfully changed."
 					+ " \n\n" + "Your are now a " + newAccountType + " \n\n" + "Sincerely,\n\n" + "The " + TOOL_NAME
 					+ " Team");
+
+			this.mailSender.send(msg);
+		} catch (MailException ex) {
+			logger.error(ex.getMessage(), ex);
+		} catch (Exception ex) {
+			logger.error(ex.getMessage(), ex);
+		}
+	}
+	
+	private void sendChangeAuthoritiesNotification(Account acc, List<String> authorities) {
+		try {
+			SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
+			msg.setTo(acc.getEmail());
+			msg.setSubject("" + TOOL_NAME + " Account Privileges Change Notification");
+			String text = "Dear " + acc.getUsername() + ", \n\n" + "Your account type has been successfully changed."
+					+ " \n\n" + "You now have the following privileges: \n\n";
+			if (authorities.contains("tester")) {
+				text += "\"Tester\": Allows to create personal test scopes and upload profiles to execute.\n";
+			}
+			if (authorities.contains("deployer")) {
+				text += "\"Deployer\": Allows to push profiles directly from IGAMT and TCAMT tools.\n";
+			}
+			if (authorities.contains("publisher")) {
+				text += "\"Publisher\": Allows make private tool scopes and tests public.\n";
+			}
+			if (authorities.contains("admin")) {
+				text += "\"Admin\": Gives administration controls.\n\n";
+			}
+			text += "Sincerely,\n\n" + "The " + TOOL_NAME + " Team";
+			msg.setText(text);
+			
 
 			this.mailSender.send(msg);
 		} catch (MailException ex) {

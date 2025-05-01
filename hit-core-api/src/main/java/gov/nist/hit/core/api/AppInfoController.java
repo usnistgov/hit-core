@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,7 +34,10 @@ import gov.nist.hit.core.service.DomainService;
  */
 @RestController
 @RequestMapping("/appInfo")
-@PropertySource(value = { "classpath:app-config.properties" })
+@PropertySources({
+@PropertySource(value = { "classpath:app-config.properties" }),
+@PropertySource(value = { "file:${propfile}" }, ignoreResourceNotFound= true)
+})
 public class AppInfoController {
 
 	@Value("${app.baseUrl:#{null}}")

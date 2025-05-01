@@ -55,7 +55,7 @@ public class TransportConfig {
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "sut_initiator_config",
       joinColumns = @JoinColumn(name = "transport_config_id"))
-  @MapKeyColumn(name = "property_key")
+  @MapKeyColumn(name = "property_key", length = 100)
   @Column(name = "property_value")
   protected Map<String, String> sutInitiator = new HashMap<String, String>();;
 
@@ -63,7 +63,7 @@ public class TransportConfig {
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "ta_initiator_config",
       joinColumns = @JoinColumn(name = "transport_config_id"))
-  @MapKeyColumn(name = "property_key")
+  @MapKeyColumn(name = "property_key", length = 100)
   @Column(name = "property_value")
   protected Map<String, String> taInitiator = new HashMap<String, String>();;
 

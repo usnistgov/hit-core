@@ -52,7 +52,8 @@ public class TestResource implements Serializable {
   @Column(nullable = false)
   @JsonView(Views.Short.class)
   protected TestScope scope;
-
+  
+  @Column(columnDefinition = "BOOLEAN")
   protected boolean preloaded = false;
 
   public String getAuthorUsername() {

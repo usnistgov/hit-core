@@ -1,5 +1,6 @@
 package gov.nist.hit.core.service.impl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import gov.nist.hit.core.domain.AbstractTestCase;
-import gov.nist.hit.core.domain.CFTestPlan;
 import gov.nist.hit.core.domain.TestArtifact;
 import gov.nist.hit.core.domain.TestCase;
 import gov.nist.hit.core.domain.TestCaseGroup;
@@ -52,6 +51,12 @@ public class TestPlanServiceImpl implements TestPlanService {
 			TestScope scope, String domain) {
 		return testPlanRepository.findAllShortByStageAndUsernameAndScopeAndDomain(stage, authorUsername, scope, domain);
 	}
+	
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllShortByStageAndUsernameAndDomain(TestingStage stage, String authorUsername, String domain) {
+		return testPlanRepository.findAllShortByStageAndUsernameAndDomain(stage, authorUsername, domain);
+	}
 
 	@Override
 	@Transactional(value = "transactionManager")
@@ -73,6 +78,22 @@ public class TestPlanServiceImpl implements TestPlanService {
  		for(TestPlan tc : list) {
  			testPlanRepository.delete(tc);
  		}
+ 		
+ 	}
+	
+	@Override
+ 	public void deleteAllByDomain(String domain) {
+ 		try {
+ 			List<TestPlan> list = testPlanRepository.getAllByDomain(domain);
+ 	 		System.out.println(list.size());
+ 	 		for(TestPlan tc : list) {
+ 	 			testPlanRepository.delete(tc);
+ 	 		}
+ 		}catch(Exception e){
+ 			System.out.println(e.getLocalizedMessage());
+ 		}
+		
+ 		
  		
  	}
 	
@@ -250,24 +271,25 @@ private String findFullPathContainingAbstractTestCase(AbstractTestCase node,Abst
 	
 	@Override
 	public TestPlan findOne(Long testPlanId) {
-		if (cache.get(testPlanId) != null && testPlanRepository.getUpdateDate(testPlanId) != null && cache.get(testPlanId).getUpdateDate() != null) {
-			//Rounded to the nearest second to avoid (most) date format conversion issues.
-			Date d = DateUtils.round(testPlanRepository.getUpdateDate(testPlanId), Calendar.SECOND);
-			Date d2 = DateUtils.round(cache.get(testPlanId).getUpdateDate(), Calendar.SECOND);
-			if (d2.compareTo(d)== 0) {
-				return cache.get(testPlanId);		
-			}else {
-				TestPlan tp = testPlanRepository.findOne(testPlanId);
-				cache.put(testPlanId, tp);
-				return tp;
-			}			
-		}else {
-			TestPlan tp = testPlanRepository.findOne(testPlanId);
-			cache.put(testPlanId, tp);
+//		if (cache.get(testPlanId) != null && testPlanRepository.getUpdateDate(testPlanId) != null && cache.get(testPlanId).getUpdateDate() != null) {
+//			//Rounded to the nearest second to avoid (most) date format conversion issues.
+//			Date d = DateUtils.round(testPlanRepository.getUpdateDate(testPlanId), Calendar.SECOND);
+//			Date d2 = DateUtils.round(cache.get(testPlanId).getUpdateDate(), Calendar.SECOND);
+//			if (d2.compareTo(d)== 0) {
+//				return cache.get(testPlanId);		
+//			}else {
+//				TestPlan tp = testPlanRepository.findOne(testPlanId);
+//				cache.put(testPlanId, tp);
+//				return tp;
+//			}			
+//		}else {
+			TestPlan tp = testPlanRepository.findByID(testPlanId);
+//			cache.put(testPlanId, tp);
 			return tp;
-		}
+//		}
 		
 	}
+	
 	
 	@Override
 	public Date getUpdateDate(Long testPlanId) {		
@@ -344,6 +366,67 @@ private String findFullPathContainingAbstractTestCase(AbstractTestCase node,Abst
 			}
 		}
 	}
+	
+
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllByDomain(String domain) {
+		return testPlanRepository.findAllByDomain(domain);
+
+	}
+
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllByScopeAndDomain(TestScope scope, String domain) {
+		return testPlanRepository.findAllByScopeAndDomain( scope,  domain);
+
+	}
+
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllByScopeAndUsernameAndDomain(TestScope scope, String username, String domain) {
+		return testPlanRepository.findAllByScopeAndUsernameAndDomain( scope,  username,  domain);
+
+	}
+
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllByUsernameAndDomain(String username, String domain) {
+		return testPlanRepository.findAllByUsernameAndDomain( username,  domain);
+
+	}
+	
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllTestPlanIdsByDomain(String domain) {
+		return testPlanRepository.findAllTestPlanIdsByDomain(domain);
+
+	}
+
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllTestPlanIdsByScopeAndDomain(TestScope scope, String domain) {
+		return testPlanRepository.findAllTestPlanIdsByScopeAndDomain( scope,  domain);
+
+	}
+
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllTestPlanIdsByScopeAndUsernameAndDomain(TestScope scope, String username, String domain) {
+		return testPlanRepository.findAllTestPlanIdsByScopeAndUsernameAndDomain( scope,  username,  domain);
+
+	}
+
+	@Override
+	@Transactional(value = "transactionManager")
+	public List<TestPlan> findAllTestPlanIdsByUsernameAndDomain(String username, String domain) {
+		return testPlanRepository.findAllTestPlanIdsByUsernameAndDomain( username,  domain);
+
+	}
+	
+
+	
+	
 	
 	
 

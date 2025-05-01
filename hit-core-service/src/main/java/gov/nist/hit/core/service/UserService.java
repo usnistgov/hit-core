@@ -135,10 +135,15 @@ public interface UserService {
 	 * @param username
 	 * @throws BadCredentialsException
 	 */
+	
+	public void changeAccountAuthoritiesForUser(List<String> authorities, String username) throws BadCredentialsException;
+	
 	public void changeAccountTypeForUser(String newAccountType, String username) throws BadCredentialsException;
 
 	public boolean hasGlobalAuthorities(String username) throws NoUserFoundException;
 
+	public List<String> getUserAuthorities(String username) throws NoUserFoundException;
+	
 	public boolean isAdmin(String username) throws NoUserFoundException;
 
 	public boolean isPublisher(String username) throws NoUserFoundException;

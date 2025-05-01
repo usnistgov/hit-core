@@ -41,5 +41,7 @@ public interface DomainService {
 	void canDelete(String domainKey, Authentication auth) throws DomainException;
 
 	List<Domain> findShortAll();
+	
+	public List<Domain> updateAllCustumUrlstoDefault();
 
 }

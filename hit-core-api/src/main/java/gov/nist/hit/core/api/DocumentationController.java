@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,12 +29,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,15 +50,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 import gov.nist.auth.hit.core.domain.Account;
 import gov.nist.hit.core.domain.Document;
 import gov.nist.hit.core.domain.DocumentType;
 import gov.nist.hit.core.domain.TestCaseDocumentation;
 import gov.nist.hit.core.domain.TestScope;
 import gov.nist.hit.core.domain.TestingStage;
-import gov.nist.hit.core.domain.util.Views;
 import gov.nist.hit.core.repo.DocumentRepository;
 import gov.nist.hit.core.service.AccountService;
 import gov.nist.hit.core.service.AppInfoService;
@@ -66,6 +67,7 @@ import gov.nist.hit.core.service.ZipGenerator;
 import gov.nist.hit.core.service.exception.DocumentationException;
 import gov.nist.hit.core.service.exception.DownloadDocumentException;
 import gov.nist.hit.core.service.exception.MessageUploadException;
+import gov.nist.hit.core.service.exception.NoUserFoundException;
 import io.swagger.annotations.ApiParam;
 
 /**
@@ -76,7 +78,7 @@ import io.swagger.annotations.ApiParam;
 @RestController
 public class DocumentationController {
 
-	static final Logger logger = LoggerFactory.getLogger(DocumentationController.class);
+	static final  Logger logger = LogManager.getLogger(DocumentationController.class);
 
 	@Autowired
 	private TestCaseDocumentationService testCaseDocumentationService;
@@ -203,30 +205,49 @@ public class DocumentationController {
 	@RequestMapping(value = "/testcases", method = RequestMethod.GET, produces = "application/json")
 	public List<TestCaseDocumentation> testCases(HttpServletResponse response,
 			@RequestParam(required = true) String domain, @RequestParam(required = true) TestScope scope,
-			HttpServletRequest request) throws IOException {
+			HttpServletRequest request) throws IOException, NoUserFoundException {
 		logger.info("Fetching test case documentation");
-		if (TestScope.USER.equals(scope)) {
-			Long userId = SessionContext.getCurrentUserId(request.getSession(false));
-			if (userId != null) {
-				Account account = accountService.findOne(userId);
-				if (account != null) {
-					return testCaseDocumentationService.generate(scope, domain, account.getUsername());
+		Long userId = SessionContext.getCurrentUserId(request.getSession(false));
+		if (userId != null) {	
+			Account account = accountService.findOne(userId);
+			if (account != null) {
+				String email = account.getEmail();
+				if (userService.isAdminByEmail(email) || userService.isAdmin(account.getUsername())) {
+					if (TestScope.USER.equals(scope)) {
+						return testCaseDocumentationService.generate(TestScope.USER, domain);
+					}else if (TestScope.GLOBALANDUSER.equals(scope)) {
+						List<TestCaseDocumentation> res = new ArrayList<TestCaseDocumentation>();
+						res = testCaseDocumentationService.generate(TestScope.USER, domain);
+						res.addAll(testCaseDocumentationService.generate(TestScope.GLOBAL, domain));
+						return res;
+					}
+				
+				}else{			
+					if (TestScope.USER.equals(scope)) {			
+						if (userId != null) {					
+							if (account != null) {
+								return testCaseDocumentationService.generate(scope, domain, account.getUsername());
+							}
+						}
+					} else if (TestScope.GLOBALANDUSER.equals(scope)) {
+						List<TestCaseDocumentation> res = new ArrayList<TestCaseDocumentation>();
+						if (userId != null) {
+							if (account != null) {
+								res = testCaseDocumentationService.generate(TestScope.USER, domain, account.getUsername());
+							}
+						}		
+						res.addAll(testCaseDocumentationService.generate(TestScope.GLOBAL, domain));
+						return res;
+					}  else {
+						return testCaseDocumentationService.generate(scope, domain);
+					} 
 				}
 			}
-		} else if (TestScope.GLOBALANDUSER.equals(scope)) {
-			List<TestCaseDocumentation> res = new ArrayList<TestCaseDocumentation>();
-			Long userId = SessionContext.getCurrentUserId(request.getSession(false));
-			if (userId != null) {
-				Account account = accountService.findOne(userId);
-				if (account != null) {
-					res = testCaseDocumentationService.generate(TestScope.USER, domain, account.getUsername());
-				}
-			}		
-			res.addAll(testCaseDocumentationService.generate(TestScope.GLOBAL, domain));
-			return res;
-		}  else {
-			return testCaseDocumentationService.generate(scope, domain);
-		} 
+		}
+		
+		
+		
+		
 		return null;
 	}
 
@@ -274,6 +295,24 @@ public class DocumentationController {
 		logger.info("Publishing user document with id=" + id);
 		return publishDocument(id, auth);
 	}
+		
+	@RequestMapping(value = "/documents/{id}/content", method = RequestMethod.GET, produces = "application/json")
+	public String getDocumentContent(HttpServletResponse response, @PathVariable Long id, HttpServletRequest request,
+			Authentication auth)  {
+		Document doc = documentRepository.findOne(id);
+		if (doc != null) {
+			if (doc.getPath() != null) {
+				String docString = getContentAsString(doc.getPath());
+				Parser parser = Parser.builder().build();
+				Node document = parser.parse(docString);
+				HtmlRenderer renderer = HtmlRenderer.builder().build();
+				return renderer.render(document).toString();
+			}
+		}
+		
+		
+		return "d";
+	}
 
 	@RequestMapping(value = "/downloadDocument", method = RequestMethod.POST)
 	public void downloadDocumentByPath(
@@ -293,7 +332,9 @@ public class DocumentationController {
 				if (found == false) {
 					throw new DownloadDocumentException("Cannot download the document, document requested invalid");
 				}
-			
+				
+				
+
 				String fileName = null;
 				InputStream content = null;
 				path = !path.startsWith("/") ? "/" + path : path;
@@ -307,12 +348,12 @@ public class DocumentationController {
 					fileName = path.substring(path.lastIndexOf("/") + 1);
 					response.setContentType(getContentType(path));
 					fileName = fileName.replaceAll(" ", "-");
-					response.setHeader("Content-disposition", "attachment;filename=" + fileName);
+					response.setHeader("Content-disposition", "attachment;filename=\"" + fileName+"\"");
 					streamer.stream(response.getOutputStream(), content);
 				}
 			}
-		} catch (IOException e) {
-			logger.debug("Failed to download the test packages ");
+		} catch (IOException e) {			
+			logger.debug("Failed to download the test packages", e);
 			throw new DownloadDocumentException("Cannot download the document");
 		}
 	}
@@ -329,10 +370,10 @@ public class DocumentationController {
 			response.setHeader("Content-disposition", "attachment;filename=" + name + ".zip");
 			streamer.stream(response.getOutputStream(), stream);
 		} catch (IOException e) {
-			logger.debug("Failed to download resource documentation of  " + type);
+			logger.debug("Failed to download resource documentation of  " + type,e);
 			throw new DownloadDocumentException("Failed to download resource documentation of  " + type);
 		} catch (Exception e) {
-			logger.debug("Failed to download the test packages ");
+			logger.debug("Failed to download the test packages ",e);
 			throw new DownloadDocumentException("Failed to download resource documentation of  " + type);
 		}
 	}
@@ -345,7 +386,7 @@ public class DocumentationController {
 			Document d = documentRepository.findOneByName(name);
 			if (d != null) {
 				downloadDocumentByPath(d.getPath(), request, response);
-			} else {
+			} else { 
 				throw new DownloadDocumentException("Unknown document");
 			}
 		}
@@ -361,10 +402,10 @@ public class DocumentationController {
 			response.setHeader("Content-disposition", "attachment;filename=TestPackages.zip");
 			streamer.stream(response.getOutputStream(), stream);
 		} catch (IOException e) {
-			logger.debug("Failed to download the test packages ");
+			logger.debug("Failed to download the test packages",e);
 			throw new DownloadDocumentException("Cannot download the test packages");
 		} catch (Exception e) {
-			logger.debug("Failed to download the test packages ");
+			logger.debug("Failed to download the test packages",e);
 			throw new DownloadDocumentException("Cannot download the test packages");
 		}
 	}
@@ -385,10 +426,10 @@ public class DocumentationController {
 			response.setHeader("Content-disposition", "attachment;filename=" + "ExampleMessages.zip");
 			streamer.stream(response.getOutputStream(), stream);
 		} catch (IOException e) {
-			logger.debug("Failed to download the example messages ");
+			logger.debug("Failed to download the example messages ",e);
 			throw new DownloadDocumentException("Cannot download the example messages");
 		} catch (Exception e) {
-			logger.debug("Failed to download the example messages ");
+			logger.debug("Failed to download the example messages ",e);
 			throw new DownloadDocumentException("Cannot download the example messages");
 		}
 	}
@@ -405,7 +446,7 @@ public class DocumentationController {
 				response.setContentType(getContentType(path));
 				fileName = title + "-" + fileName;
 				fileName = fileName.replaceAll(" ", "-");
-				response.setHeader("Content-disposition", "attachment;filename=" + fileName);
+				response.setHeader("Content-disposition", "attachment;filename=\"" + fileName+"\"");
 				streamer.stream(response.getOutputStream(), content);
 			} else {
 				throw new DownloadDocumentException("Invalid Path Provided");
@@ -500,9 +541,22 @@ public class DocumentationController {
 		}
 		return content;
 	}
+	
+	private String getContentAsString(String path) {
+		try (InputStream content = getContent(path)) {
+	        if (content == null) {
+	            System.err.println("Resource not found: " + path);
+	            return null;
+	        }
+	        return new String(IOUtils.toByteArray(content), StandardCharsets.UTF_8);
+	    } catch (IOException e) {
+	        System.err.println("Error reading document: " + e.getMessage());
+	        return null;
+	    }
+	}
 
 	private String getContentType(String fileName) {
-		String contentType = "application/octet-stream";
+		String contentType  = "application/octet-stream";
 		String fileExtension = getExtension(fileName);
 		if (fileExtension != null) {
 			fileExtension = fileExtension.toLowerCase();
@@ -527,7 +581,10 @@ public class DocumentationController {
 			contentType = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
 		} else if (fileExtension.equals("ppt")) {
 			contentType = "application/vnd.ms-powerpoint";
-		}
+		} else if (fileExtension.equals("md")) {
+			contentType = "text/markdown";
+		}		
+		
 		return contentType;
 	}
 

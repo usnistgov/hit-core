@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration >
+	<Appenders>
+		<!-- Console Appender -->
+		<Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} -- %msg%n"/>
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+        </Console>
+
+<!-- 		errors and up -->
+        <RollingFile name="DailyErrorFileAppender" fileName="logs/error.log" filePattern="logs/error-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+		        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+		    </Policies>
+        </RollingFile>
+        
+<!--         info and up -->
+        <RollingFile name="DailyInfoFileAppender" fileName="logs/info.log" filePattern="logs/info-%d{yyyy-MM-dd}.log">
+		    <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+		    <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+		    <Policies>
+		        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+		    </Policies>
+		</RollingFile>
+		
+<!-- 		only debug level -->
+		<RollingFile name="DailyDebugFileAppender" fileName="logs/debug.log" filePattern="logs/debug-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <LevelRangeFilter minLevel="DEBUG" maxLevel="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+		        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+		    </Policies>
+        </RollingFile>
+        
+	</Appenders>
+	<Loggers>
+		<!-- Log everything in hibernate -->
+		<Logger name="org.hibernate" level="WARN" additivity="false">
+			<AppenderRef ref="ConsoleAppender" />
+		</Logger>
+
+		<Logger name="org.springframework" level="debug" additivity="false">
+                <AppenderRef ref="ConsoleAppender"/>
+        </Logger>
+
+		<!-- Log all SQL statements -->
+<!-- 		<Logger name="org.hibernate.SQL" level="DEBUG" -->
+<!-- 			additivity="false"> -->
+<!-- 			<AppenderRef ref="Console" /> -->
+<!-- 		</Logger> -->
+
+<!-- 		<Logger name="org.hibernate.type.descriptor.sql.BasicBinder" -->
+<!-- 			level="TRACE" additivity="false"> -->
+<!-- 			<AppenderRef ref="Console" /> -->
+<!-- 		</Logger> -->
+
+		<Root level="DEBUG">
+			<AppenderRef ref="ConsoleAppender" />
+			<AppenderRef ref="DailyErrorFileAppender"/>
+			<AppenderRef ref="DailyInfoFileAppender"/>
+			<AppenderRef ref="DailyDebugFileAppender"/>
+		</Root>
+	</Loggers>
+</Configuration>

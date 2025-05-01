@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>gov.nist.hit.core</groupId>
 		<artifactId>hit-core</artifactId>
-		<version>1.0.29-SNAPSHOT</version>
+		<version>1.1.0</version>
 	</parent>
 
 	<dependencies>
@@ -16,7 +16,7 @@
 			<groupId>gov.nist.hit.core</groupId>
 			<artifactId>hit-core-auth-repo</artifactId>
 			<version>${parent.version}</version>
-		</dependency>
+		</dependency> 
 
 		<dependency>
 			<groupId>gov.nist.hit.core</groupId>

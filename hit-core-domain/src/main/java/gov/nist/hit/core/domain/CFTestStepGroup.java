@@ -12,8 +12,10 @@
 package gov.nist.hit.core.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -92,6 +94,21 @@ public class CFTestStepGroup extends AbstractTestCase implements Serializable {
     this.testStepGroups = testStepGroups;
   }
 
+  public List<CFTestStep> getAllTestSteps() {
+	  List<CFTestStep> testSteps = new ArrayList<>();
+
+
+      testSteps.addAll(getTestSteps());
+   
+
+      if (testStepGroups != null) {
+          for (CFTestStepGroup testCaseGroup : testStepGroups) {
+              testSteps.addAll(testCaseGroup.getAllTestSteps());
+          }
+      }
+
+      return testSteps;
+  }
 
 
 }

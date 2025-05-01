@@ -6,6 +6,7 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
 
 import gov.nist.auth.hit.core.domain.ValidationLog;
@@ -27,7 +28,10 @@ import gov.nist.auth.hit.core.domain.ValidationLog;
  */
 @Configuration
 @ComponentScan(basePackages = "gov.nist.*")
-@PropertySource(value = { "classpath:app-config.properties" })
+@PropertySources({
+@PropertySource(value = { "classpath:app-config.properties" }),
+@PropertySource(value = { "file:${propfile}" }, ignoreResourceNotFound= true)
+})
 public class ValidationLogUtil implements EnvironmentAware {
 
 	public static Environment environment;

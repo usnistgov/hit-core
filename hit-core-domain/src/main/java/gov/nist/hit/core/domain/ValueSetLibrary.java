@@ -18,6 +18,7 @@ public class ValueSetLibrary implements java.io.Serializable {
   private static final long serialVersionUID = 1L;
 
   protected List<ValueSetDefinitions> valueSetDefinitions;
+  protected List<ExternalValueSetDefinitions> externalValueSetDefinitions;
   protected NoValidation noValidation;
   protected String name;
   protected String organizationName;
@@ -31,6 +32,7 @@ public class ValueSetLibrary implements java.io.Serializable {
   public ValueSetLibrary() {
     super();
     valueSetDefinitions = new ArrayList<ValueSetDefinitions>();
+    externalValueSetDefinitions = new ArrayList<ExternalValueSetDefinitions>();
   }
 
   /**
@@ -41,6 +43,26 @@ public class ValueSetLibrary implements java.io.Serializable {
    */
   public List<ValueSetDefinitions> getValueSetDefinitions() {
     return valueSetDefinitions;
+  }
+
+  /**
+   * Sets the value of the valueSetDefinitions property.
+   * 
+   * @param value allowed object is {@link ValueSetDefinitions }
+   * 
+   */
+  public void setExternalValueSetDefinitions(List<ExternalValueSetDefinitions> value) {
+    this.externalValueSetDefinitions = value;
+  }
+  
+  /**
+   * Gets the value of the valueSetDefinitions property.
+   * 
+   * @return possible object is {@link ValueSetDefinitions }
+   * 
+   */
+  public List<ExternalValueSetDefinitions> getExternalValueSetDefinitions() {
+    return this.externalValueSetDefinitions;
   }
 
   /**

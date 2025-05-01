@@ -32,10 +32,10 @@ public class Notification {
 	@Column(nullable = true)
 	protected Date date;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "BOOLEAN")
 	protected boolean active;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "BOOLEAN")	
 	protected boolean dismissable;
 
 	public Notification() {

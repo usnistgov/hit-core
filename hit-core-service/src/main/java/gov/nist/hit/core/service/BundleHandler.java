@@ -21,7 +21,13 @@ public interface BundleHandler {
   public String getValueSetContentFromZipDirectory(String dir) throws IOException;
 
   public String getConstraintContentFromZipDirectory(String dir) throws IOException;
+  
+  public String getCoConstraintContentFromZipDirectory(String dir) throws IOException;
+  
+  public String getSlicingsContentFromZipDirectory(String dir) throws IOException;
 
+  public String getValueSetBindingsContentFromZipDirectory(String dir) throws IOException;
+  
   GVTSaveInstance createSaveInstance(String dir, CFTestPlan tp)
       throws IOException, ProfileParserException;
 

@@ -43,11 +43,12 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -72,6 +73,7 @@ import gov.nist.hit.core.domain.AppInfo;
 import gov.nist.hit.core.domain.CFTestPlan;
 import gov.nist.hit.core.domain.CFTestStep;
 import gov.nist.hit.core.domain.CFTestStepGroup;
+import gov.nist.hit.core.domain.CoConstraints;
 import gov.nist.hit.core.domain.Constraints;
 import gov.nist.hit.core.domain.DataMapping;
 import gov.nist.hit.core.domain.DocumentType;
@@ -84,6 +86,7 @@ import gov.nist.hit.core.domain.MappingSourceRandom;
 import gov.nist.hit.core.domain.Message;
 import gov.nist.hit.core.domain.ProfileModel;
 import gov.nist.hit.core.domain.Protocol;
+import gov.nist.hit.core.domain.Slicings;
 import gov.nist.hit.core.domain.TestArtifact;
 import gov.nist.hit.core.domain.TestCase;
 import gov.nist.hit.core.domain.TestCaseDocument;
@@ -96,17 +99,20 @@ import gov.nist.hit.core.domain.TestStepFieldPair;
 import gov.nist.hit.core.domain.TestingStage;
 import gov.nist.hit.core.domain.TestingType;
 import gov.nist.hit.core.domain.TransportForms;
+import gov.nist.hit.core.domain.ValueSetBindings;
 import gov.nist.hit.core.domain.VocabularyLibrary;
 import gov.nist.hit.core.repo.AppInfoRepository;
 import gov.nist.hit.core.repo.CFTestPlanRepository;
 import gov.nist.hit.core.repo.CFTestStepGroupRepository;
 import gov.nist.hit.core.repo.CFTestStepRepository;
+import gov.nist.hit.core.repo.CoConstraintsRepository;
 import gov.nist.hit.core.repo.ConformanceProfileRepository;
 import gov.nist.hit.core.repo.ConstraintsRepository;
 import gov.nist.hit.core.repo.DataMappingRepository;
 import gov.nist.hit.core.repo.DocumentRepository;
 import gov.nist.hit.core.repo.IntegrationProfileRepository;
 import gov.nist.hit.core.repo.MessageRepository;
+import gov.nist.hit.core.repo.SlicingsRepository;
 import gov.nist.hit.core.repo.TestCaseDocumentationRepository;
 import gov.nist.hit.core.repo.TestCaseGroupRepository;
 import gov.nist.hit.core.repo.TestCaseRepository;
@@ -116,20 +122,28 @@ import gov.nist.hit.core.repo.TestStepValidationReportRepository;
 import gov.nist.hit.core.repo.TransactionRepository;
 import gov.nist.hit.core.repo.TransportFormsRepository;
 import gov.nist.hit.core.repo.TransportMessageRepository;
+import gov.nist.hit.core.repo.ValueSetBindingsRepository;
 import gov.nist.hit.core.repo.VocabularyLibraryRepository;
 import gov.nist.hit.core.service.exception.ProfileParserException;
 import gov.nist.hit.core.service.util.FileUtil;
 import gov.nist.hit.core.service.util.GCUtil;
 import gov.nist.hit.core.service.util.ResourcebundleHelper;
 
-@PropertySource(value = { "classpath:app-config.properties" })
+@PropertySources({
+@PropertySource(value = { "classpath:app-config.properties" }),
+@PropertySource(value = { "file:${propfile}"}, ignoreResourceNotFound= true)
+})
 @Transactional(value = "transactionManager")
 public abstract class ResourcebundleLoader {
 
-	static final public Logger logger = LoggerFactory.getLogger(ResourcebundleLoader.class);
+	static final public Logger logger = LogManager.getLogger(ResourcebundleLoader.class);
+	
 	final static public String PROFILE_PATTERN = "Global/Profiles/";
 	final static public String VALUESET_PATTERN = "Global/Tables/";
 	final static public String CONSTRAINT_PATTERN = "Global/Constraints/";
+	final static public String COCONSTRAINT_PATTERN = "Global/CoConstraints/";
+	final static public String VALUESETBINDINGS_PATTERN = "Global/Bindings/";
+	final static public String SLICINGS_PATTERN = "Global/Slicings/";
 	final static public String CONSTRAINTS_FILE_PATTERN = "Constraints.xml";
 	final static public String VALUESETS_FILE_PATTERN = "ValueSets.xml";
 	final static public String PROFILE_FILE_PATTERN = "Profile.xml";
@@ -246,6 +260,15 @@ public abstract class ResourcebundleLoader {
 	@Autowired
 	protected VocabularyLibraryRepository vocabularyLibraryRepository;
 
+	@Autowired
+	protected ValueSetBindingsRepository valueSetBindingsRepository;
+	
+	@Autowired
+	protected CoConstraintsRepository coConstraintsRepository;
+	
+	@Autowired
+	protected SlicingsRepository slicingsRepository;
+	
 	@Autowired
 	protected TestCaseGroupRepository testCaseGroupRepository;
 
@@ -390,6 +413,8 @@ public abstract class ResourcebundleLoader {
 	@Value("${app.url}")
 	private String url;
 	
+	@Value("${app.loadOnlyDefaultDomain:#{false}}")
+	private boolean loadOnlyDefaultDomain;
 
 	// conformance profile source Id - integration profile id
 	protected static HashMap<String, String> profilesMap;
@@ -412,7 +437,7 @@ public abstract class ResourcebundleLoader {
 			prettyPrintTf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 			prettyPrintTf.setOutputProperty(OutputKeys.INDENT, "yes");
 		} catch (TransformerConfigurationException | TransformerFactoryConfigurationError e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 	}
@@ -450,6 +475,9 @@ public abstract class ResourcebundleLoader {
 		vocabularyLibraryRepository.deletePreloaded();
 		constraintsRepository.deletePreloaded();
 		integrationProfileRepository.deletePreloaded();
+		valueSetBindingsRepository.deletePreloaded();
+		coConstraintsRepository.deletePreloaded();
+		slicingsRepository.deletePreloaded();
 		
 		testCaseDocumentationRepository.deletePreloaded();
 		transportFormsRepository.deleteAll();
@@ -479,14 +507,14 @@ public abstract class ResourcebundleLoader {
 		envurl = envurl == null ? System.getenv("TOOL_URL") : envurl;
 		if (envurl != null && !envurl.isEmpty()) {
 			logger.info("TOOL_URL is set to " + envurl);
-			System.out.println("TOOL_URL is set to " + envurl);
+//			System.out.println("TOOL_URL is set to " + envurl);
 			this.appInfoService.get().setUrl(envurl);
 		}
 		
 		String isDevTool = System.getProperty("IS_DEV_TOOL");
 		isDevTool = isDevTool == null ? System.getenv("IS_DEV_TOOL") : isDevTool;
-		System.out.println("IS_DEV_TOOL is set to " + isDevTool);
-		logger.info("IS_DEV_TOOL is set to " + isDevTool);
+//		System.out.println("IS_DEV_TOOL is set to " + isDevTool);
+		logger.info("IS_DEV_TOOL is set to :" + isDevTool);
 		if (Boolean.valueOf(isDevTool) == true) {
 			 this.appInfoService.get().setDevTool(true);
 		}else{
@@ -496,11 +524,11 @@ public abstract class ResourcebundleLoader {
 		
 		if(cacheAtStartUp()) {
 			//preload TestPlans at startup
-			System.out.println("Caching CB test plans..");
+			logger.info("Caching CB test plans..");
 			cbTestPlanService.loadAll();
-			System.out.println("Done.\nCaching CF test plans...");
+			logger.info("Caching CF test plans...");
 			cfTestPlanService.loadAll();
-			System.out.println("Done.");
+			logger.info("Caching done.");
 		}
 		
 		
@@ -519,6 +547,11 @@ public abstract class ResourcebundleLoader {
 	public abstract ProfileModel parseProfile(String integrationProfileXml, String conformanceProfileId,
 			String constraintsXml, String additionalConstraintsXml)
 			throws ProfileParserException, UnsupportedOperationException;
+	
+	public abstract ProfileModel parseEnhanced(String integrationProfileXml, String conformanceProfileId,
+			String constraintsXml, String additionalConstraintsXml, String valueSets, String valueSetBindings, String coConstraints,
+			String slicings)
+					throws ProfileParserException, UnsupportedOperationException;
 
 	public abstract VocabularyLibrary vocabLibrary(String content, String domain, TestScope scope,
 			String authorUsername, boolean preloaded)
@@ -539,8 +572,11 @@ public abstract class ResourcebundleLoader {
 		while (it.hasNext()) {
 			JsonNode node = it.next();
 			Domain domain = getDomain(node, rootPath);
-			domainService.save(domain);
-			loadDomainsArtifacts(rootPath, domain.getScope(), domain.isPreloaded(), domain.getDomain());
+			if(!loadOnlyDefaultDomain || domain.getDomain().equalsIgnoreCase("default")) {
+				domainService.save(domain);
+				loadDomainsArtifacts(rootPath, domain.getScope(), domain.isPreloaded(), domain.getDomain());
+			}
+			
 		}
 		loadDomainsArtifacts(rootPath, TestScope.GLOBAL, true, TOOL_DOCUMENT_DOMAIN);
 
@@ -552,8 +588,11 @@ public abstract class ResourcebundleLoader {
 		this.loadConstraints(directory, scope, preloaded, domain);
 		this.loadVocabularyLibraries(directory, scope, preloaded, domain);
 		this.loadIntegrationProfiles(directory, scope, preloaded, domain);
+		this.loadValueSetBindinds(directory, scope, preloaded, domain);
+		this.loadCoConstraints(directory, scope, preloaded, domain);
+		this.loadSlicings(directory, scope, preloaded, domain);
 		this.loadContextFreeTestCases(directory, scope, preloaded, domain);
-		this.loadContextBasedTestCases(directory, scope, preloaded, domain);
+		this.loadContextBasedTestCases(directory, scope, preloaded, domain);		
 		this.loadUserDocs(directory, scope, preloaded, domain);
 		this.loadKownIssues(directory, scope, preloaded, domain);
 		this.loadReleaseNotes(directory, scope, preloaded, domain);
@@ -579,12 +618,19 @@ public abstract class ResourcebundleLoader {
 		entry.setHomeTitle(node.get("homeTitle").textValue());
 		entry.setAuthorUsername(node.get("authorUsername").textValue());
 		entry.setDisabled(disabled);
+		
+		if (node.get("version") != null) {
+			entry.setVersion(node.get("version").asText());
+		}
 		if (node.get("rsbVersion") != null) {
 			entry.setRsbVersion(node.get("rsbVersion").asText());
 		}
 		if (node.get("igVersion") != null) {
-			entry.setRsbVersion(node.get("igVersion").asText());
+			entry.setIgVersion(node.get("igVersion").asText());
 		}
+		
+		
+		
 		if (node.get("participantEmails") != null && node.get("participantEmails").isArray()) {
 			Iterator<JsonNode> ownerEmailNodes = node.get("participantEmails").iterator();
 			while (ownerEmailNodes.hasNext()) {
@@ -598,6 +644,10 @@ public abstract class ResourcebundleLoader {
 				entry.setReportSavingSupported(optionsJn.get(Constant.REPORT_SAVING_SUPPORTED).asBoolean());
 			}else {
 				entry.setReportSavingSupported(true);// default value
+			}
+			
+			if (optionsJn.get(Constant.DEFAULT_HL7V2_VALIDATION_VERSION) != null) {
+				entry.setHl7v2ValidationVersion(optionsJn.get(Constant.DEFAULT_HL7V2_VALIDATION_VERSION).asText());
 			}
 			
 		}
@@ -630,7 +680,8 @@ public abstract class ResourcebundleLoader {
 		if (resource != null) {
 			entry.setMessageContentInfo(FileUtil.getContent(resource));
 		}
-
+		//set domain custom url to the default of the domain id
+		entry.getOptions().put("DOMAIN_CUSTOM_URL", entry.getDomain());
 		return entry;
 
 	}
@@ -805,11 +856,10 @@ public abstract class ResourcebundleLoader {
 	private List<gov.nist.hit.core.domain.Document> getValueSetsDocs(String rootPath, TestScope scope,
 			boolean preloaded, String domain) throws IOException {
 		List<gov.nist.hit.core.domain.Document> resourceDocs = new ArrayList<gov.nist.hit.core.domain.Document>();
-		logger.info("loading constraints documents for domain=" + domain);
+		logger.info("loading value set documents for domain=" + domain);
 		JsonNode conf = toJsonObj(getDomainBasedPath(VALUESET_PATTERN, domain) + TABLES_CONF_FILE_PATTERN, rootPath);
 		Set<String> skipped = null;
 		JsonNode ordersObj = null;
-		logger.info("loading value sets...");
 		// value sets
 		skipped = null;
 		if (conf != null) {
@@ -840,7 +890,7 @@ public abstract class ResourcebundleLoader {
 
 	public void loadProfilesDocs(String rootPath, TestScope scope, boolean preloaded, String domain)
 			throws IOException {
-		logger.info("loading profiles documents...");
+		logger.info("loading profiles documents for domain=" + domain);
 		List<gov.nist.hit.core.domain.Document> resourceDocs = getProfilesDocs(rootPath, scope, preloaded, domain);
 		if (!resourceDocs.isEmpty()) {
 			documentRepository.save(resourceDocs);
@@ -849,7 +899,7 @@ public abstract class ResourcebundleLoader {
 
 	public void loadConstraintsDocs(String rootPath, TestScope scope, boolean preloaded, String domain)
 			throws IOException {
-		logger.info("loading constraints documents...");
+		logger.info("loading constraints documents for domain=" + domain);
 		List<gov.nist.hit.core.domain.Document> resourceDocs = getConstraintsDocs(rootPath, scope, preloaded, domain);
 		if (!resourceDocs.isEmpty()) {
 			documentRepository.save(resourceDocs);
@@ -858,7 +908,7 @@ public abstract class ResourcebundleLoader {
 
 	public void loadValuesetsDocs(String rootPath, TestScope scope, boolean preloaded, String domain)
 			throws IOException {
-		logger.info("loading valuesets documents...");
+		logger.info("loading valuesets documents for domain=" + domain);
 		List<gov.nist.hit.core.domain.Document> resourceDocs = getValueSetsDocs(rootPath, scope, preloaded, domain);
 		if (!resourceDocs.isEmpty()) {
 			documentRepository.save(resourceDocs);
@@ -866,9 +916,8 @@ public abstract class ResourcebundleLoader {
 	}
 
 	public void loadKownIssues(String rootPath, TestScope scope, boolean preloaded, String domain) throws IOException {
-		logger.info("loading known issues...");
-		List<gov.nist.hit.core.domain.Document> knownIssues = new ArrayList<gov.nist.hit.core.domain.Document>();
 		logger.info("loading known issues documents for domain=" + domain);
+		List<gov.nist.hit.core.domain.Document> knownIssues = new ArrayList<gov.nist.hit.core.domain.Document>();
 		JsonNode knownIssueObj = toJsonObj(getDomainBasedPath(KNOWNISSUE_PATTERN, domain) + KNOWNISSUE_FILE_PATTERN,
 				rootPath);
 		if (knownIssueObj != null && knownIssueObj.isArray()) {
@@ -978,14 +1027,35 @@ public abstract class ResourcebundleLoader {
 					while (it.hasNext()) {
 						JsonNode node = it.next();
 						gov.nist.hit.core.domain.Document document = new gov.nist.hit.core.domain.Document(domain);
-						if (node.findValue("title") == null || node.findValue("link") == null
-								|| node.findValue("date") == null) {
-							throw new IllegalArgumentException("Download is missing one of those: title, link, date");
+						if (node.findValue("title") == null || (node.findValue("name")== null && node.findValue("link")== null) 
+								) {
+							throw new IllegalArgumentException("Download is missing one of those: title, link or name");
 						}
 						document.setTitle(node.findValue("title").textValue());
-						document.setPath(node.findValue("link").textValue());
-						document.setDate(node.findValue("date").textValue());
-						document.setType(DocumentType.DELIVERABLE);
+						if (node.findValue("name") != null) {
+							String name = node.findValue("name").textValue();		
+							if (node.findValue("path") != null) {
+								String path = node.findValue("path").textValue();
+								document.setName(name); 
+								document.setPath(getDomainBasedPath(TOOL_DOWNLOADS_PATTERN, TOOL_DOCUMENT_DOMAIN) + path);
+							}else {
+								document.setName(name); 
+								document.setPath(getDomainBasedPath(TOOL_DOWNLOADS_PATTERN, TOOL_DOCUMENT_DOMAIN) + name);
+							}
+							
+						} else if (node.findValue("link") != null) {
+							document.setPath(node.findValue("link").textValue());
+						}
+						if (node.findValue("date") != null) {
+							document.setDate(node.findValue("date").textValue());
+						}
+						if (node.findValue("type") != null && node.findValue("type").textValue().equalsIgnoreCase("docker")) {
+							document.setType(DocumentType.DOCKER);
+
+						}else {
+							document.setType(DocumentType.DELIVERABLE);
+
+						}
 						document.setScope(scope);
 						document.setPreloaded(preloaded);
 						document.setDomain(domain);
@@ -1074,7 +1144,7 @@ public abstract class ResourcebundleLoader {
 
 	public void loadIntegrationProfiles(String rootPath, TestScope scope, boolean preloaded, String domain)
 			throws IOException {
-		logger.info("loading integration profiles... of domain=" + domain);
+		logger.info("loading integration profiles of domain=" + domain);
 		List<Resource> resources = getResources(getDomainBasedPath(PROFILE_PATTERN, domain) + "*.xml", rootPath);
 		if (resources != null && !resources.isEmpty()) {
 			for (Resource resource : resources) {
@@ -1099,10 +1169,69 @@ public abstract class ResourcebundleLoader {
 					// cachedRepository.getCachedVocabLibraries().put(vocabLibrary.getSourceId(),
 					// vocabLibrary);
 				} catch (UnsupportedOperationException e) {
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
 	}
+	
+	public void loadValueSetBindinds(String rootPath, TestScope scope, boolean preloaded, String domain)
+			throws IOException {
+		logger.info("loading value set bindinngs of domain=" + domain);
+		List<Resource> resources = getResources(getDomainBasedPath(VALUESETBINDINGS_PATTERN, domain) + "*.xml", rootPath);
+		if (resources != null && !resources.isEmpty()) {
+			for (Resource resource : resources) {
+				String content = FileUtil.getContent(resource);
+				try {
+					ValueSetBindings valuesetbindings = valuesetbindings(content, domain, scope, getDomainAuthorname(domain),
+							preloaded);
+					this.valueSetBindingsRepository.save(valuesetbindings);					
+				} catch (UnsupportedOperationException e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+		}
+	}
+	
+	public void loadCoConstraints(String rootPath, TestScope scope, boolean preloaded, String domain)
+			throws IOException {
+		logger.info("loading coconstraints of domain=" + domain);
+		List<Resource> resources = getResources(getDomainBasedPath(COCONSTRAINT_PATTERN, domain) + "*.xml", rootPath);
+		if (resources != null && !resources.isEmpty()) {
+			for (Resource resource : resources) {
+				String content = FileUtil.getContent(resource);
+				try {
+					CoConstraints coConstraints = coConstraints(content, domain, scope, getDomainAuthorname(domain),
+							preloaded);
+					this.coConstraintsRepository.save(coConstraints);					
+				} catch (UnsupportedOperationException e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+		}
+	}
+	
+	public void loadSlicings(String rootPath, TestScope scope, boolean preloaded, String domain)
+			throws IOException {
+		logger.info("loading slicings of domain=" + domain);
+		List<Resource> resources = getResources(getDomainBasedPath(SLICINGS_PATTERN, domain) + "*.xml", rootPath);
+		if (resources != null && !resources.isEmpty()) {
+			for (Resource resource : resources) {
+				String content = FileUtil.getContent(resource);
+				try {
+					Slicings slicings = slicings(content, domain, scope, getDomainAuthorname(domain),
+							preloaded);
+					this.slicingsRepository.save(slicings);					
+				} catch (UnsupportedOperationException e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+		}
+	}
+	
+	
+	
+	
 
 	protected Constraints additionalConstraints(String content, String domain, TestScope scope, String username,
 			boolean preloaded) throws IOException {
@@ -1188,6 +1317,45 @@ public abstract class ResourcebundleLoader {
 			constraints.setDescription(metaDataElement.getAttribute("Description"));
 		return constraints;
 	}
+	
+	public Slicings slicings(String content, String domain, TestScope scope, String username, boolean preloaded) {
+		Document doc = this.stringToDom(content);
+		Slicings slicings = new Slicings();
+		slicings.setXml(content);
+		Element constraintsElement = (Element) doc.getElementsByTagName("ProfileSlicing").item(0);
+		slicings.setSourceId(constraintsElement.getAttribute("ID"));
+		slicings.setDomain(domain);
+		slicings.setScope(scope);
+		slicings.setAuthorUsername(username);
+		slicings.setPreloaded(preloaded);		
+		return slicings;
+	}
+	
+	public CoConstraints coConstraints(String content, String domain, TestScope scope, String username, boolean preloaded) {
+		Document doc = this.stringToDom(content);
+		CoConstraints coConstraints = new CoConstraints();
+		coConstraints.setXml(content);
+		Element constraintsElement = (Element) doc.getElementsByTagName("CoConstraintContext").item(0);
+		coConstraints.setSourceId(constraintsElement.getAttribute("ID"));
+		coConstraints.setDomain(domain);
+		coConstraints.setScope(scope);
+		coConstraints.setAuthorUsername(username);
+		coConstraints.setPreloaded(preloaded);		
+		return coConstraints;
+	}
+	
+	public ValueSetBindings valuesetbindings(String content, String domain, TestScope scope, String username, boolean preloaded) {
+		Document doc = this.stringToDom(content);
+		ValueSetBindings valuesetbindings = new ValueSetBindings();
+		valuesetbindings.setXml(content);
+		Element constraintsElement = (Element) doc.getElementsByTagName("ValueSetBindingsContext").item(0);
+		valuesetbindings.setSourceId(constraintsElement.getAttribute("ID"));
+		valuesetbindings.setDomain(domain);
+		valuesetbindings.setScope(scope);
+		valuesetbindings.setAuthorUsername(username);
+		valuesetbindings.setPreloaded(preloaded);		
+		return valuesetbindings;
+	}
 
 	protected Document stringToDom(String xmlSource) {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -1200,11 +1368,11 @@ public abstract class ResourcebundleLoader {
 			builder = factory.newDocumentBuilder();
 			return builder.parse(new InputSource(new StringReader(xmlSource)));
 		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} catch (SAXException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -1215,7 +1383,7 @@ public abstract class ResourcebundleLoader {
 			prettyPrintTf.transform(new DOMSource(xml), new StreamResult(out));
 			return out.toString();
 		} catch (Exception e) {
-
+			logger.error(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -1229,10 +1397,26 @@ public abstract class ResourcebundleLoader {
 			String json = obm.writeValueAsString(profileModel);
 			return json;
 		} catch (UnsupportedOperationException e) {
-
+			logger.error(e.getMessage(), e);
 		}
 		return null;
 	}
+	
+	public String jsonConformanceProfileEnhanced(String integrationProfileXml, String conformanceProfileId,
+			String constraintsXml, String additionalConstraintsXml,  String valueSets, String valueSetBindings, String coConstraints, String slicings)
+			throws ProfileParserException, JsonProcessingException, com.fasterxml.jackson.core.JsonProcessingException {
+		try {
+			ProfileModel profileModel = parseEnhanced(integrationProfileXml, conformanceProfileId, constraintsXml,
+					additionalConstraintsXml,valueSets,valueSetBindings, coConstraints, slicings);
+			String json = obm.writeValueAsString(profileModel);
+			return json;
+		} catch (UnsupportedOperationException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return null;
+	}
+
+	
 
 	public String getConformanceProfileContent(String integrationProfileXml, String messageId) {
 		Document doc = stringToDom(integrationProfileXml);
@@ -1276,7 +1460,7 @@ public abstract class ResourcebundleLoader {
 		}
 		return c;
 	}
-
+	
 	protected VocabularyLibrary getVocabularyLibrary(String sourceId) throws IOException {
 		VocabularyLibrary v = vocabularyLibraryRepository.findOneBySourceId(sourceId);
 		if (v == null) {
@@ -1285,6 +1469,30 @@ public abstract class ResourcebundleLoader {
 		return v;
 	}
 
+	protected ValueSetBindings getValueSetBindingsBySourceId(String sourceId) throws IOException {
+		ValueSetBindings v = valueSetBindingsRepository.findOneBySourceId(sourceId);
+		if (v == null) {
+			throw new IllegalArgumentException("ValueSetBindings with sourceid = " + sourceId + " not found");
+		}
+		return v;
+	}
+	
+	protected CoConstraints getCoConstraintsBySourceId(String sourceId) throws IOException {
+		CoConstraints c = coConstraintsRepository.findOneBySourceId(sourceId);
+		if (c == null) {
+			throw new IllegalArgumentException("CoConstraints with sourceid = " + sourceId + " not found");
+		}
+		return c;
+	}
+	
+	protected Slicings getSlicingsBySourceId(String sourceId) throws IOException {
+		Slicings s = slicingsRepository.findOneBySourceId(sourceId);
+		if (s == null) {
+			throw new IllegalArgumentException("Slicings with sourceid = " + sourceId + " not found");
+		}
+		return s;
+	}
+	
 	public String domainPath(String path) {
 		return path;
 	}
@@ -1915,7 +2123,7 @@ public abstract class ResourcebundleLoader {
 	}
 
 	protected String fileName(Resource resource) throws IOException {
-		String location = URLDecoder.decode(resource.getURL().toString(), "UTF-8");		
+		String location = URLDecoder.decode(resource.getURL().toString().replaceAll("\\+", "%2b"), "UTF-8");		
 		return location;
 		//		return location.replaceAll("%20", " ");
 	}
@@ -2020,11 +2228,15 @@ public abstract class ResourcebundleLoader {
 		
 		String uploadsFolderPathFromSystemEnv = System.getProperty("UPLOAD_PATH");
 		uploadsFolderPathFromSystemEnv = uploadsFolderPathFromSystemEnv == null ? System.getenv("UPLOAD_PATH") : uploadsFolderPathFromSystemEnv;	
+		logger.info("UPLOAD_PATH is set to " + uploadsFolderPathFromSystemEnv);
+//		System.out.println("UPLOAD_PATH is set to " + uploadsFolderPathFromSystemEnv);
 		if (uploadsFolderPathFromSystemEnv != null) {
 			appInfo.setUploadsFolderPath(uploadsFolderPathFromSystemEnv);
 		}else {
 			appInfo.setUploadsFolderPath(uploadsFolderPath);
 		}
+		
+		
 		
 		appInfo.setUrl(url);
 				
@@ -2168,7 +2380,7 @@ public abstract class ResourcebundleLoader {
 	}
 
 	public Resource getResource(String pattern, String rootPath) throws IOException {
-		if (rootPath.isEmpty())
+		if (rootPath.isEmpty())			
 			return ResourcebundleHelper.getResource(pattern);
 		else
 			return ResourcebundleHelper.getResourceFile(rootPath + pattern);

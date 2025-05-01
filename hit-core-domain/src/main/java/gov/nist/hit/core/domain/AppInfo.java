@@ -126,8 +126,8 @@ public class AppInfo implements Serializable {
   
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "APP_OPTIONS")
-  @MapKeyColumn(name = "OPTION_TYPE")
-  @Column(name = "OPTION_VALUE")
+  @MapKeyColumn(name = "OPTION_TYPE", length = 100)
+  @Column(name = "OPTION_VALUE", length = 100)
   private Map<String, String> options = new HashMap<String, String>();
 
 

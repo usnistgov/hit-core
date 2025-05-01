@@ -44,7 +44,7 @@ public class IntegrationProfile extends ValidationArtifact implements Serializab
 
 	@JsonIgnore
 	@NotNull
-	@Column(unique = true)
+	@Column(unique = true, length = 100)
 	protected String sourceId;
 
 	@Column(nullable = true)

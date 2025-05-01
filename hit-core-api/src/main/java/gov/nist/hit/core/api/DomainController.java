@@ -12,6 +12,7 @@
 
 package gov.nist.hit.core.api;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,7 +56,10 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping("/domains")
-@PropertySource(value = { "classpath:app-config.properties" })
+@PropertySources({
+@PropertySource(value = { "classpath:app-config.properties" }),
+@PropertySource(value = { "file:${propfile}" }, ignoreResourceNotFound= true)
+})
 @Api(value = "Tool Scope Api", tags = "tool scope api")
 public  class DomainController {
 
@@ -363,7 +368,6 @@ public  class DomainController {
 			i++;
 			newKey = key+"_"+i;			
 			found = domainService.findOneByKey(newKey);
-//			throw new DomainException("A Tool scope with key=" + key + " already exists");
 		}
 
 		Domain result = new Domain();
@@ -373,6 +377,8 @@ public  class DomainController {
 		result.setName(name);
 		result.setHomeTitle(domain.getHomeTitle());
 		result.setDisabled(false);
+		//set default custom url
+		result.getOptions().put("DOMAIN_CUSTOM_URL", result.getDomain());
 		hasScopeAccess(result.getScope(), authentication);
 		domainService.save(result);
 		return result;
@@ -479,7 +485,13 @@ public  class DomainController {
 		} catch (Exception e) {
 			throw new DomainException(e);
 		}
-
+	}
+	
+	@PreAuthorize("hasRole('admin')")
+	@PostMapping(value = "/updateCustumUrls", produces = "application/json")
+	public List<Domain>  updateCustumUrls(HttpServletRequest request,Authentication authentication) throws DomainException {
+		List<Domain> domainsChanged = domainService.updateAllCustumUrlstoDefault();
+		return domainsChanged;
 	}
 
 }
