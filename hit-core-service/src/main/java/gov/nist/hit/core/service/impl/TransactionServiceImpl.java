@@ -65,6 +65,7 @@ public class TransactionServiceImpl implements TransactionService {
   @Override
   public Transaction findOneByProperties(Map<String, String> criteria) {
     
+
 			List<Transaction> list = transactionRepository.findAll();
 			if (list != null && list.size()>0) {
 				for (Transaction t : list) {
@@ -99,26 +100,34 @@ public class TransactionServiceImpl implements TransactionService {
     ArrayList<String> conditions = new ArrayList<>();
     Iterator<Entry<String, String>> it = criteria.entrySet().iterator();
     int i = 1;
+    
     while (it.hasNext()) {
-      Map.Entry<String, String> pair = it.next();
-      String key = pair.getKey();
-      String value = pair.getValue();
-      String alias = "transaction_config" + i;
-      sql += " LEFT OUTER JOIN transaction_config " + alias + " ON tr.id = " + alias
-          + ".transaction_id AND " + alias + ".property_key = '" + key + "' AND " + alias
-          + ".property_value = '" + value + "'";
-      conditions.add(alias + ".property_key is not null");
-      i++;
-    }
-    if (conditions.size() > 1) {
-      sql += " WHERE ";
-      for (int j = 0; j < conditions.size(); j++) {
-        if (j > 0) {
-          sql += " AND ";
-        }
-        sql += conditions.get(j);
+        Map.Entry<String, String> pair = it.next();
+        String key = pair.getKey();
+        String value = pair.getValue();
+        String alias = "transaction_config" + i;
+        sql += " LEFT OUTER JOIN transaction_config " + alias + " ON tr.id = " + alias
+            + ".transaction_id AND " + alias + ".property_key = '" + key + "' AND " + alias
+            + ".property_value = '" + value + "'";
+        conditions.add(alias + ".property_key is not null");
+        i++;
       }
-    }
+      if (conditions.size() > 1) {
+        sql += " WHERE ";
+        for (int j = 0; j < conditions.size(); j++) {
+          if (j > 0) {
+            sql += " AND ";
+          }
+          sql += conditions.get(j);
+        }
+      }
+      
+    
+    
+    
+    
+    
+    
     return sql;
   }
 
@@ -204,6 +213,7 @@ public class TransactionServiceImpl implements TransactionService {
 //    String sql = toQuery(criteria);
 //    Query q = entityManager.createNativeQuery(sql, Transaction.class);
 //    return q.getResultList();
+
 
   }
 

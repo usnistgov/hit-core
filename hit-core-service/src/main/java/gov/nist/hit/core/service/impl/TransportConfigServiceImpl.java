@@ -172,6 +172,7 @@ public class TransportConfigServiceImpl implements TransportConfigService {
     TransportConfig tr = getSingleResult(q);
     return tr;
         
+
   }
 
 
@@ -179,13 +180,16 @@ public class TransportConfigServiceImpl implements TransportConfigService {
 public TransportConfig findOneByPropertiesAndProtocol(Map<String, String> criteria,
   TestingType type, String protocol) {
 
+
 TransportConfig tr2 = toInitiatorTransportConfigWithPreparedStatement(criteria, type, protocol);
  
 //    String sql = toInitiatorQuery(criteria, type, protocol);
 //    Query q =
 //        entityManagerFactory.createEntityManager().createNativeQuery(sql, TransportConfig.class);
 //    TransportConfig tr = getSingleResult(q);
+
 return tr2;
+
 }
 
 
