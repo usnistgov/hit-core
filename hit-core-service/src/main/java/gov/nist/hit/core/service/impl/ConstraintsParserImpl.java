@@ -44,6 +44,7 @@ import gov.nist.hit.core.domain.constraints.ConformanceStatement;
 import gov.nist.hit.core.domain.constraints.Constraints;
 import gov.nist.hit.core.domain.constraints.Context;
 import gov.nist.hit.core.domain.constraints.Predicate;
+import gov.nist.hit.core.domain.constraints.Reference;
 import gov.nist.hit.core.service.ConstraintsParser;
 
 public class ConstraintsParserImpl implements ConstraintsParser {
@@ -204,8 +205,22 @@ public class ConstraintsParserImpl implements ConstraintsParser {
 				constraintObj.setConstraintTarget(".");
 			} else if (pathElementList.size() == 1) {
 				constraintObj.setConstraintTarget(pathElementList.get(0).getAttribute("Path"));
-			}
-    	  
+			}    	  
+      }
+      
+      NodeList referenceNodes = elmConstraint.getElementsByTagName("Reference");
+      if (referenceNodes != null && referenceNodes.getLength() == 1) {
+    	  Reference ref = new Reference();
+    	  Element elmReference= (Element) referenceNodes.item(0);
+    	  ref.setChapter(elmReference.getAttribute("Chapter"));
+    	  ref.setSection(elmReference.getAttribute("Section"));
+    	  ref.setPage(elmReference.getAttribute("Page"));
+    	  ref.setUrl(elmReference.getAttribute("URL"));
+    	  ref.setSource(elmReference.getAttribute("Source"));
+    	  ref.setGeneratedBy(elmReference.getAttribute("GeneratedBy"));
+    	  ref.setReferencePath(elmReference.getAttribute("ReferencePath"));
+    	  ref.setTestDataCategorization(elmReference.getAttribute("TestDataCategorization"));   
+    	  constraintObj.setReference(ref);
       }
       
       NodeList descriptionNodes = elmConstraint.getElementsByTagName("Description");

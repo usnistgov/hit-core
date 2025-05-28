@@ -38,6 +38,9 @@ public abstract class Constraint implements Serializable, Cloneable {
 	// @Column(nullable = false, columnDefinition = "LONGTEXT", name =
 	// "CONSTRAINT_ASSERTION")
 	protected String assertion;
+	
+	protected Reference reference;
+	
 
 	public String getId() {
 		return id;
@@ -62,8 +65,14 @@ public abstract class Constraint implements Serializable, Cloneable {
 	public void setConstraintTarget(String constraintTarget) {
 		this.constraintTarget = constraintTarget;
 	}
+	 
+	public Reference getReference() {
+		return reference;
+	}
 
- 
+	public void setReference(Reference reference) {
+		this.reference = reference;
+	}
 
 	public String getDescription() {
 		return description;
