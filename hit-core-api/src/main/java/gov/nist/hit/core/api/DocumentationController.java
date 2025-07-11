@@ -256,7 +256,7 @@ public class DocumentationController {
 	public List<Document> userDocs(HttpServletResponse response, @RequestParam(required = true) DocumentType type,
 			@RequestParam(required = true) String domain, @RequestParam(required = true) TestScope scope,
 			HttpServletRequest request) throws IOException {
-		logger.info("Fetching  all release notes");
+		logger.info("Fetching all " +type.toString()+  "documents");
 		if (TestScope.USER.equals(scope)) {
 			Long userId = SessionContext.getCurrentUserId(request.getSession(false));
 			if (userId != null) {

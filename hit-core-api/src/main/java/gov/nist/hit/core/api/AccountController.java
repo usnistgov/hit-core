@@ -1037,7 +1037,7 @@ public class AccountController {
 	/**
 	 * 
 	 * */
-	@RequestMapping(value = "/accounts/cuser", method = RequestMethod.GET)
+	@RequestMapping(value = "/accounts/cuser", method = RequestMethod.GET,produces = "application/json")
 	public CurrentUser getCUser() {
 		User u = userService.getCurrentUser();
 		CurrentUser cu = null;

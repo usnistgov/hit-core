@@ -301,9 +301,10 @@ public class TestStepValidationReportServiceImpl implements TestStepValidationRe
     sb.append("<style>");
     sb.append(css);
     sb.append("</style>");
-    sb.append("<style type='text/javascript'>");
+    	//hash for CSP compliance (make sure it's in the header as well)
+//    sb.append("<style type='text/javascript' integrity=\"sha256-f9h3HRjL1VUqG5+6Pw2xrc2lksENHrSDJStWs/Qrh04=\" crossorigin=\"anonymous\">");
     sb.append(javascript);
-    sb.append("</style>");
+//    sb.append("</style>");
     sb.append("</head><body>");
     sb.append(htmlReport);
     sb.append("</body></html>");

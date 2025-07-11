@@ -38,6 +38,8 @@ public class MessageValidationCommand extends TestCaseCommand {
   private String contextType;
 
   private String name;
+  
+  private Boolean useHttp;
 
   @ApiModelProperty(required = false, value = "data quality codes to validate")
   private ArrayList<String> dqaCodes;
@@ -99,6 +101,16 @@ public class MessageValidationCommand extends TestCaseCommand {
   public void setUserId(Long userId) {
     this.userId = userId;
   }
+
+	public Boolean getUseHttp() {
+		return useHttp;
+	}
+	
+	public void setUseHttp(Boolean useHttp) {
+		this.useHttp = useHttp;
+	}
+  
+  
 
 
 

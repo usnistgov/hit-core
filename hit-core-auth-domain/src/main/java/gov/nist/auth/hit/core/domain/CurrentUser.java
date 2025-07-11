@@ -137,6 +137,20 @@ public class CurrentUser {
     this.employer = employer;
   }
 
-
+  @Override
+  public String toString() {
+      return "CurrentUser{" +
+              "username='" + username + '\'' +
+              ", email='" + email + '\'' +
+              ", accountId=" + accountId +
+              ", isAuthenticated=" + isAuthenticated +
+              ", isPending=" + isPending +
+              ", authorities=" + authorities +
+              ", fullName='" + fullName + '\'' +
+              ", guestAccount=" + guestAccount +
+              ", lastTestPlanPersistenceId=" + lastTestPlanPersistenceId +
+              ", employer='" + employer + '\'' +
+              '}';
+  }
 
 }

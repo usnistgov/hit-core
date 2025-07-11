@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 
@@ -164,12 +165,14 @@ public class TransportConfigServiceImpl implements TransportConfigService {
     }
 
 
-    Query q = entityManagerFactory.createEntityManager().createNativeQuery(sql, TransportConfig.class);
+    EntityManager em= entityManagerFactory.createEntityManager();
+    Query q =em.createNativeQuery(sql, TransportConfig.class);
     int j;
     for (j=0;j<params.size();j++) {
         q.setParameter(j+1, params.get(j));
     }
     TransportConfig tr = getSingleResult(q);
+    em.close();
     return tr;
         
 
