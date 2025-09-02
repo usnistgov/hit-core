@@ -642,7 +642,7 @@ public class AccountController {
 		}
 		// generate and send email
 		this.sendRegistrationNotificationToAdmin(account);
-		this.sendApplicationConfirmationNotification(account);
+		this.sendAccountRegistrationNotification(account);
 		return new ResponseMessage(ResponseMessage.Type.success, "userAdded", registeredAccount.getId().toString(),
 				"true");
 	}
@@ -1067,7 +1067,7 @@ public class AccountController {
 			msg.setTo(acc.getEmail());
 			msg.setText("Dear " + acc.getUsername() + ", \n\n"
 					+ "Thank you for submitting an application for use of the " + TOOL_NAME + ".\n\n"
-					+ "Please refer to the to the documents in the Documentation tab, for additional information." + "\n\n" + "Sincerely, " + "\n\n"
+					+ "Please refer to the to the documents in the Documentation tab for additional information." + "\n\n" + "Sincerely, " + "\n\n"
 					+ "The " + TOOL_NAME + " Team" + "\n\n" + "For support, contact us at '"
 					+ appInfoService.get().getAdminEmails().get(0) + "'");
 

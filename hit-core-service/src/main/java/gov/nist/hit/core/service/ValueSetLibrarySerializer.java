@@ -163,6 +163,7 @@ public abstract class ValueSetLibrarySerializer {
   public ValueSetLibrary toObject(String xml) {
     Document tableLibraryDoc = this.toDoc(xml);
     ValueSetLibrary valueSetLibrary = new ValueSetLibrary();
+    valueSetLibrary.setHasExternal(false);
     Element elmTableLibrary =
         (Element) tableLibraryDoc.getElementsByTagName("ValueSetLibrary").item(0);
     valueSetLibrary.setDescription(elmTableLibrary.getAttribute("Description"));
@@ -299,7 +300,7 @@ public abstract class ValueSetLibrarySerializer {
         	  externalVSD.setContentDefinition(ContentDefinitionType.fromValue(elmTable
                   .getAttribute("ContentDefinition")));
             }
-
+          valueSetLibrary.setHasExternal(true);
           valueSetDefinitions.addValueSet(externalVSD);
         }
         
@@ -354,7 +355,7 @@ public abstract class ValueSetLibrarySerializer {
                       .getAttribute("ContentDefinition")));
                 }
              
-
+              valueSetLibrary.setHasExternal(true);
               externalValueSetDefinitions.addValueSet(tableObj);
             }
           }

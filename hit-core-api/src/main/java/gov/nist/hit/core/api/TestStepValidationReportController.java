@@ -26,8 +26,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,30 +35,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 import gov.nist.auth.hit.core.domain.Account;
-import gov.nist.auth.hit.core.domain.UserTestStepReport;
-import gov.nist.auth.hit.core.domain.ValidationLog;
-import gov.nist.auth.hit.core.service.UserTestStepReportService;
-import gov.nist.hit.core.domain.ResponseMessage;
 import gov.nist.hit.core.domain.TestResult;
 import gov.nist.hit.core.domain.TestStep;
 import gov.nist.hit.core.domain.TestStepValidationReport;
 import gov.nist.hit.core.domain.TestStepValidationReportRequest;
 import gov.nist.hit.core.domain.TestingStage;
-import gov.nist.hit.core.domain.UserTestStepReportRequest;
-import gov.nist.hit.core.domain.ResponseMessage.Type;
-import gov.nist.hit.core.domain.util.Views;
 import gov.nist.hit.core.service.AccountService;
 import gov.nist.hit.core.service.Streamer;
 import gov.nist.hit.core.service.TestStepService;
 import gov.nist.hit.core.service.TestStepValidationReportService;
 import gov.nist.hit.core.service.UserService;
 import gov.nist.hit.core.service.exception.MessageValidationException;
-import gov.nist.hit.core.service.exception.NoUserFoundException;
-import gov.nist.hit.core.service.exception.TestStepException;
-import gov.nist.hit.core.service.exception.UserNotFoundException;
 import gov.nist.hit.core.service.exception.ValidationReportException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -182,7 +170,7 @@ public class TestStepValidationReportController {
 			//Already saved at validation?  this updates the validation result 
 			TestStepValidationReport vr = validationReportService.save(report);
 			String tmpXml = generateXml(report, testStep.getStage(), testStep);
-			report.setHtml(validationReportService.generateHtml(tmpXml));
+			report.setHtml(validationReportService.generateHtmlForAngularJs(tmpXml));
 			report.setXml(null);
 			report.setJson(null);
 			streamer.stream(response.getOutputStream(), report);
@@ -279,20 +267,30 @@ public class TestStepValidationReportController {
 	 */
 	@ApiOperation(value = "", hidden = true)
 	@RequestMapping(value = "/{testStepId}/delete", method = RequestMethod.POST)
-	public boolean clearRecords(
+	public ResponseEntity<?> clearRecords(
 			@ApiParam(value = "the id of the test step", required = true) @PathVariable("testStepId") final Long testStepId,
 			HttpServletRequest request) throws MessageValidationException {
 		logger.info("Generating html validation report");
 		Long userId = SessionContext.getCurrentUserId(request.getSession(false));
-		if (userId == null || accountService.findOne(userId) == null)
-			throw new ValidationReportException("Invalid user credentials");
+		 if (userId == null || accountService.findOne(userId) == null) {
+		        // 401 Unauthorized
+		        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+		                .body("Invalid user credentials");
+		    }
+		
 		List<TestStepValidationReport> results = validationReportService.findAllByTestStepAndUser(testStepId, userId);
-		if (results != null) {
-			for (TestStepValidationReport report : results) {
-				validationReportService.delete(report.getId());
-			}
-		}
-		return true;
+	    if (results == null || results.isEmpty()) {
+	        // 404 Not Found
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body("Invalid testStep provided");
+	    }
+
+	    for (TestStepValidationReport report : results) {
+	        validationReportService.delete(report.getId());
+	    }
+	    // 200 OK
+	    return ResponseEntity.ok(true);
+		
 	}
 
 	public InputStream generatePdf(TestStepValidationReport report) {

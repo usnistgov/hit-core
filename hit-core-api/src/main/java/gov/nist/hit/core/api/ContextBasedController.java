@@ -87,7 +87,7 @@ public class ContextBasedController {
 
 	@ApiOperation(value = "Find all context-based test cases list by scope", nickname = "getTestPlansByScope")
 	@RequestMapping(value = "/testplans", method = RequestMethod.GET, produces = "application/json")
-	public void getTestPlansByScope(
+	public List<TestPlan> getTestPlansByScope(
 			@ApiParam(value = "the scope of the test plans", required = false) @RequestParam(required = false) TestScope scope,
 			@ApiParam(value = "the domain of the test plans", required = true) @RequestParam(required = true) String domain,
 			HttpServletRequest request, HttpServletResponse response) throws IOException, NoUserFoundException {
@@ -110,7 +110,8 @@ public class ContextBasedController {
 		} else {
 			results = testPlanService.findShortAllByStageAndScopeAndDomain(TestingStage.CB, scope, domain);
 		}
-		streamer.stream(response.getOutputStream(), results);
+		return results;
+//		streamer.stream(response.getOutputStream(), results);
 	}
 	
 	@ApiOperation(value = "Find a context-based test plan by its id", nickname = "getOneTestPlanById")

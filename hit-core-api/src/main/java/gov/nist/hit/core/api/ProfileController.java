@@ -46,12 +46,13 @@ public class ProfileController {
 	private ConformanceProfileRepository conformanceProfileRepository;
 
 	@RequestMapping(value = "/{profileId}", method = RequestMethod.GET, produces = "application/json")
-	public void getProfileJsonById(HttpServletResponse response,
+	public String getProfileJsonById(HttpServletResponse response,
 			@ApiParam(value = "the id of the conformance profile", required = true) @PathVariable final long profileId)
 			throws IOException {
 		logger.info("Fetching conformance profile (json) with id=" + profileId);
 		String value = conformanceProfileRepository.getJson(profileId);
-		streamer.stream(response.getOutputStream(), value);
+		return value;
+//		streamer.stream(response.getOutputStream(), value);
 	}
 
 }

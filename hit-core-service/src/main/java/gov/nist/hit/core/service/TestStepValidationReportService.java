@@ -45,6 +45,8 @@ public interface TestStepValidationReportService {
       TestStepValidationReport report, TestStep testStep) throws ValidationReportException;
 
   String generateHtml(String xml) throws ValidationReportException;
+  
+  String generateHtmlForAngularJs(String xml) throws ValidationReportException;
 
   String generateXhtml(String xml) throws ValidationReportException;
 

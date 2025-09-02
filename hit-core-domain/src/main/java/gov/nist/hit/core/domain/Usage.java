@@ -2,7 +2,7 @@ package gov.nist.hit.core.domain;
 
 public enum Usage {
 
-	R, RE, O, C, X, B, W, CE;
+	R, RE, O, C, X, B, W, CE,IX;
 
 	public String value() {
 		return name();

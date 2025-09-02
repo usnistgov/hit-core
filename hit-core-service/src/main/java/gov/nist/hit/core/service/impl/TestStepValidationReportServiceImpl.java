@@ -46,6 +46,7 @@ public class TestStepValidationReportServiceImpl implements TestStepValidationRe
   private final static Logger logger = LogManager.getLogger(TestStepValidationReportServiceImpl.class);
   private static final String PDF_XSL = "/report/teststep-validation-report-pdf.xsl";
   private static final String HTML_XSL = "/report/teststep-validation-report-html.xsl";
+  private static final String HTML_ANGULARJS_XSL = "/report/teststep-validation-report-html-angularjs.xsl";
   protected static final String CSS = "/report/report.css";
   protected static final String JS = "/report/report.js";
 
@@ -124,11 +125,39 @@ public class TestStepValidationReportServiceImpl implements TestStepValidationRe
 
 
   @Override
+  //with embedded javacript, good for download.
   public String generateHtml(String xml) throws ValidationReportException {
     try {
       if (xml != null && StringUtils.isNotEmpty(xml)) {
         String xslt = IOUtils
             .toString(TestCaseValidationReportServiceImpl.class.getResourceAsStream(HTML_XSL));
+        TransformerFactory transFact = TransformerFactory.newInstance();
+        transFact.setURIResolver(new XsltURIResolver());
+        Transformer transformer =
+            transFact.newTransformer(new StreamSource(new StringReader(xslt)));
+        StreamSource source = new StreamSource(new StringReader(xml));
+        ByteArrayOutputStream resultStream = new ByteArrayOutputStream();
+        StreamResult result = new StreamResult(resultStream);
+        transformer.transform(source, result);
+        String htmlReport = HtmlUtil.repairStyle(new String(resultStream.toByteArray()));
+        logger.info("HTML validation report generated");
+        return addCss(htmlReport);
+      }
+      return null;
+    } catch (Exception e) {
+      throw new ValidationReportException(e);
+    } catch (TransformerFactoryConfigurationError e) {
+      throw new ValidationReportException(e.getMessage());
+    }
+  }
+  
+  @Override
+  //with angularjs specifics, good for in-tool display.
+  public String generateHtmlForAngularJs(String xml) throws ValidationReportException {
+    try {
+      if (xml != null && StringUtils.isNotEmpty(xml)) {
+        String xslt = IOUtils
+            .toString(TestCaseValidationReportServiceImpl.class.getResourceAsStream(HTML_ANGULARJS_XSL));
         TransformerFactory transFact = TransformerFactory.newInstance();
         transFact.setURIResolver(new XsltURIResolver());
         Transformer transformer =
@@ -302,9 +331,9 @@ public class TestStepValidationReportServiceImpl implements TestStepValidationRe
     sb.append(css);
     sb.append("</style>");
     	//hash for CSP compliance (make sure it's in the header as well)
-//    sb.append("<style type='text/javascript' integrity=\"sha256-f9h3HRjL1VUqG5+6Pw2xrc2lksENHrSDJStWs/Qrh04=\" crossorigin=\"anonymous\">");
+    sb.append("<style type='text/javascript' integrity=\"sha256-f9h3HRjL1VUqG5+6Pw2xrc2lksENHrSDJStWs/Qrh04=\" crossorigin=\"anonymous\">");
     sb.append(javascript);
-//    sb.append("</style>");
+    sb.append("</style>");
     sb.append("</head><body>");
     sb.append(htmlReport);
     sb.append("</body></html>");

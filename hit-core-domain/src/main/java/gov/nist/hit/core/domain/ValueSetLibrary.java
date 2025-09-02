@@ -27,6 +27,7 @@ public class ValueSetLibrary implements java.io.Serializable {
   protected String valueSetIdentifier;
   protected String description;
   protected String dateCreated;
+  protected boolean hasExternal;
   
 
   public ValueSetLibrary() {
@@ -195,7 +196,16 @@ public class ValueSetLibrary implements java.io.Serializable {
     this.noValidation = noValidation;
   }
 
+  public boolean isHasExternal() {
+	return hasExternal;
+  }
+
+  public void setHasExternal(boolean hasExternal) {
+	this.hasExternal = hasExternal;
+  }
+
  
+  
   
 
 }

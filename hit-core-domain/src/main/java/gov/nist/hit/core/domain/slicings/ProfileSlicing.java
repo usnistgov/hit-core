@@ -1,12 +1,16 @@
 package gov.nist.hit.core.domain.slicings;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ProfileSlicing {
 
 	private SegmentSlicing segmentSlicing;
 	private FieldSlicing fieldSlicing;
+	private Set<String> segmentReferences = new HashSet<String>();
+	private Set<String> dataTypeReferences  = new HashSet<String>();
 	private String id;
 
 	public ProfileSlicing() {
@@ -48,6 +52,31 @@ public class ProfileSlicing {
 	public void setId(String id) {
 		this.id = id;
 	}
+
+
+	public Set<String> getSegmentReferences() {
+		return segmentReferences;
+	}
+
+
+	public void setSegmentReferences(Set<String> segmentReferences) {
+		this.segmentReferences = segmentReferences;
+	}
+
+
+	public Set<String> getDataTypeReferences() {
+		return dataTypeReferences;
+	}
+
+
+	public void setDataTypeReferences(Set<String> dataTypeReferences) {
+		this.dataTypeReferences = dataTypeReferences;
+	}
+
+
+	
+	
+	
 
 	
 }

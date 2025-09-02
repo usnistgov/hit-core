@@ -46,12 +46,13 @@ public class ValueSetController {
 	private Streamer streamer;
 
 	@RequestMapping(value = "/{valueSetLibraryId}", produces = "application/json", method = RequestMethod.GET)
-	public void getValueSetLibraryById(HttpServletResponse response,
+	public String getValueSetLibraryById(HttpServletResponse response,
 			@ApiParam(value = "the id of the value set library", required = true) @PathVariable final long valueSetLibraryId)
 			throws IOException {
 		logger.info("Fetching value set library (json) with id=" + valueSetLibraryId);
 		String value = vocabularyLibraryRepository.getJson(valueSetLibraryId);
-		streamer.stream(response.getOutputStream(), value);
+		return value;
+//		streamer.stream(response.getOutputStream(), value);
 
 	}
 

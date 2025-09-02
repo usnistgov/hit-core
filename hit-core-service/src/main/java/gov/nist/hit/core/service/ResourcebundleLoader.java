@@ -703,7 +703,8 @@ public abstract class ResourcebundleLoader {
 						document.setPosition(node.findValue("order") != null ? node.findValue("order").intValue()
 								: userDocs.size() + 1);
 						document.setTitle(node.findValue("title") != null ? node.findValue("title").textValue() : null);
-						if (node.findValue("name") != null) {
+						//just name then it's a local document
+						if (node.findValue("name") != null && node.findValue("link") == null) {
 							String path = node.findValue("name").textValue();
 							if (path.endsWith("*")) {
 								Resource rs = getLatestResource(getDomainBasedPath(USERDOCS_PATTERN, domain)
@@ -714,6 +715,11 @@ public abstract class ResourcebundleLoader {
 							document.setPath(getDomainBasedPath(USERDOCS_PATTERN, domain) + path);
 						} else if (node.findValue("link") != null) {
 							document.setPath(node.findValue("link").textValue());
+							//if we have a name we add it too
+							if (node.findValue("name") != null) {
+								document.setName(node.findValue("name").textValue());
+							}
+							
 						}
 						document.setDate(node.findValue("date") != null ? node.findValue("date").textValue() : null);
 						document.setType(DocumentType.USERDOC);

@@ -11,6 +11,8 @@
  */
 package gov.nist.hit.core.service;
 
+import org.relaxng.datatype.Datatype;
+
 import gov.nist.hit.core.domain.ProfileModel;
 import gov.nist.hit.core.service.exception.ProfileParserException;
 
@@ -60,4 +62,12 @@ public abstract class ProfileParser {
 
 public abstract ProfileModel parseEnhanced(Object conformanceProfile, String constraintsXml, String additionalConstraintsXml,
 		String valueSetsXML, String valueSetBindings, String coConstraints, String slicings) throws ProfileParserException;
+
+public abstract ProfileModel parseEnhanced(Object conformanceProfile, Object segmentsMap, Object datatypesMap, String constraintsXml, String additionalConstraintsXml,
+		String valueSetsXml, String valueSetBindingsXml, String coConstraintsXml, String slicingsXml) throws ProfileParserException ;
+
+
+
+
+
 }

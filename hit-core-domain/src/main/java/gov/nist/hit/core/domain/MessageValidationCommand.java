@@ -40,6 +40,8 @@ public class MessageValidationCommand extends TestCaseCommand {
   private String name;
   
   private Boolean useHttp;
+  
+  private Boolean useValueSetProxy;
 
   @ApiModelProperty(required = false, value = "data quality codes to validate")
   private ArrayList<String> dqaCodes;
@@ -109,6 +111,16 @@ public class MessageValidationCommand extends TestCaseCommand {
 	public void setUseHttp(Boolean useHttp) {
 		this.useHttp = useHttp;
 	}
+
+	public Boolean getUseValueSetProxy() {
+		return useValueSetProxy;
+	}
+
+	public void setUseValueSetProxy(Boolean useValueSetProxy) {
+		this.useValueSetProxy = useValueSetProxy;
+	}
+	
+	
   
   
 

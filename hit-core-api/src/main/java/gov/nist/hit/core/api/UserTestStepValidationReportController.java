@@ -227,7 +227,7 @@ public class UserTestStepValidationReportController {
 			
 			
 			String xmlReport = generateXml(report, testStep.getStage(), testStep);
-			String htmlReport = generateHtml(xmlReport);
+			String htmlReport = validationReportService.generateHtmlForAngularJs(xmlReport);// generateHtml(xmlReport);
 			
 		
 			UserTestStepReport userTestStepReport = new UserTestStepReport(testStep.getName(),findFullPathContainingAbstractTestCase(testStep),testStep.getDomain(),testStep.getStage(),report.getResult(),xmlReport, htmlReport, report.getJson(),

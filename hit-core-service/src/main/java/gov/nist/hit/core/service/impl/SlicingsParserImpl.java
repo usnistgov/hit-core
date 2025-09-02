@@ -16,7 +16,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -53,6 +55,8 @@ public class SlicingsParserImpl implements SlicingsParser {
 	private TransformerFactory transFactory;
 	private Transformer transformer;
 	private StringWriter buffer;
+	private Set<String> segmentReferences = new HashSet<String>();
+	private Set<String> dataTypeReferences  = new HashSet<String>();
 
 	
 	
@@ -71,6 +75,9 @@ public class SlicingsParserImpl implements SlicingsParser {
 	@Override
 	public ProfileSlicing slicings(String xmlSlicings) {
 		ProfileSlicing profileSlicing = null;
+		segmentReferences = new HashSet<String>();
+		dataTypeReferences  = new HashSet<String>();
+		
 		if (xmlSlicings != null) {
 			Document profileSlicingDoc = this.stringToDom(xmlSlicings);
 			if (profileSlicingDoc != null && profileSlicingDoc.getElementsByTagName("ProfileSlicing") != null) {
@@ -78,9 +85,11 @@ public class SlicingsParserImpl implements SlicingsParser {
 				profileSlicing = new ProfileSlicing(profileSlicingElement.getAttribute("ID"));
 				profileSlicing.setSegmentSlicing(getSegmentSlicing(profileSlicingElement));
 				profileSlicing.setFieldSlicing(getFieldSlicing(profileSlicingElement));
-			}						
+			}			
+			profileSlicing.setSegmentReferences(segmentReferences);
+			profileSlicing.setDataTypeReferences(dataTypeReferences);
 		}
-
+		
 		return profileSlicing;
 	}
 
@@ -134,8 +143,8 @@ public class SlicingsParserImpl implements SlicingsParser {
 			for (int i = 0; i < segmentContextgNodes.getLength(); i++) {
 				Element segmentContextElement = (Element) segmentContextgNodes.item(i);
 				FieldSlicingContext fieldSlicingContext = new FieldSlicingContext(segmentContextElement.getAttribute("ID"));
-				fieldSlicingContext.setAssertionSlicing(getAssertionSlicing(segmentContextElement));
-				fieldSlicingContext.setOccurrenceSlicing(getOccurrenceSlicing(segmentContextElement));
+				fieldSlicingContext.setAssertionSlicing(getAssertionSlicing(segmentContextElement,"segment"));
+				fieldSlicingContext.setOccurrenceSlicing(getOccurrenceSlicing(segmentContextElement,"segment"));
 				list.add(fieldSlicingContext);
 			}
 		}
@@ -150,8 +159,8 @@ public class SlicingsParserImpl implements SlicingsParser {
 			for (int i = 0; i < segmentSlicingGroupContextNodes.getLength(); i++) {
 				Element segmentSlicingGroupContextElement = (Element) segmentSlicingGroupContextNodes.item(i);
 				SegmentSlicingGroupContext segmentSlicingGroupContext = new SegmentSlicingGroupContext(segmentSlicingGroupContextElement.getAttribute("ID"));				
-				segmentSlicingGroupContext.setAssertionSlicing(getAssertionSlicing(segmentSlicingGroupContextElement));
-				segmentSlicingGroupContext.setOccurrenceSlicing(getOccurrenceSlicing(segmentSlicingGroupContextElement));
+				segmentSlicingGroupContext.setAssertionSlicing(getAssertionSlicing(segmentSlicingGroupContextElement,"group"));
+				segmentSlicingGroupContext.setOccurrenceSlicing(getOccurrenceSlicing(segmentSlicingGroupContextElement,"group"));
 
 				list.add(segmentSlicingGroupContext);
 			}
@@ -159,14 +168,15 @@ public class SlicingsParserImpl implements SlicingsParser {
 		return list;
 	}
 	
-	private List<AssertionSlicing> getAssertionSlicing(Element element) {
+	private List<AssertionSlicing> getAssertionSlicing(Element element, String context) {
 		List<AssertionSlicing> list = new ArrayList<AssertionSlicing>();
 		if (element != null && element.getElementsByTagName("AssertionSlicing") != null) {
+			System.out.println("Parsing SegmentContext ID: " + element.getAttribute("ID"));
 			NodeList assertionSlicingNodes = element.getElementsByTagName("AssertionSlicing");
 			for (int i = 0; i < assertionSlicingNodes.getLength(); i++) {
 				Element assertionSlicingElement = (Element) assertionSlicingNodes.item(i);
 				AssertionSlicing assertionSlicing = new AssertionSlicing(Integer.parseInt(assertionSlicingElement.getAttribute("Position")));				
-				assertionSlicing.setSlices(getAssertionSlices(assertionSlicingElement));
+				assertionSlicing.setSlices(getAssertionSlices(assertionSlicingElement,context));
 				list.add(assertionSlicing);
 			}
 		}
@@ -174,29 +184,38 @@ public class SlicingsParserImpl implements SlicingsParser {
 	}
 
 	
-	private List<AssertionSlice> getAssertionSlices(Element element) {
+	private List<AssertionSlice> getAssertionSlices(Element element, String context) {
 		List<AssertionSlice> list = new ArrayList<AssertionSlice>();
 		if (element != null && element.getElementsByTagName("Slice") != null) {
 			NodeList assertionSliceNodes = element.getElementsByTagName("Slice");
 			for (int i = 0; i < assertionSliceNodes.getLength(); i++) {
 				Element assertionSliceElement = (Element) assertionSliceNodes.item(i);
 				AssertionSlice assertionSlice = new AssertionSlice(assertionSliceElement.getAttribute("Ref"));				
-				assertionSlice.setAssertion(assertionSliceElement.getElementsByTagName("Assertion").item(0).getTextContent());
+				try {
+					assertionSlice.setAssertion(getInnerXml((Element)assertionSliceElement.getElementsByTagName("Assertion").item(0)));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				assertionSlice.setDescription(assertionSliceElement.getElementsByTagName("Description").item(0).getTextContent());
+				if (context.equalsIgnoreCase("group")) {
+					segmentReferences.add(assertionSlice.getRef());
+				}else if (context.equalsIgnoreCase("segment")) {
+					dataTypeReferences.add(assertionSlice.getRef());
+				}
 				list.add(assertionSlice);
 			}
 		}
 		return list;
 	}
 	
-	private List<OccurrenceSlicing> getOccurrenceSlicing(Element element) {
+	private List<OccurrenceSlicing> getOccurrenceSlicing(Element element, String context) {
 		List<OccurrenceSlicing> list = new ArrayList<OccurrenceSlicing>();
 		if (element != null && element.getElementsByTagName("OccurrenceSlicing") != null) {
 			NodeList occurrenceSlicingNodes = element.getElementsByTagName("OccurrenceSlicing");
 			for (int i = 0; i < occurrenceSlicingNodes.getLength(); i++) {
 				Element occurrenceSlicingElement = (Element) occurrenceSlicingNodes.item(i);
 				OccurrenceSlicing occurrenceSlicing = new OccurrenceSlicing(Integer.parseInt(occurrenceSlicingElement.getAttribute("Position")));				
-				occurrenceSlicing.setSlices(getOccurrenceSlices(occurrenceSlicingElement));
+				occurrenceSlicing.setSlices(getOccurrenceSlices(occurrenceSlicingElement,context));
 				list.add(occurrenceSlicing);
 			}
 		}
@@ -204,7 +223,7 @@ public class SlicingsParserImpl implements SlicingsParser {
 	}
 
 	
-	private List<OccurrenceSlice> getOccurrenceSlices(Element element) {
+	private List<OccurrenceSlice> getOccurrenceSlices(Element element, String context) {
 		List<OccurrenceSlice> list = new ArrayList<OccurrenceSlice>();
 		if (element != null && element.getElementsByTagName("Slice") != null) {
 			NodeList occurrenceSliceNodes = element.getElementsByTagName("Slice");
@@ -214,6 +233,11 @@ public class SlicingsParserImpl implements SlicingsParser {
 				occurrenceSlice.setOccurrence(Integer.parseInt(assertionSliceElement.getAttribute("Occurrence")));
 				occurrenceSlice.setRef(assertionSliceElement.getAttribute("Ref"));
 				list.add(occurrenceSlice);
+				if (context.equalsIgnoreCase("group")) {
+					segmentReferences.add(occurrenceSlice.getRef());
+				}else if (context.equalsIgnoreCase("segment")) {
+					dataTypeReferences.add(occurrenceSlice.getRef());
+				}
 			}
 		}
 		return list;
@@ -221,6 +245,22 @@ public class SlicingsParserImpl implements SlicingsParser {
 	
 	
 
+	
+	private String getInnerXml(Element element) throws Exception {
+	    StringBuilder sb = new StringBuilder();
+	    NodeList children = element.getChildNodes();
+	    for (int i = 0; i < children.getLength(); i++) {
+	        Node child = children.item(i);
+	        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+	        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+	        transformer.setOutputProperty(OutputKeys.INDENT, "no");
+	        StringWriter writer = new StringWriter();
+	        transformer.transform(new DOMSource(child), new StreamResult(writer));
+	        sb.append(writer.toString());
+	    }
+	    return sb.toString();
+	}
+	
 	
 	private String convertElementToString(Node node) {
 		try {

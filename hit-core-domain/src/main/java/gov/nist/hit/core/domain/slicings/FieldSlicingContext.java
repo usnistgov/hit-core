@@ -22,7 +22,7 @@ public class FieldSlicingContext {
 		return assertionSlicing;
 	}
 	public void setAssertionSlicing(List<AssertionSlicing> assertionSlicing) {
-		assertionSlicing = assertionSlicing;
+		this.assertionSlicing = assertionSlicing;
 	}
 	public List<OccurrenceSlicing> getOccurrenceSlicing() {
 		return occurrenceSlicing;
