@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +22,11 @@ import gov.nist.hit.core.domain.MessageParserCommand;
 import gov.nist.hit.core.domain.MessageValidationCommand;
 import gov.nist.hit.core.domain.MessageValidationResult;
 import gov.nist.hit.core.domain.TestContext;
+import gov.nist.hit.core.domain.TestScope;
 import gov.nist.hit.core.domain.TestStep;
 import gov.nist.hit.core.domain.TestStepValidationReport;
 import gov.nist.hit.core.service.AccountService;
+import gov.nist.hit.core.service.DomainService;
 import gov.nist.hit.core.service.MessageParser;
 import gov.nist.hit.core.service.MessageValidator;
 import gov.nist.hit.core.service.Streamer;
@@ -47,6 +50,9 @@ public abstract class TestContextController {
 
 	@Autowired
 	private AccountService accountService;
+	
+	@Autowired
+	private DomainService domainService;
 
 	@Autowired
 	private Streamer streamer;
@@ -91,11 +97,16 @@ public abstract class TestContextController {
 	public void validateMessage(
 			@ApiParam(value = "the id of the test context", required = true) @PathVariable final Long testContextId,
 			@ApiParam(value = "the request to be validated", required = true) @RequestBody final MessageValidationCommand command,
-			HttpServletRequest request, HttpServletResponse response, HttpSession session)
+			HttpServletRequest request, HttpServletResponse response, HttpSession session, Authentication auth)
 			throws MessageValidationException {
-		try {
+		try {					
 			logger.info("Validating a message");
 			TestContext testContext = getTestContext(testContextId);
+			if (testContext!= null && testContext.getScope().equals(TestScope.USER)) {
+				String domain = testContext.getDomain();
+				domainService.hasPermission(domain, auth);
+			}	
+			
 			Long userId = SessionContext.getCurrentUserId(request.getSession(false));
 			command.setUserId(userId);
 			MessageValidationResult result = getMessageValidator().validate(testContext, command);

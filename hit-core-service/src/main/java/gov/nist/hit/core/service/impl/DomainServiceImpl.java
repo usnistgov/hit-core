@@ -180,6 +180,10 @@ public class DomainServiceImpl implements DomainService {
 	@Override
 	public void hasPermission(String domainKey, Authentication auth) throws DomainException {
 		try {
+			if (auth == null) {
+				//no user
+				throw new DomainException("You do not have the permission to perform this operation");
+			}
 			String username = auth.getName();
 			if (!"app".equalsIgnoreCase(domainKey)) {
 				Domain domain = findOneByKey(domainKey);
@@ -212,7 +216,8 @@ public class DomainServiceImpl implements DomainService {
 				}
 			}
 		} catch (NoUserFoundException e) {
-			throw new DomainException(e);
+			//no user
+			throw new DomainException("You do not have the permission to perform this operation");
 		}
 	}
 
