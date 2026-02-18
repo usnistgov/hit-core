@@ -964,22 +964,78 @@ public abstract class ResourcebundleLoader {
 			throws IOException {
 		List<gov.nist.hit.core.domain.Document> releaseNotes = new ArrayList<gov.nist.hit.core.domain.Document>();
 		logger.info("loading release notes documents for domain=" + domain);
-		JsonNode releaseNoteObj = toJsonObj(getDomainBasedPath(RELEASENOTE_PATTERN, domain) + RELEASENOTE_FILE_PATTERN,
-				rootPath);
-		if (releaseNoteObj != null && releaseNoteObj.isArray()) {
-			Iterator<JsonNode> it = releaseNoteObj.elements();
-			if (it != null) {
-				while (it.hasNext()) {
-					JsonNode node = it.next();
-					gov.nist.hit.core.domain.Document document = getDocument(node, scope, domain, preloaded,
-							RELEASENOTE_PATTERN, DocumentType.RELEASENOTE);
-					releaseNotes.add(document);
+//		JsonNode releaseNoteObj = toJsonObj(getDomainBasedPath(RELEASENOTE_PATTERN, domain) + RELEASENOTE_FILE_PATTERN,
+//				rootPath);
+		Resource resource = getResource(getDomainBasedPath(RELEASENOTE_PATTERN, domain) + RELEASENOTE_FILE_PATTERN, rootPath);
+
+		if (resource != null) {
+			String descriptorContent = FileUtil.getContent(resource);
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode releaseNoteObj = mapper.readTree(descriptorContent);
+			if (releaseNoteObj.isArray()) {
+				Iterator<JsonNode> it = releaseNoteObj.elements();
+				if (it != null) {
+					while (it.hasNext()) {
+						JsonNode node = it.next();
+						gov.nist.hit.core.domain.Document document = new gov.nist.hit.core.domain.Document(domain);
+						document.setPosition(node.findValue("order") != null ? node.findValue("order").intValue()
+								: releaseNotes.size() + 1);
+						document.setTitle(node.findValue("title") != null ? node.findValue("title").textValue() : null);
+						//just name then it's a local document
+						if (node.findValue("name") != null && node.findValue("link") == null) {
+							String path = node.findValue("name").textValue();
+							if (path.endsWith("*")) {
+								Resource rs = getLatestResource(getDomainBasedPath(RELEASENOTE_PATTERN, domain)
+										+ node.findValue("name").textValue(), rootPath);
+								path = rs.getFilename();
+							}
+							document.setName(path);
+							document.setPath(getDomainBasedPath(RELEASENOTE_PATTERN, domain) + path);
+						} else if (node.findValue("link") != null) {
+							document.setPath(node.findValue("link").textValue());
+							//if we have a name we add it too
+							if (node.findValue("name") != null) {
+								document.setName(node.findValue("name").textValue());
+							}
+							
+						}
+						document.setDate(node.findValue("date") != null ? node.findValue("date").textValue() : null);
+						document.setType(DocumentType.RELEASENOTE);
+						document.setComments(
+								node.findValue("comments") != null ? node.findValue("comments").textValue() : null);
+						document.setScope(scope);
+						document.setAuthorUsername(getDomainAuthorname(domain));
+						document.setPreloaded(preloaded);
+
+						releaseNotes.add(document);
+					}
+					if (!releaseNotes.isEmpty()) {
+						documentRepository.save(releaseNotes);
+					}
 				}
 			}
 		}
-		if (!releaseNotes.isEmpty()) {
-			documentRepository.save(releaseNotes);
-		}
+		
+		
+		
+		
+		
+		
+		
+//		if (releaseNoteObj != null && releaseNoteObj.isArray()) {
+//			Iterator<JsonNode> it = releaseNoteObj.elements();
+//			if (it != null) {
+//				while (it.hasNext()) {
+//					JsonNode node = it.next();
+//					gov.nist.hit.core.domain.Document document = getDocument(node, scope, domain, preloaded,
+//							RELEASENOTE_PATTERN, DocumentType.RELEASENOTE);
+//					releaseNotes.add(document);
+//				}
+//			}
+//		}
+//		if (!releaseNotes.isEmpty()) {
+//			documentRepository.save(releaseNotes);
+//		}
 	}
 
 	public void loadInstallationGuides(String rootPath, TestScope scope, boolean preloaded, String domain)

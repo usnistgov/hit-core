@@ -20,10 +20,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import gov.nist.auth.hit.core.domain.ResetPassword;
 import gov.nist.hit.core.repo.VocabularyLibraryRepository;
 import gov.nist.hit.core.service.Streamer;
 import io.swagger.annotations.ApiParam;
@@ -53,6 +55,15 @@ public class ValueSetController {
 		String value = vocabularyLibraryRepository.getJson(valueSetLibraryId);
 		return value;
 //		streamer.stream(response.getOutputStream(), value);
+
+	}
+	
+	@RequestMapping(value = "/metadata", produces = "application/json", method = RequestMethod.GET)
+	public String getValueSetLibraryMetadata(HttpServletResponse response,
+			@RequestBody String url)
+			throws IOException {
+		
+		return url;
 
 	}
 

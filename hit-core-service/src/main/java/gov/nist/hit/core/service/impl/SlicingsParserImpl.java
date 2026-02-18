@@ -171,7 +171,6 @@ public class SlicingsParserImpl implements SlicingsParser {
 	private List<AssertionSlicing> getAssertionSlicing(Element element, String context) {
 		List<AssertionSlicing> list = new ArrayList<AssertionSlicing>();
 		if (element != null && element.getElementsByTagName("AssertionSlicing") != null) {
-			System.out.println("Parsing SegmentContext ID: " + element.getAttribute("ID"));
 			NodeList assertionSlicingNodes = element.getElementsByTagName("AssertionSlicing");
 			for (int i = 0; i < assertionSlicingNodes.getLength(); i++) {
 				Element assertionSlicingElement = (Element) assertionSlicingNodes.item(i);
