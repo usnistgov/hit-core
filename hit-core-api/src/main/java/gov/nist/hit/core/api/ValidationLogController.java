@@ -1,5 +1,6 @@
 package gov.nist.hit.core.api;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,16 +14,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.nist.auth.hit.core.domain.Account;
 import gov.nist.auth.hit.core.domain.ValidationLog;
 import gov.nist.hit.core.domain.ResponseMessage;
 import gov.nist.hit.core.domain.ResponseMessage.Type;
-import gov.nist.hit.core.service.ValidationLogService;
 import gov.nist.hit.core.service.AccountService;
 import gov.nist.hit.core.service.TestStepService;
 import gov.nist.hit.core.service.UserService;
+import gov.nist.hit.core.service.ValidationLogService;
 import gov.nist.hit.core.service.exception.NoUserFoundException;
 import io.swagger.annotations.ApiOperation;
 
@@ -65,6 +67,21 @@ public class ValidationLogController {
 		logger.info("Fetching all validation logs...");
 		checkPermission(authentication);
 		return validationLogService.findAll(domain);
+	}
+	
+	@PreAuthorize("hasRole('tester')")
+	@ApiOperation(value = "get logs by date range", nickname = "getLogsByDateRange")
+	@RequestMapping(value = "/{domain}/range", method = RequestMethod.GET, produces = "application/json")
+	public List<ValidationLog> getLogsByDateRange(@PathVariable("domain") String domain, 
+	                                              @RequestParam("startDate") Long startDate, 
+	                                              @RequestParam("endDate") Long endDate, 
+	                                              Authentication authentication,
+			                                      HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.info("Fetching validation logs by date range...");
+		checkPermission(authentication);
+		Date start = new Date(startDate);
+		Date end = new Date(endDate);
+		return validationLogService.findAllByDateRange(start, end, domain);
 	}
 
 	@PreAuthorize("hasRole('tester')")

@@ -1,5 +1,6 @@
 package gov.nist.hit.core.service;
 
+import java.util.Date;
 import java.util.List;
 
 import gov.nist.auth.hit.core.domain.TransportLog;
@@ -9,6 +10,8 @@ public interface TransportLogService {
 	public TransportLog findOne(Long id);
 
 	public List<TransportLog> findAll(String domain);
+	
+	public List<TransportLog> findAllByDateRange(Date startDate, Date endDate, String domain);
 
 	public TransportLog save(TransportLog log);
 

@@ -1,5 +1,6 @@
 package gov.nist.hit.core.service;
 
+import java.util.Date;
 import java.util.List;
 
 import gov.nist.auth.hit.core.domain.ValidationLog;
@@ -11,6 +12,8 @@ public interface ValidationLogService {
 	public ValidationLog findOne(Long id);
 
 	public List<ValidationLog> findAll(String domain);
+	
+	public List<ValidationLog> findAllByDateRange(Date startDate, Date endDate, String domain);
 
 	public ValidationLog save(ValidationLog log);
 

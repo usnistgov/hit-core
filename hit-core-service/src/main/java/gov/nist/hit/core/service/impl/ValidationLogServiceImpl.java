@@ -183,13 +183,17 @@ public class ValidationLogServiceImpl implements ValidationLogService {
 
 	@Override
 	public List<ValidationLog> findAll(String domain) {
-		// TODO Auto-generated method stub
 		Date current = new Date();
 		Date startDate = DateUtil.getFirstDateOfMonth(current);
 		Date endDate = DateUtil.getLastDateOfMonth(current);
 		return validationLogRepository.findAllBetweenDate(startDate, endDate, domain);
 	}
 
+	@Override
+	public List<ValidationLog> findAllByDateRange(Date startDate, Date endDate, String domain) {
+		return validationLogRepository.findAllBetweenDate(startDate, endDate, domain);
+	}
+	
 	@Override
 	public long countAll(String domain) {
 		Date current = new Date();

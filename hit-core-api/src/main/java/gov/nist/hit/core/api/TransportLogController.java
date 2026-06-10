@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.nist.auth.hit.core.domain.Account;
@@ -78,6 +79,21 @@ public class TransportLogController {
 		checkPermission(authentication);
 		List<TransportLog> logs = transportLogService.findAll(domain);
 		return logs;
+	}
+	
+	@PreAuthorize("hasRole('tester')")
+	@ApiOperation(value = "get logs by date range", nickname = "getLogsByDateRange")
+	@RequestMapping(value = "/{domain}/range", method = RequestMethod.GET, produces = "application/json")
+	public List<TransportLog> getLogsByDateRange(@PathVariable("domain") String domain, 
+	                                              @RequestParam("startDate") Long startDate, 
+	                                              @RequestParam("endDate") Long endDate, 
+	                                              Authentication authentication,
+			                                      HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.info("Fetching validation logs by date range...");
+		checkPermission(authentication);
+		Date start = new Date(startDate);
+		Date end = new Date(endDate);
+		return transportLogService.findAllByDateRange(start, end, domain);
 	}
 
 	public void process(TransportLog log) throws Exception {

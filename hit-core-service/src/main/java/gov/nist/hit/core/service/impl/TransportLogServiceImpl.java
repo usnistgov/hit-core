@@ -53,6 +53,11 @@ public class TransportLogServiceImpl implements TransportLogService {
 		Date endDate = DateUtil.getLastDateOfMonth(current);
 		return transportLogRepository.findAllBetweenDate(startDate, endDate, domain);
 	}
+	
+	@Override
+	public List<TransportLog> findAllByDateRange(Date startDate, Date endDate, String domain) {
+		return transportLogRepository.findAllBetweenDate(startDate, endDate, domain);
+	}
 
 	@Override
 	public long countAll(String domain) {

@@ -186,7 +186,7 @@ public class DocumentationController {
 	// logger.info("Fetching test case documentation");
 	// scope = scope == null ? TestScope.GLOBAL : scope;
 	// if (TestScope.USER.equals(scope)) {
-	// Long userId = SessionContext.getCurrentUserId(request.getSession(false));
+	// Long userId = SessionContext.getCurrentUserId(request.getSession(false));x
 	// if (userId != null) {
 	// Account account = accountService.findOne(userId);
 	// if (account != null) {
