@@ -20,5 +20,6 @@ public interface TestCaseDocumentationService {
   List<TestCaseDocumentation> generate(TestScope scope, String domain, String username)
       throws IOException;
 
+  InputStream generateCompleteDomainZip(TestScope scope, String domain) throws Exception;
 
 }

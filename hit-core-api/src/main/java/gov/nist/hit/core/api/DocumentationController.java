@@ -38,6 +38,7 @@ import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,6 +52,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import gov.nist.auth.hit.core.domain.Account;
+import gov.nist.hit.core.api.SessionContext;
 import gov.nist.hit.core.domain.Document;
 import gov.nist.hit.core.domain.DocumentType;
 import gov.nist.hit.core.domain.TestCaseDocumentation;
@@ -665,6 +667,63 @@ public class DocumentationController {
 		}
 		documentRepository.saveAndFlush(result);
 		return result;
+	}
+
+	@RequestMapping(value = "/completeDomainDocumentation", method = RequestMethod.POST,
+			produces = "application/zip", consumes = "application/x-www-form-urlencoded; charset=UTF-8")
+	public String downloadCompleteDomainDocumentation(
+			@ApiParam(value = "the domain", required = true) @RequestParam("domain") String domain,
+			@ApiParam(value = "the scope", required = true) @RequestParam("scope") TestScope scope,
+			HttpServletRequest request, HttpServletResponse response) {
+		// This feature is restricted to domain owners and admins.
+		if (!isDomainOwnerOrAdmin(domain, request)) {
+			throw new AccessDeniedException(
+					"You do not have permission to download the complete documentation for this domain");
+		}
+		try {
+			logger.info("Downloading complete domain documentation for domain: " + domain);
+			// Owners and admins always receive both the public and private documentation.
+			InputStream stream = testCaseDocumentationService.generateCompleteDomainZip(TestScope.GLOBALANDUSER, domain);
+			if (stream == null) {
+				logger.error("Stream is null - no documentation content generated for domain: " + domain);
+				throw new DownloadDocumentException("Failed to generate complete domain documentation - no content found");
+			}
+			response.setContentType("application/zip");
+			response.setHeader("Content-disposition",
+					"attachment;filename=" + domain + "-Complete-Documentation.zip");
+			streamer.stream(response.getOutputStream(), stream);
+		} catch (DownloadDocumentException e) {
+			logger.error("Download exception: " + e.getMessage(), e);
+			throw e;
+		} catch (Exception e) {
+			logger.error("Unexpected error generating complete domain documentation for domain: " + domain, e);
+			throw new DownloadDocumentException("Failed to download complete domain documentation: " + e.getMessage());
+		}
+		return null;
+	}
+
+	/**
+	 * Returns true only if the current user is authenticated and is either an admin or the owner of
+	 * the given domain.
+	 */
+	private boolean isDomainOwnerOrAdmin(String domain, HttpServletRequest request) {
+		try {
+			Long userId = SessionContext.getCurrentUserId(request.getSession(false));
+			if (userId == null) {
+				return false;
+			}
+			Account account = accountService.findOne(userId);
+			if (account == null) {
+				return false;
+			}
+			boolean isAdmin = userService.isAdminByEmail(account.getEmail())
+					|| userService.isAdmin(account.getUsername());
+			gov.nist.hit.core.domain.Domain domainObj = domainService.findOneByKey(domain);
+			boolean isDomainOwner = domainObj != null && account.getUsername().equals(domainObj.getOwner());
+			return isAdmin || isDomainOwner;
+		} catch (NoUserFoundException e) {
+			return false;
+		}
 	}
 
 }
